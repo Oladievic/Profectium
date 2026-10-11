@@ -1,0 +1,1238 @@
+[
+  {
+    "id": "frontend-search-dom",
+    "role": "Frontend",
+    "title": "Поиск и безопасный DOM",
+    "summary": "Три небольших исправления браузерных функций.",
+    "scenario": "Функции независимы. Замените только функцию, названную в решении. Браузер использует стандартные URL и DOM API; сервер декодирует query string стандартным способом.",
+    "artifact": "function searchUrl(search) {\n  return \"/search?q=\" + search;\n}\nfunction renderTitle(target, title) {\n  target.innerHTML = title;\n}\nfunction bindResize(win, update) {\n  const handler = () => update();\n  win.addEventListener(\"resize\", handler);\n  return () => win.removeEventListener(\"resize\", () => update());\n}\n// searchUrl(\"A&B\") должен передать один параметр q со значением A&B.\n// renderTitle(div, \"<b>отчёт</b>\") должен показать угловые скобки как текст.\n// bindResize возвращает функцию снятия именно установленного обработчика.",
+    "requirements": [
+      "Поиск всегда передаёт один параметр q с исходной строкой, включая &, # и пробелы.",
+      "Заголовок — недоверенный текст; HTML-разметка в нём не должна интерпретироваться.",
+      "Cleanup снимает установленный обработчик resize; update — переданная функция."
+    ],
+    "estimatedMinutes": 15,
+    "decisions": [
+      {
+        "id": "encode-query",
+        "prompt": "Как заменить searchUrl, сохранив полную строку поиска?",
+        "options": [
+          {
+            "id": "encode-query-a",
+            "label": "Кодировать весь адрес",
+            "patch": "function searchUrl(search) {\n  return encodeURIComponent(\"/search?q=\" + search);\n}"
+          },
+          {
+            "id": "encode-query-b",
+            "label": "Кодировать значение параметра",
+            "patch": "function searchUrl(search) {\n  return \"/search?q=\" + encodeURIComponent(search);\n}"
+          },
+          {
+            "id": "encode-query-c",
+            "label": "Удалять специальные символы",
+            "patch": "function searchUrl(search) {\n  return \"/search?q=\" + search.replace(/[&# ]/g, \"\");\n}"
+          }
+        ],
+        "correctOptionId": "encode-query-b",
+        "explanation": "encodeURIComponent применяется к значению q, поэтому &, # и пробелы остаются частью исходного значения после декодирования. Кодирование адреса нарушает его структуру, удаление символов меняет запрос."
+      },
+      {
+        "id": "literal-title",
+        "prompt": "Как заменить renderTitle для буквального отображения строки?",
+        "options": [
+          {
+            "id": "literal-title-a",
+            "label": "Присвоить текст",
+            "patch": "function renderTitle(target, title) {\n  target.textContent = title;\n}"
+          },
+          {
+            "id": "literal-title-b",
+            "label": "Вставить строку как HTML",
+            "patch": "function renderTitle(target, title) {\n  target.insertAdjacentHTML(\"beforeend\", title);\n}"
+          },
+          {
+            "id": "literal-title-c",
+            "label": "Обернуть строку в span",
+            "patch": "function renderTitle(target, title) {\n  target.innerHTML = \"<span>\" + title + \"</span>\";\n}"
+          }
+        ],
+        "correctOptionId": "literal-title-a",
+        "explanation": "textContent заменяет содержимое текстом, не разбирая HTML. Два других варианта по-прежнему интерпретируют недоверенную строку как разметку."
+      },
+      {
+        "id": "resize-cleanup",
+        "prompt": "Как заменить bindResize, чтобы cleanup снимал нужную подписку?",
+        "options": [
+          {
+            "id": "resize-cleanup-a",
+            "label": "Передать update при снятии",
+            "patch": "function bindResize(win, update) {\n  const handler = () => update();\n  win.addEventListener(\"resize\", handler);\n  return () => win.removeEventListener(\"resize\", update);\n}"
+          },
+          {
+            "id": "resize-cleanup-b",
+            "label": "Снять обработчик другого события",
+            "patch": "function bindResize(win, update) {\n  const handler = () => update();\n  win.addEventListener(\"resize\", handler);\n  return () => win.removeEventListener(\"scroll\", handler);\n}"
+          },
+          {
+            "id": "resize-cleanup-c",
+            "label": "Сохранить тип события и ссылку",
+            "patch": "function bindResize(win, update) {\n  const handler = () => update();\n  win.addEventListener(\"resize\", handler);\n  return () => win.removeEventListener(\"resize\", handler);\n}"
+          }
+        ],
+        "correctOptionId": "resize-cleanup-c",
+        "explanation": "Для удаления передаются тот же тип события и тот же объект функции. update и созданная обёртка handler — разные ссылки."
+      }
+    ],
+    "rubric": [
+      {
+        "id": "encode-query",
+        "label": "Как заменить searchUrl, сохранив полную строку поиска?",
+        "maxPoints": 1
+      },
+      {
+        "id": "literal-title",
+        "label": "Как заменить renderTitle для буквального отображения строки?",
+        "maxPoints": 1
+      },
+      {
+        "id": "resize-cleanup",
+        "label": "Как заменить bindResize, чтобы cleanup снимал нужную подписку?",
+        "maxPoints": 1
+      }
+    ],
+    "skill": "JavaScript"
+  },
+  {
+    "id": "frontend-editor-state",
+    "role": "Frontend",
+    "title": "Состояние редактора",
+    "summary": "Иммутабельное обновление, защита от старого снимка и стабильная сортировка.",
+    "scenario": "Используется обычный JavaScript, без framework. Каждый вариант заменяет одну независимую функцию. response всегда полный снимок того же документа, revision — целое монотонно растущее число; равная revision означает одинаковые данные.",
+    "artifact": "function updateTheme(state, theme) {\n  state.preferences.theme = theme;\n  return state;\n}\nfunction mergeSnapshot(current, response) {\n  return response;\n}\nfunction sortRecords(records) {\n  return records.sort((a, b) => b.updatedAt - a.updatedAt);\n}\nconst state = { count: 7, preferences: { theme: \"light\", language: \"ru\" } };\nconst current = { revision: 8, text: \"новое\" };\nconst response = { revision: 7, text: \"старое\" };\nconst records = [\n  { id: 2, updatedAt: 100 },\n  { id: 5, updatedAt: 100 },\n  { id: 9, updatedAt: 90 }\n];",
+    "requirements": [
+      "updateTheme возвращает новый верхний объект и новый preferences, не меняет вход и сохраняет остальные поля.",
+      "mergeSnapshot не заменяет текущий снимок снимком с меньшей revision.",
+      "sortRecords не меняет входной массив; сортирует updatedAt по убыванию, при равенстве — числовой id по убыванию."
+    ],
+    "estimatedMinutes": 15,
+    "decisions": [
+      {
+        "id": "immutable-theme",
+        "prompt": "Как заменить updateTheme без мутации вложенного объекта?",
+        "options": [
+          {
+            "id": "immutable-theme-a",
+            "label": "Копировать только верхний уровень",
+            "patch": "function updateTheme(state, theme) {\n  const next = { ...state };\n  next.preferences.theme = theme;\n  return next;\n}"
+          },
+          {
+            "id": "immutable-theme-b",
+            "label": "Создать только новое поле темы",
+            "patch": "function updateTheme(state, theme) {\n  return { preferences: { theme } };\n}"
+          },
+          {
+            "id": "immutable-theme-c",
+            "label": "Копировать оба изменяемых уровня",
+            "patch": "function updateTheme(state, theme) {\n  return { ...state, preferences: { ...state.preferences, theme } };\n}"
+          }
+        ],
+        "correctOptionId": "immutable-theme-c",
+        "explanation": "Копия обоих уровней сохраняет исходный preferences и остальные поля. Поверхностная копия оставляет общую вложенную ссылку; последний сокращённый объект теряет поля."
+      },
+      {
+        "id": "monotonic-snapshot",
+        "prompt": "Как заменить mergeSnapshot для полного снимка с revision?",
+        "options": [
+          {
+            "id": "monotonic-snapshot-a",
+            "label": "Принимать только нестарый снимок",
+            "patch": "function mergeSnapshot(current, response) {\n  return response.revision >= current.revision ? response : current;\n}"
+          },
+          {
+            "id": "monotonic-snapshot-b",
+            "label": "Принимать только меньшую revision",
+            "patch": "function mergeSnapshot(current, response) {\n  return response.revision < current.revision ? response : current;\n}"
+          },
+          {
+            "id": "monotonic-snapshot-c",
+            "label": "Объединять поля любого ответа",
+            "patch": "function mergeSnapshot(current, response) {\n  return { ...current, ...response };\n}"
+          }
+        ],
+        "correctOptionId": "monotonic-snapshot-a",
+        "explanation": "Полный снимок меньшей revision устарел целиком. Проверка перед заменой не позволяет позднему ответу откатить состояние; простое слияние такой проверки не делает."
+      },
+      {
+        "id": "deterministic-sort",
+        "prompt": "Как заменить sortRecords с заданным порядком и без мутации?",
+        "options": [
+          {
+            "id": "deterministic-sort-a",
+            "label": "Копировать и добавить второй ключ",
+            "patch": "function sortRecords(records) {\n  return [...records].sort((a, b) => b.updatedAt - a.updatedAt || b.id - a.id);\n}"
+          },
+          {
+            "id": "deterministic-sort-b",
+            "label": "Сортировать вход по двум ключам",
+            "patch": "function sortRecords(records) {\n  return records.sort((a, b) => b.updatedAt - a.updatedAt || b.id - a.id);\n}"
+          },
+          {
+            "id": "deterministic-sort-c",
+            "label": "Копировать и сортировать оба ключа по возрастанию",
+            "patch": "function sortRecords(records) {\n  return [...records].sort((a, b) => a.updatedAt - b.updatedAt || a.id - b.id);\n}"
+          }
+        ],
+        "correctOptionId": "deterministic-sort-a",
+        "explanation": "Новый массив сохраняет порядок входного массива. Разность по updatedAt задаёт убывание, а по id разрешает равенство первым ключом."
+      }
+    ],
+    "rubric": [
+      {
+        "id": "immutable-theme",
+        "label": "Как заменить updateTheme без мутации вложенного объекта?",
+        "maxPoints": 1
+      },
+      {
+        "id": "monotonic-snapshot",
+        "label": "Как заменить mergeSnapshot для полного снимка с revision?",
+        "maxPoints": 1
+      },
+      {
+        "id": "deterministic-sort",
+        "label": "Как заменить sortRecords с заданным порядком и без мутации?",
+        "maxPoints": 1
+      }
+    ],
+    "skill": "JavaScript"
+  },
+  {
+    "id": "backend-sql-boundaries",
+    "role": "Backend",
+    "title": "SQL: владелец, остаток и курсор",
+    "summary": "Исправление трёх независимых параметризованных SQL-запросов.",
+    "scenario": "SQL-движок поддерживает указанный синтаксис и атомарный UPDATE. Параметры передаются отдельно от SQL. :owner получен из проверенной сессии; :qty — положительное целое. Решения затрагивают разные таблицы.",
+    "artifact": "CREATE TABLE documents (\n  owner TEXT NOT NULL, id INTEGER NOT NULL, content TEXT NOT NULL,\n  PRIMARY KEY (owner, id)\n);\nCREATE TABLE stock (sku TEXT PRIMARY KEY, available INTEGER NOT NULL);\nCREATE TABLE feed (id INTEGER PRIMARY KEY, created_at INTEGER NOT NULL, title TEXT NOT NULL);\n\n-- getDocument; id может повторяться у разных владельцев\nSELECT content FROM documents WHERE id = :id;\n\n-- reserve; успех определяется числом изменённых строк = 1\nUPDATE stock SET available = available - :qty WHERE sku = :sku;\n\n-- nextPage; курсор — последняя строка предыдущей страницы\nSELECT * FROM feed WHERE created_at < :time\nORDER BY created_at DESC, id DESC LIMIT :limit;",
+    "requirements": [
+      "getDocument возвращает только документ текущего владельца; owner и id вместе идентифицируют строку.",
+      "reserve одной SQL-командой уменьшает остаток, только если товара достаточно; отрицательный остаток запрещён.",
+      "nextPage следует порядку (created_at DESC, id DESC), включая строки с тем же временем; между страницами набор данных неизменен."
+    ],
+    "estimatedMinutes": 20,
+    "decisions": [
+      {
+        "id": "owner-scope",
+        "prompt": "Как заменить запрос getDocument для изоляции владельцев?",
+        "options": [
+          {
+            "id": "owner-scope-a",
+            "label": "Условие на любой из ключей",
+            "patch": "SELECT content FROM documents\nWHERE owner = :owner OR id = :id;"
+          },
+          {
+            "id": "owner-scope-b",
+            "label": "Условие на оба ключа",
+            "patch": "SELECT content FROM documents\nWHERE owner = :owner AND id = :id;"
+          },
+          {
+            "id": "owner-scope-c",
+            "label": "Выбрать первую строку с id",
+            "patch": "SELECT content FROM documents\nWHERE id = :id ORDER BY owner LIMIT 1;"
+          }
+        ],
+        "correctOptionId": "owner-scope-b",
+        "explanation": "Только AND по доверенному owner и id выбирает заданную составным ключом строку. OR и поиск только по id допускают документ другого владельца."
+      },
+      {
+        "id": "atomic-stock",
+        "prompt": "Как заменить reserve, сохранив атомарную проверку остатка?",
+        "options": [
+          {
+            "id": "atomic-stock-a",
+            "label": "Проверить достаточный остаток в UPDATE",
+            "patch": "UPDATE stock SET available = available - :qty\nWHERE sku = :sku AND available >= :qty;"
+          },
+          {
+            "id": "atomic-stock-b",
+            "label": "Проверить только ненулевой остаток",
+            "patch": "UPDATE stock SET available = available - :qty\nWHERE sku = :sku AND available > 0;"
+          },
+          {
+            "id": "atomic-stock-c",
+            "label": "Обрезать отрицательный остаток до нуля",
+            "patch": "UPDATE stock SET available = CASE\n  WHEN available >= :qty THEN available - :qty ELSE 0 END\nWHERE sku = :sku;"
+          }
+        ],
+        "correctOptionId": "atomic-stock-a",
+        "explanation": "Предикат available >= :qty в той же атомарной команде допускает списание только достаточного остатка. Другие варианты либо уходят в минус, либо сообщают успешное изменение при недостающем товаре."
+      },
+      {
+        "id": "cursor-tie",
+        "prompt": "Как заменить nextPage, чтобы не пропускать одинаковое время?",
+        "options": [
+          {
+            "id": "cursor-tie-a",
+            "label": "Использовать нестрогое время",
+            "patch": "SELECT * FROM feed WHERE created_at <= :time\nORDER BY created_at DESC, id DESC LIMIT :limit;"
+          },
+          {
+            "id": "cursor-tie-b",
+            "label": "Сравнивать только id",
+            "patch": "SELECT * FROM feed WHERE id < :id\nORDER BY created_at DESC, id DESC LIMIT :limit;"
+          },
+          {
+            "id": "cursor-tie-c",
+            "label": "Сравнивать пару ключей в порядке сортировки",
+            "patch": "SELECT * FROM feed\nWHERE created_at < :time OR (created_at = :time AND id < :id)\nORDER BY created_at DESC, id DESC LIMIT :limit;"
+          }
+        ],
+        "correctOptionId": "cursor-tie-c",
+        "explanation": "Строка после курсора имеет меньшее время либо то же время и меньший id. Нестрогое время повторяет курсор; id сам по себе не определяет позицию относительно разных времён."
+      }
+    ],
+    "rubric": [
+      {
+        "id": "owner-scope",
+        "label": "Как заменить запрос getDocument для изоляции владельцев?",
+        "maxPoints": 1
+      },
+      {
+        "id": "atomic-stock",
+        "label": "Как заменить reserve, сохранив атомарную проверку остатка?",
+        "maxPoints": 1
+      },
+      {
+        "id": "cursor-tie",
+        "label": "Как заменить nextPage, чтобы не пропускать одинаковое время?",
+        "maxPoints": 1
+      }
+    ],
+    "skill": "SQL"
+  },
+  {
+    "id": "backend-delivery-races",
+    "role": "Backend",
+    "title": "События, доставка и устаревший исполнитель",
+    "summary": "Транзакционная дедупликация, outbox и fencing token.",
+    "scenario": "Три независимых фрагмента. db.transaction(async tx => ...) атомарно фиксирует все tx.run либо откатывает все при ошибке; параллельные транзакции соблюдают UNIQUE. run возвращает changes. broker.publish разрешается только после долговременного подтверждения; повторная доставка допустима. Здесь нет требования доставки ровно один раз.",
+    "artifact": "CREATE TABLE inbox (event_id TEXT PRIMARY KEY);\nCREATE TABLE counters (id TEXT PRIMARY KEY, value INTEGER NOT NULL);\nCREATE TABLE outbox (id TEXT PRIMARY KEY, payload TEXT NOT NULL, sent INTEGER NOT NULL);\nCREATE TABLE resources (id TEXT PRIMARY KEY, value TEXT NOT NULL, last_token INTEGER NOT NULL);\n\nasync function handle(event, db) {\n  await db.run(\"UPDATE counters SET value = value + 1 WHERE id = ?\", [event.counterId]);\n  await db.run(\"INSERT INTO inbox(event_id) VALUES (?) ON CONFLICT(event_id) DO NOTHING\", [event.id]);\n}\nasync function deliver(row, db, broker) {\n  await db.run(\"UPDATE outbox SET sent = 1 WHERE id = ?\", [row.id]);\n  await broker.publish(row.payload);\n}\n-- writeResource: A получил token=10, B token=11; B уже записал значение\nUPDATE resources SET value = :value, last_token = :token WHERE id = :id;",
+    "requirements": [
+      "Для существующего счётчика один event.id увеличивает value ровно один раз даже при повторе; inbox и эффект фиксируются вместе.",
+      "Доставка outbox не должна помечаться sent до подтверждения брокера; дубли после сбоя допустимы.",
+      "writeResource отклоняет token меньше сохранённого last_token; равный или больший token разрешён, операция заменяет значение."
+    ],
+    "estimatedMinutes": 25,
+    "decisions": [
+      {
+        "id": "transactional-inbox",
+        "prompt": "Как заменить handle для атомарной дедупликации?",
+        "options": [
+          {
+            "id": "transactional-inbox-a",
+            "label": "Дедупликация после увеличения в транзакции",
+            "patch": "async function handle(event, db) {\n  await db.transaction(async tx => {\n    await tx.run(\"UPDATE counters SET value = value + 1 WHERE id = ?\", [event.counterId]);\n    await tx.run(\"INSERT INTO inbox(event_id) VALUES (?) ON CONFLICT(event_id) DO NOTHING\", [event.id]);\n  });\n}"
+          },
+          {
+            "id": "transactional-inbox-b",
+            "label": "Сначала отдельная фиксация метки",
+            "patch": "async function handle(event, db) {\n  const r = await db.run(\"INSERT INTO inbox(event_id) VALUES (?) ON CONFLICT(event_id) DO NOTHING\", [event.id]);\n  if (r.changes === 1) await db.run(\"UPDATE counters SET value = value + 1 WHERE id = ?\", [event.counterId]);\n}"
+          },
+          {
+            "id": "transactional-inbox-c",
+            "label": "Метка и условный эффект в одной транзакции",
+            "patch": "async function handle(event, db) {\n  await db.transaction(async tx => {\n    const r = await tx.run(\"INSERT INTO inbox(event_id) VALUES (?) ON CONFLICT(event_id) DO NOTHING\", [event.id]);\n    if (r.changes === 1) await tx.run(\"UPDATE counters SET value = value + 1 WHERE id = ?\", [event.counterId]);\n  });\n}"
+          }
+        ],
+        "correctOptionId": "transactional-inbox-c",
+        "explanation": "UNIQUE допускает единственную новую метку, а проверка changes ограничивает эффект этой вставкой. Общая транзакция исключает сбой между отдельной фиксацией метки и увеличением счётчика."
+      },
+      {
+        "id": "outbox-ack",
+        "prompt": "Как заменить deliver, чтобы подтверждённая метка не опережала доставку?",
+        "options": [
+          {
+            "id": "outbox-ack-a",
+            "label": "Помечать в finally",
+            "patch": "async function deliver(row, db, broker) {\n  try { await broker.publish(row.payload); }\n  finally { await db.run(\"UPDATE outbox SET sent = 1 WHERE id = ?\", [row.id]); }\n}"
+          },
+          {
+            "id": "outbox-ack-b",
+            "label": "Дождаться подтверждения, затем пометить",
+            "patch": "async function deliver(row, db, broker) {\n  await broker.publish(row.payload);\n  await db.run(\"UPDATE outbox SET sent = 1 WHERE id = ?\", [row.id]);\n}"
+          },
+          {
+            "id": "outbox-ack-c",
+            "label": "Отправить и пометить параллельно",
+            "patch": "async function deliver(row, db, broker) {\n  await Promise.all([\n    broker.publish(row.payload),\n    db.run(\"UPDATE outbox SET sent = 1 WHERE id = ?\", [row.id])\n  ]);\n}"
+          }
+        ],
+        "correctOptionId": "outbox-ack-b",
+        "explanation": "Метка ставится только после успешного подтверждения. Сбой после publish до UPDATE может дать повтор, который разрешён. finally и параллельная запись могут пометить недоставленное событие."
+      },
+      {
+        "id": "fencing-token",
+        "prompt": "Как заменить writeResource, чтобы A с token=10 не затёр уже записанное B с token=11?",
+        "options": [
+          {
+            "id": "fencing-token-a",
+            "label": "Сравнить токен в атомарной записи",
+            "patch": "UPDATE resources SET value = :value, last_token = :token\nWHERE id = :id AND last_token <= :token;"
+          },
+          {
+            "id": "fencing-token-b",
+            "label": "Пропускать меньший токен",
+            "patch": "UPDATE resources SET value = :value, last_token = :token\nWHERE id = :id AND last_token >= :token;"
+          },
+          {
+            "id": "fencing-token-c",
+            "label": "Сохранить максимум токена без защиты значения",
+            "patch": "UPDATE resources SET value = :value,\nlast_token = CASE WHEN last_token > :token THEN last_token ELSE :token END\nWHERE id = :id;"
+          }
+        ],
+        "correctOptionId": "fencing-token-a",
+        "explanation": "Предикат отклоняет всю запись старого исполнителя. Сохранение только максимального токена всё ещё позволяет перезаписать value устаревшим значением."
+      }
+    ],
+    "rubric": [
+      {
+        "id": "transactional-inbox",
+        "label": "Как заменить handle для атомарной дедупликации?",
+        "maxPoints": 1
+      },
+      {
+        "id": "outbox-ack",
+        "label": "Как заменить deliver, чтобы подтверждённая метка не опережала доставку?",
+        "maxPoints": 1
+      },
+      {
+        "id": "fencing-token",
+        "label": "Как заменить writeResource, чтобы A с token=10 не затёр уже записанное B с token=11?",
+        "maxPoints": 1
+      }
+    ],
+    "skill": "Node.js"
+  },
+  {
+    "id": "fullstack-save-contract",
+    "role": "Fullstack",
+    "title": "Контракт сохранения формы",
+    "summary": "HTTP-ошибка, частичное обновление и серверное право редактирования.",
+    "scenario": "Каждый фрагмент независим. fetch использует стандартный Response; GET /profile возвращает JSON только при HTTP 200, остальные статусы означают ошибку. Patch-контракт: отсутствие description сохраняет значение, null очищает, строка заменяет. session приходит от проверенного серверного middleware; body полностью контролируется клиентом.",
+    "artifact": "async function loadProfile(fetcher) {\n  const response = await fetcher(\"/profile\");\n  return response.json();\n}\nfunction buildPatch(title, descriptionChanged, description) {\n  return { title, description: descriptionChanged ? description : null };\n}\nfunction canEdit(session, body) {\n  return body.role === \"editor\";\n}\n// buildPatch(\"Отчёт\", false, null) => { title: \"Отчёт\" }\n// canEdit({ role: \"reader\" }, { role: \"editor\" }) => false",
+    "requirements": [
+      "loadProfile отклоняет Promise при любом неуспешном HTTP-статусе, а при 200 возвращает распарсенный объект.",
+      "buildPatch всегда передаёт title и передаёт description только при descriptionChanged=true; пустая строка — допустимое новое значение.",
+      "canEdit возвращает true только для session.role='editor', включая отказ при отсутствующей сессии."
+    ],
+    "estimatedMinutes": 15,
+    "decisions": [
+      {
+        "id": "http-status",
+        "prompt": "Как заменить loadProfile с учётом HTTP-ошибок?",
+        "options": [
+          {
+            "id": "http-status-a",
+            "label": "Проверить Response.ok",
+            "patch": "async function loadProfile(fetcher) {\n  const response = await fetcher(\"/profile\");\n  if (!response.ok) throw new Error(\"HTTP \" + response.status);\n  return response.json();\n}"
+          },
+          {
+            "id": "http-status-b",
+            "label": "Полагаться только на сетевой catch",
+            "patch": "async function loadProfile(fetcher) {\n  try { return await (await fetcher(\"/profile\")).json(); }\n  catch (error) { throw error; }\n}"
+          },
+          {
+            "id": "http-status-c",
+            "label": "Отклонять только серверные ошибки",
+            "patch": "async function loadProfile(fetcher) {\n  const response = await fetcher(\"/profile\");\n  if (response.status >= 500) throw new Error(\"Server error\");\n  return response.json();\n}"
+          }
+        ],
+        "correctOptionId": "http-status-a",
+        "explanation": "fetch не отклоняет Promise только из-за HTTP 404. Response.ok позволяет проверить статус до разбора успешного результата; проверка только 5xx пропускает ошибки 4xx."
+      },
+      {
+        "id": "partial-patch",
+        "prompt": "Как заменить buildPatch, различая отсутствие, null и пустую строку?",
+        "options": [
+          {
+            "id": "partial-patch-a",
+            "label": "Передавать description всегда",
+            "patch": "function buildPatch(title, descriptionChanged, description) {\n  return { title, description: descriptionChanged ? description : null };\n}"
+          },
+          {
+            "id": "partial-patch-b",
+            "label": "Добавлять поле только при признаке изменения",
+            "patch": "function buildPatch(title, descriptionChanged, description) {\n  return descriptionChanged ? { title, description } : { title };\n}"
+          },
+          {
+            "id": "partial-patch-c",
+            "label": "Добавлять только непустое значение",
+            "patch": "function buildPatch(title, descriptionChanged, description) {\n  return descriptionChanged && description ? { title, description } : { title };\n}"
+          }
+        ],
+        "correctOptionId": "partial-patch-b",
+        "explanation": "Флаг изменения определяет присутствие поля. Проверка truthiness теряет намеренное очищение через null и замену на пустую строку; безусловный null очищает неизменяемое поле."
+      },
+      {
+        "id": "trusted-role",
+        "prompt": "Как заменить canEdit для проверки доверенной роли?",
+        "options": [
+          {
+            "id": "trusted-role-a",
+            "label": "Разрешать по одной из ролей",
+            "patch": "function canEdit(session, body) {\n  return session?.role === \"editor\" || body.role === \"editor\";\n}"
+          },
+          {
+            "id": "trusted-role-b",
+            "label": "Доверять наличию пользовательского id",
+            "patch": "function canEdit(session, body) {\n  return Boolean(session?.userId);\n}"
+          },
+          {
+            "id": "trusted-role-c",
+            "label": "Использовать только роль проверенной сессии",
+            "patch": "function canEdit(session, body) {\n  return session?.role === \"editor\";\n}"
+          }
+        ],
+        "correctOptionId": "trusted-role-c",
+        "explanation": "Роль в body может подделать клиент. Наличие сессии не означает право editor. Условие на проверенную роль отказывает и пользователю reader, и запросу без сессии."
+      }
+    ],
+    "rubric": [
+      {
+        "id": "http-status",
+        "label": "Как заменить loadProfile с учётом HTTP-ошибок?",
+        "maxPoints": 1
+      },
+      {
+        "id": "partial-patch",
+        "label": "Как заменить buildPatch, различая отсутствие, null и пустую строку?",
+        "maxPoints": 1
+      },
+      {
+        "id": "trusted-role",
+        "label": "Как заменить canEdit для проверки доверенной роли?",
+        "maxPoints": 1
+      }
+    ],
+    "skill": "JavaScript"
+  },
+  {
+    "id": "fullstack-private-profile",
+    "role": "Fullstack",
+    "title": "Приватный профиль и устаревший черновик",
+    "summary": "Минимальная проекция, точный Origin и базовая версия сохранения.",
+    "scenario": "Три независимые функции на сервере/клиенте. id — публичный случайный идентификатор. canSeeContact вычислен сервером по действующему разрешению именно этому получателю; переданный клиентом флаг сюда не попадает. Доверенный web-origin — https://app.example.test. Сервер CAS принимает If-Match с версией в двойных кавычках, например '\"4\"'.",
+    "artifact": "function projectProfile(profile, canSeeContact) {\n  return { ...profile };\n}\nfunction allowedOrigin(origin) {\n  return Boolean(origin && origin.startsWith(\"https://app.example.test\"));\n}\nfunction prepareSave(draft, current) {\n  return {\n    headers: { \"If-Match\": '\"' + current.revision + '\"' },\n    body: JSON.stringify(draft.fields)\n  };\n}\nconst profile = {\n  id: \"public-72\", role: \"Backend\", grade: \"Middle\",\n  contact: \"contact-value\", legalName: \"private-value\", internalNote: \"private-note\"\n};\nconst draft = { baseRevision: 4, fields: { role: \"Backend\" } };\nconst current = { revision: 5 }; // получен фоновым sync после начала редактирования",
+    "requirements": [
+      "В проекции допустимы только id, role, grade; contact добавляется только при canSeeContact=true. Остальные поля всегда запрещены.",
+      "allowedOrigin разрешает только точное указанное origin; null, другой порт, поддомен и похожее имя запрещены. Это только одна проверка в уже существующем механизме защиты запросов.",
+      "prepareSave использует исходную baseRevision черновика; фоновый sync не превращает устаревшее редактирование в актуальное."
+    ],
+    "estimatedMinutes": 20,
+    "decisions": [
+      {
+        "id": "profile-allowlist",
+        "prompt": "Как заменить projectProfile для заданного списка полей?",
+        "options": [
+          {
+            "id": "profile-allowlist-a",
+            "label": "Скопировать и удалить только contact",
+            "patch": "function projectProfile(profile, canSeeContact) {\n  const result = { ...profile };\n  if (!canSeeContact) delete result.contact;\n  return result;\n}"
+          },
+          {
+            "id": "profile-allowlist-b",
+            "label": "Явно собрать допустимые поля",
+            "patch": "function projectProfile(profile, canSeeContact) {\n  const result = { id: profile.id, role: profile.role, grade: profile.grade };\n  if (canSeeContact) result.contact = profile.contact;\n  return result;\n}"
+          },
+          {
+            "id": "profile-allowlist-c",
+            "label": "Всегда включать contact в явную проекцию",
+            "patch": "function projectProfile(profile, canSeeContact) {\n  return { id: profile.id, role: profile.role, grade: profile.grade, contact: profile.contact };\n}"
+          }
+        ],
+        "correctOptionId": "profile-allowlist-b",
+        "explanation": "Явный список не раскрывает legalName/internalNote и учитывает разрешение на contact. Удаление только contact из общей копии оставляет другие приватные поля."
+      },
+      {
+        "id": "exact-origin",
+        "prompt": "Как заменить allowedOrigin согласно точному разрешённому значению?",
+        "options": [
+          {
+            "id": "exact-origin-a",
+            "label": "Сравнить всю строку",
+            "patch": "function allowedOrigin(origin) {\n  return origin === \"https://app.example.test\";\n}"
+          },
+          {
+            "id": "exact-origin-b",
+            "label": "Проверить наличие доверенного текста",
+            "patch": "function allowedOrigin(origin) {\n  return Boolean(origin && origin.includes(\"app.example.test\"));\n}"
+          },
+          {
+            "id": "exact-origin-c",
+            "label": "Разрешить отсутствующий Origin",
+            "patch": "function allowedOrigin(origin) {\n  return origin == null || origin === \"https://app.example.test\";\n}"
+          }
+        ],
+        "correctOptionId": "exact-origin-a",
+        "explanation": "Точное равенство отклоняет похожие домены, другие порты и null. Проверка подстроки может принять app.example.test.attacker.test; разрешение null противоречит условиям."
+      },
+      {
+        "id": "draft-cas",
+        "prompt": "Как заменить prepareSave для корректного If-Match?",
+        "options": [
+          {
+            "id": "draft-cas-a",
+            "label": "Заменить базу черновика на текущую revision",
+            "patch": "function prepareSave(draft, current) {\n  draft.baseRevision = current.revision;\n  return { headers: { \"If-Match\": '\"' + draft.baseRevision + '\"' }, body: JSON.stringify(draft.fields) };\n}"
+          },
+          {
+            "id": "draft-cas-b",
+            "label": "Отправлять сохранение без If-Match",
+            "patch": "function prepareSave(draft, current) {\n  return { headers: {}, body: JSON.stringify(draft.fields) };\n}"
+          },
+          {
+            "id": "draft-cas-c",
+            "label": "Передать сохранённую базу редактирования",
+            "patch": "function prepareSave(draft, current) {\n  return { headers: { \"If-Match\": '\"' + draft.baseRevision + '\"' }, body: JSON.stringify(draft.fields) };\n}"
+          }
+        ],
+        "correctOptionId": "draft-cas-c",
+        "explanation": "База 4 описывает снимок, на котором создан черновик. С revision=5 на сервере запрос должен конфликтовать. Подмена базы после sync скрывает конфликт и может перезаписать чужие изменения."
+      }
+    ],
+    "rubric": [
+      {
+        "id": "profile-allowlist",
+        "label": "Как заменить projectProfile для заданного списка полей?",
+        "maxPoints": 1
+      },
+      {
+        "id": "exact-origin",
+        "label": "Как заменить allowedOrigin согласно точному разрешённому значению?",
+        "maxPoints": 1
+      },
+      {
+        "id": "draft-cas",
+        "label": "Как заменить prepareSave для корректного If-Match?",
+        "maxPoints": 1
+      }
+    ],
+    "skill": "JavaScript"
+  },
+  {
+    "id": "data-preparation",
+    "role": "Data Science",
+    "title": "Подготовка измерений",
+    "summary": "Пропуски, неизвестные категории и разделение по установке.",
+    "scenario": "Используется Python 3 и стандартные структуры данных. Три функции независимы. В train есть хотя бы одно число; пропуски обозначены None. Категориальный словарь заранее зафиксирован. Измерения одной установки нельзя распределять между train и validation.",
+    "artifact": "def impute_validation(train, validation):\n    observed = [x for x in train + validation if x is not None]\n    mean = sum(observed) / len(observed)\n    return [mean if x is None else x for x in validation]\n\ndef encode_level(value):\n    return [int(value == \"low\"), int(value == \"high\"), 0]\n\ndef split_groups(rows, validation_groups):\n    return rows[::2], rows[1::2]\n\ntrain = [0, 10, None]\nvalidation = [100, None]\nrows = [\n    {\"machine_id\": \"m1\", \"measurement\": 1},\n    {\"machine_id\": \"m2\", \"measurement\": 3},\n    {\"machine_id\": \"m1\", \"measurement\": 2},\n    {\"machine_id\": \"m2\", \"measurement\": 4},\n]\nvalidation_groups = {\"m2\"}",
+    "requirements": [
+      "Среднее для заполнения пропусков рассчитывается только по непустым train; validation не влияет на параметр. Ожидаемый validation=[100, 5].",
+      "encode_level возвращает ровно три столбца [low, high, unknown]; любая категория кроме low/high попадает в unknown.",
+      "split_groups возвращает (train_rows, validation_rows); принадлежность validation определяется только membership machine_id в validation_groups."
+    ],
+    "estimatedMinutes": 20,
+    "decisions": [
+      {
+        "id": "train-only-imputation",
+        "prompt": "Как заменить impute_validation без утечки validation в среднее?",
+        "options": [
+          {
+            "id": "train-only-imputation-a",
+            "label": "Вычислить среднее только по validation",
+            "patch": "def impute_validation(train, validation):\n    observed = [x for x in validation if x is not None]\n    mean = sum(observed) / len(observed)\n    return [mean if x is None else x for x in validation]"
+          },
+          {
+            "id": "train-only-imputation-b",
+            "label": "Считать пропуски train нулями",
+            "patch": "def impute_validation(train, validation):\n    mean = sum(0 if x is None else x for x in train) / len(train)\n    return [mean if x is None else x for x in validation]"
+          },
+          {
+            "id": "train-only-imputation-c",
+            "label": "Оценить среднее по наблюдаемым train",
+            "patch": "def impute_validation(train, validation):\n    observed = [x for x in train if x is not None]\n    mean = sum(observed) / len(observed)\n    return [mean if x is None else x for x in validation]"
+          }
+        ],
+        "correctOptionId": "train-only-imputation-c",
+        "explanation": "Параметр preprocessing оценивается на наблюдаемых значениях train. Validation не участвует, а None не считается нулём. Для [0,10] среднее равно 5."
+      },
+      {
+        "id": "unknown-category",
+        "prompt": "Как заменить encode_level для фиксированного словаря?",
+        "options": [
+          {
+            "id": "unknown-category-a",
+            "label": "Отдельно кодировать неизвестную категорию",
+            "patch": "def encode_level(value):\n    return [int(value == \"low\"), int(value == \"high\"), int(value not in {\"low\", \"high\"})]"
+          },
+          {
+            "id": "unknown-category-b",
+            "label": "Относить любую не-low категорию к high",
+            "patch": "def encode_level(value):\n    return [int(value == \"low\"), int(value != \"low\"), 0]"
+          },
+          {
+            "id": "unknown-category-c",
+            "label": "Добавлять четвёртый столбец для неизвестной категории",
+            "patch": "def encode_level(value):\n    result = [int(value == \"low\"), int(value == \"high\"), 0]\n    return result if value in {\"low\", \"high\"} else result + [1]"
+          }
+        ],
+        "correctOptionId": "unknown-category-a",
+        "explanation": "Фиксированные три столбца сохраняют согласованность входа модели; неизвестное значение даёт [0,0,1]. Другие варианты меняют смысл high либо размерность."
+      },
+      {
+        "id": "group-split",
+        "prompt": "Как заменить split_groups, сохранив все измерения установки в одном наборе?",
+        "options": [
+          {
+            "id": "group-split-a",
+            "label": "Делить по индексу измерения",
+            "patch": "def split_groups(rows, validation_groups):\n    middle = len(rows) // 2\n    return rows[:middle], rows[middle:]"
+          },
+          {
+            "id": "group-split-b",
+            "label": "Делить по заданным идентификаторам групп",
+            "patch": "def split_groups(rows, validation_groups):\n    train_rows = [r for r in rows if r[\"machine_id\"] not in validation_groups]\n    validation_rows = [r for r in rows if r[\"machine_id\"] in validation_groups]\n    return train_rows, validation_rows"
+          },
+          {
+            "id": "group-split-c",
+            "label": "Поместить все строки в оба набора",
+            "patch": "def split_groups(rows, validation_groups):\n    return list(rows), list(rows)"
+          }
+        ],
+        "correctOptionId": "group-split-b",
+        "explanation": "Единственный критерий — принадлежность machine_id заранее заданному множеству. Деление по позиции случайно работает для некоторых порядков, но нарушает контракт на переставленных строках."
+      }
+    ],
+    "rubric": [
+      {
+        "id": "train-only-imputation",
+        "label": "Как заменить impute_validation без утечки validation в среднее?",
+        "maxPoints": 1
+      },
+      {
+        "id": "unknown-category",
+        "label": "Как заменить encode_level для фиксированного словаря?",
+        "maxPoints": 1
+      },
+      {
+        "id": "group-split",
+        "label": "Как заменить split_groups, сохранив все измерения установки в одном наборе?",
+        "maxPoints": 1
+      }
+    ],
+    "skill": "Python"
+  },
+  {
+    "id": "data-evaluation",
+    "role": "Data Science",
+    "title": "Проверяемый отчёт качества",
+    "summary": "Взвешенная точность, зрелые метки и Brier score.",
+    "scenario": "Три независимые Python-функции. Вес каждого сегмента задан целевым распределением, веса неотрицательны и суммируются в 1. label_known_at — время, начиная с которого финальная метка доступна; None означает отсутствие финальной метки. В Brier p — вероятность класса 1, y — 0 или 1; списки непустые и одинаковой длины.",
+    "artifact": "def weighted_accuracy(accuracy, weights):\n    return sum(accuracy.values()) / len(accuracy)\n\ndef mature_rows(rows, now):\n    return [r for r in rows if r[\"created_at\"] <= now]\n\ndef brier(p, y):\n    return sum(abs(pi - yi) for pi, yi in zip(p, y)) / len(p)\n\naccuracy = {\"small\": 1.0, \"large\": 0.5}\nweights = {\"small\": 0.1, \"large\": 0.9}\nrows = [\n    {\"id\": 1, \"created_at\": 1, \"label_known_at\": 10, \"y\": 1},\n    {\"id\": 2, \"created_at\": 1, \"label_known_at\": 20, \"y\": 0},\n    {\"id\": 3, \"created_at\": 1, \"label_known_at\": None, \"y\": 0},\n]\nnow = 15\np, y = [0.8, 0.4], [1, 0]",
+    "requirements": [
+      "weighted_accuracy вычисляет сумму accuracy[segment]*weights[segment] по всем сегментам; ожидается 0.55.",
+      "mature_rows включает только строки с уже доступной финальной меткой: label_known_at не None и <= now. В примере включается только id=1.",
+      "Brier здесь определён как среднее (p-y)^2 без квадратного корня и без дополнительного множителя; ожидается 0.10 с учётом погрешности float."
+    ],
+    "estimatedMinutes": 20,
+    "decisions": [
+      {
+        "id": "weighted-metric",
+        "prompt": "Как заменить weighted_accuracy по заданным весам?",
+        "options": [
+          {
+            "id": "weighted-metric-a",
+            "label": "Усреднить произведения по числу сегментов",
+            "patch": "def weighted_accuracy(accuracy, weights):\n    return sum(accuracy[k] * weights[k] for k in weights) / len(weights)"
+          },
+          {
+            "id": "weighted-metric-b",
+            "label": "Взять сумму взвешенных точностей",
+            "patch": "def weighted_accuracy(accuracy, weights):\n    return sum(accuracy[k] * weights[k] for k in weights)"
+          },
+          {
+            "id": "weighted-metric-c",
+            "label": "Взять невзвешенное среднее",
+            "patch": "def weighted_accuracy(accuracy, weights):\n    return sum(accuracy[k] for k in weights) / len(weights)"
+          }
+        ],
+        "correctOptionId": "weighted-metric-b",
+        "explanation": "Веса уже нормированы, поэтому сумма произведений равна 0.1*1+0.9*0.5=0.55. Повторное деление на число сегментов уменьшает результат без основания."
+      },
+      {
+        "id": "label-maturity",
+        "prompt": "Как заменить mature_rows без преждевременных меток?",
+        "options": [
+          {
+            "id": "label-maturity-a",
+            "label": "Оставлять все ненулевые метки",
+            "patch": "def mature_rows(rows, now):\n    return [r for r in rows if r[\"y\"] == 1]"
+          },
+          {
+            "id": "label-maturity-b",
+            "label": "Проверять только наличие времени метки",
+            "patch": "def mature_rows(rows, now):\n    return [r for r in rows if r[\"label_known_at\"] is not None]"
+          },
+          {
+            "id": "label-maturity-c",
+            "label": "Проверять доступность метки к now",
+            "patch": "def mature_rows(rows, now):\n    return [r for r in rows if r[\"label_known_at\"] is not None and r[\"label_known_at\"] <= now]"
+          }
+        ],
+        "correctOptionId": "label-maturity-c",
+        "explanation": "Доступность метки определяется указанным временем, а не её классом или временем создания строки. Будущая дата финализации ещё не разрешает использовать строку."
+      },
+      {
+        "id": "brier-formula",
+        "prompt": "Как заменить brier согласно указанной формуле?",
+        "options": [
+          {
+            "id": "brier-formula-a",
+            "label": "Среднее квадратов ошибок",
+            "patch": "def brier(p, y):\n    return sum((pi - yi) ** 2 for pi, yi in zip(p, y)) / len(p)"
+          },
+          {
+            "id": "brier-formula-b",
+            "label": "Корень из среднего квадратов",
+            "patch": "def brier(p, y):\n    return (sum((pi - yi) ** 2 for pi, yi in zip(p, y)) / len(p)) ** 0.5"
+          },
+          {
+            "id": "brier-formula-c",
+            "label": "Квадрат средней ошибки",
+            "patch": "def brier(p, y):\n    return (sum(pi - yi for pi, yi in zip(p, y)) / len(p)) ** 2"
+          }
+        ],
+        "correctOptionId": "brier-formula-a",
+        "explanation": "Нужны квадрат каждой ошибки и затем среднее: (0.04+0.16)/2=0.10. Корень даёт другую метрику; квадрат среднего допускает взаимную компенсацию ошибок."
+      }
+    ],
+    "rubric": [
+      {
+        "id": "weighted-metric",
+        "label": "Как заменить weighted_accuracy по заданным весам?",
+        "maxPoints": 1
+      },
+      {
+        "id": "label-maturity",
+        "label": "Как заменить mature_rows без преждевременных меток?",
+        "maxPoints": 1
+      },
+      {
+        "id": "brier-formula",
+        "label": "Как заменить brier согласно указанной формуле?",
+        "maxPoints": 1
+      }
+    ],
+    "skill": "Python"
+  },
+  {
+    "id": "devops-service-runtime",
+    "role": "DevOps",
+    "title": "Маршрут сервиса и жизненный цикл",
+    "summary": "Исправление порта, времени завершения и двух проверок состояния.",
+    "scenario": "Дан сокращённый, синтаксически полный Kubernetes manifest. Процесс слушает 8080. GET /ready отвечает 503 при временной недоступности зависимости; GET /live отвечает 200, пока сам процесс работоспособен. Только readiness исключает Pod из готовых endpoints сервиса. SIGTERM немедленно прекращает приём новых запросов, текущие заканчиваются не позднее 20 секунд; preStop отсутствует. Каждое решение заменяет только указанный YAML-узел.",
+    "artifact": "apiVersion: v1\nkind: Service\nmetadata:\n  name: web\nspec:\n  selector: {app: web}\n  ports:\n    - port: 9000\n      targetPort: 3000\n---\napiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: web\nspec:\n  replicas: 1\n  selector:\n    matchLabels: {app: web}\n  template:\n    metadata:\n      labels: {app: web}\n    spec:\n      terminationGracePeriodSeconds: 10\n      containers:\n        - name: web\n          image: example/web:training\n          ports:\n            - containerPort: 8080\n          readinessProbe:\n            httpGet: {path: /live, port: 8080}\n          livenessProbe:\n            httpGet: {path: /ready, port: 8080}",
+    "requirements": [
+      "Клиенты обращаются к Service на 9000, процесс в Pod принимает трафик на 8080; менять сам процесс нельзя.",
+      "Период завершения Pod должен быть не менее 25 секунд: до 20 на текущие запросы и минимум 5 запаса.",
+      "Недоступность зависимости должна убирать Pod из готовых endpoints, но сама по себе не провоцировать перезапуск живого процесса."
+    ],
+    "estimatedMinutes": 20,
+    "decisions": [
+      {
+        "id": "service-target-port",
+        "prompt": "Чем заменить spec.ports у Service?",
+        "options": [
+          {
+            "id": "service-target-port-a",
+            "label": "Оставить клиентский порт и направить на 8080",
+            "patch": "ports:\n  - port: 9000\n    targetPort: 8080"
+          },
+          {
+            "id": "service-target-port-b",
+            "label": "Поменять местами клиентский и целевой порты",
+            "patch": "ports:\n  - port: 8080\n    targetPort: 9000"
+          },
+          {
+            "id": "service-target-port-c",
+            "label": "Направить оба порта на 9000",
+            "patch": "ports:\n  - port: 9000\n    targetPort: 9000"
+          }
+        ],
+        "correctOptionId": "service-target-port-a",
+        "explanation": "Service.port остаётся 9000 для клиентов, а targetPort должен совпадать с фактическим портом процесса 8080."
+      },
+      {
+        "id": "shutdown-grace",
+        "prompt": "Чем заменить terminationGracePeriodSeconds в Pod spec?",
+        "options": [
+          {
+            "id": "shutdown-grace-a",
+            "label": "Дать 10 секунд",
+            "patch": "terminationGracePeriodSeconds: 10"
+          },
+          {
+            "id": "shutdown-grace-b",
+            "label": "Дать ровно 20 секунд",
+            "patch": "terminationGracePeriodSeconds: 20"
+          },
+          {
+            "id": "shutdown-grace-c",
+            "label": "Дать 30 секунд",
+            "patch": "terminationGracePeriodSeconds: 30"
+          }
+        ],
+        "correctOptionId": "shutdown-grace-c",
+        "explanation": "Из вариантов только 30 секунд покрывают оговорённые 20 секунд работы плюс минимум 5 секунд запаса. Значение 20 не оставляет требуемого запаса."
+      },
+      {
+        "id": "health-probe-purpose",
+        "prompt": "Чем заменить обе probe-секции контейнера web?",
+        "options": [
+          {
+            "id": "health-probe-purpose-a",
+            "label": "Использовать /ready для обеих проверок",
+            "patch": "readinessProbe:\n  httpGet: {path: /ready, port: 8080}\nlivenessProbe:\n  httpGet: {path: /ready, port: 8080}"
+          },
+          {
+            "id": "health-probe-purpose-b",
+            "label": "Разделить готовность и жизнеспособность",
+            "patch": "readinessProbe:\n  httpGet: {path: /ready, port: 8080}\nlivenessProbe:\n  httpGet: {path: /live, port: 8080}"
+          },
+          {
+            "id": "health-probe-purpose-c",
+            "label": "Использовать /live для обеих проверок",
+            "patch": "readinessProbe:\n  httpGet: {path: /live, port: 8080}\nlivenessProbe:\n  httpGet: {path: /live, port: 8080}"
+          }
+        ],
+        "correctOptionId": "health-probe-purpose-b",
+        "explanation": "Проверка /ready управляет готовностью к трафику, /live проверяет сам процесс. /ready в liveness приводит к перезапускам при отказе зависимости; /live в readiness оставляет неготовый Pod в обслуживании."
+      }
+    ],
+    "rubric": [
+      {
+        "id": "service-target-port",
+        "label": "Чем заменить spec.ports у Service?",
+        "maxPoints": 1
+      },
+      {
+        "id": "shutdown-grace",
+        "label": "Чем заменить terminationGracePeriodSeconds в Pod spec?",
+        "maxPoints": 1
+      },
+      {
+        "id": "health-probe-purpose",
+        "label": "Чем заменить обе probe-секции контейнера web?",
+        "maxPoints": 1
+      }
+    ],
+    "skill": "Kubernetes"
+  },
+  {
+    "id": "devops-ci-release",
+    "role": "DevOps",
+    "title": "Кэш сборки и совместимый релиз",
+    "summary": "Ключ бинарного кэша, устаревшее продвижение и расширяющая миграция.",
+    "scenario": "Фрагменты независимы. Кэш содержит нативные зависимости: совместимость требует равенства всех четырёх заданных полей. generation — уникальный возрастающий номер релиза, назначенный до начала сборки; сборки заканчиваются в произвольном порядке. SQL UPDATE атомарен. Во время первого этапа миграции старая версия приложения продолжает читать и писать old_name.",
+    "artifact": "function cacheKey(env) {\n  return env.lockHash;\n}\n// env: { lockHash: \"abc\", runtimeMajor: 22, os: \"linux\", arch: \"x64\" }\n\nCREATE TABLE deployments (\n  name TEXT PRIMARY KEY, generation INTEGER NOT NULL, image TEXT NOT NULL\n);\n-- promotion: релиз 11 уже опубликован, затем заканчивается сборка 10\nUPDATE deployments SET generation = :generation, image = :image WHERE name = :name;\n\nCREATE TABLE profiles (id INTEGER PRIMARY KEY, old_name TEXT NOT NULL);\n-- Требуется добавить display_name. На первом этапе новые записи могут\n-- оставлять display_name пустым; backfill и переключение чтения будут позже.\nALTER TABLE profiles RENAME COLUMN old_name TO display_name;",
+    "requirements": [
+      "cacheKey должен различаться, если меняется хотя бы одно из lockHash, runtimeMajor, os, arch; эти значения не содержат символ |.",
+      "promotion меняет существующую запись только для generation больше сохранённой; равная или меньшая generation ничего не меняет. Число изменённых строк используется как результат продвижения.",
+      "Первый этап миграции сохраняет old_name и добавляет nullable display_name; исходно display_name не существует. Дальнейшие этапы не входят в решение."
+    ],
+    "estimatedMinutes": 20,
+    "decisions": [
+      {
+        "id": "binary-cache-key",
+        "prompt": "Как заменить cacheKey для указанного кэша?",
+        "options": [
+          {
+            "id": "binary-cache-key-a",
+            "label": "Составить ключ из hash и ОС",
+            "patch": "function cacheKey(env) {\n  return [env.lockHash, env.os].join(\"|\");\n}"
+          },
+          {
+            "id": "binary-cache-key-b",
+            "label": "Включить все границы совместимости",
+            "patch": "function cacheKey(env) {\n  return [env.lockHash, env.runtimeMajor, env.os, env.arch].join(\"|\");\n}"
+          },
+          {
+            "id": "binary-cache-key-c",
+            "label": "Включить только runtime и архитектуру",
+            "patch": "function cacheKey(env) {\n  return [env.runtimeMajor, env.arch].join(\"|\");\n}"
+          }
+        ],
+        "correctOptionId": "binary-cache-key-b",
+        "explanation": "Ключ содержит все четыре оговорённых фактора совместимости. Разделитель однозначен по условию; пропуск любого фактора допускает несовместимое совпадение."
+      },
+      {
+        "id": "monotonic-promotion",
+        "prompt": "Чем заменить SQL promotion, чтобы поздняя сборка 10 не откатила релиз 11?",
+        "options": [
+          {
+            "id": "monotonic-promotion-a",
+            "label": "Ограничить UPDATE меньшей текущей generation",
+            "patch": "UPDATE deployments SET generation = :generation, image = :image\nWHERE name = :name AND generation < :generation;"
+          },
+          {
+            "id": "monotonic-promotion-b",
+            "label": "Обновлять только при меньшем входящем номере",
+            "patch": "UPDATE deployments SET generation = :generation, image = :image\nWHERE name = :name AND generation > :generation;"
+          },
+          {
+            "id": "monotonic-promotion-c",
+            "label": "Сохранить максимальный номер, но всегда менять image",
+            "patch": "UPDATE deployments SET image = :image,\ngeneration = CASE WHEN generation > :generation THEN generation ELSE :generation END\nWHERE name = :name;"
+          }
+        ],
+        "correctOptionId": "monotonic-promotion-a",
+        "explanation": "Проверка в атомарном UPDATE защищает номер и image вместе. Сохранение максимального номера без условия всё равно позволяет старой сборке заменить образ."
+      },
+      {
+        "id": "expand-migration",
+        "prompt": "Чем заменить первый шаг миграции profiles?",
+        "options": [
+          {
+            "id": "expand-migration-a",
+            "label": "Переименовать используемый столбец",
+            "patch": "ALTER TABLE profiles RENAME COLUMN old_name TO display_name;"
+          },
+          {
+            "id": "expand-migration-b",
+            "label": "Удалить старый столбец и создать новый",
+            "patch": "ALTER TABLE profiles DROP COLUMN old_name;\nALTER TABLE profiles ADD COLUMN display_name TEXT;"
+          },
+          {
+            "id": "expand-migration-c",
+            "label": "Добавить новый nullable-столбец",
+            "patch": "ALTER TABLE profiles ADD COLUMN display_name TEXT;"
+          }
+        ],
+        "correctOptionId": "expand-migration-c",
+        "explanation": "Добавление nullable-поля сохраняет старый контракт чтения и записи. Переименование либо удаление old_name сразу ломает старую версию приложения."
+      }
+    ],
+    "rubric": [
+      {
+        "id": "binary-cache-key",
+        "label": "Как заменить cacheKey для указанного кэша?",
+        "maxPoints": 1
+      },
+      {
+        "id": "monotonic-promotion",
+        "label": "Чем заменить SQL promotion, чтобы поздняя сборка 10 не откатила релиз 11?",
+        "maxPoints": 1
+      },
+      {
+        "id": "expand-migration",
+        "label": "Чем заменить первый шаг миграции profiles?",
+        "maxPoints": 1
+      }
+    ],
+    "skill": "Git"
+  },
+  {
+    "id": "qa-contract-checks",
+    "role": "QA",
+    "title": "Проверки границ и ожиданий",
+    "summary": "Усиление тестов валидации, конфликта и асинхронного статуса.",
+    "scenario": "Тесты написаны для Node.js с node:assert/strict, каждое решение заменяет отдельную функцию. waitFor — внедрённый помощник: повторяет и await-ит predicate каждые intervalMs, завершается при true и отклоняет Promise при достижении timeoutMs. getStatus возвращает pending или done. Задача гарантированно достигает done не позднее 2 секунд, точное время заранее неизвестно.",
+    "artifact": "import assert from \"node:assert/strict\";\n\nfunction checkLimits(isValid) {\n  assert.equal(isValid(50), true);\n}\nfunction checkConflict(response, before, after) {\n  assert.equal(response.status, 409);\n}\nasync function waitDone(getStatus, waitFor) {\n  await new Promise(resolve => setTimeout(resolve, 100));\n  assert.equal(await getStatus(), \"done\");\n}\n// isValid(n): принимает целые n от 1 до 100 включительно.\n// before/after: независимые снимки всей записи; конфликт обязан не менять её.",
+    "requirements": [
+      "checkLimits проверяет обе включённые целочисленные границы и ближайшее запрещённое целое снаружи: 0, 1, 100, 101.",
+      "checkConflict подтверждает HTTP 409 и отсутствие любых изменений записи, используя полное глубокое сравнение снимков.",
+      "waitDone ожидает done с конечным timeout=3000 ms; фиксированная короткая задержка не подходит, pending не считается успехом."
+    ],
+    "estimatedMinutes": 15,
+    "decisions": [
+      {
+        "id": "boundary-assertions",
+        "prompt": "Как заменить checkLimits для четырёх обязательных точек?",
+        "options": [
+          {
+            "id": "boundary-assertions-a",
+            "label": "Проверить середину и одну границу",
+            "patch": "function checkLimits(isValid) {\n  assert.equal(isValid(50), true);\n  assert.equal(isValid(100), true);\n}"
+          },
+          {
+            "id": "boundary-assertions-b",
+            "label": "Считать верхнюю границу запрещённой",
+            "patch": "function checkLimits(isValid) {\n  assert.equal(isValid(0), false);\n  assert.equal(isValid(1), true);\n  assert.equal(isValid(100), false);\n  assert.equal(isValid(101), false);\n}"
+          },
+          {
+            "id": "boundary-assertions-c",
+            "label": "Проверить 0, 1, 100, 101 с верными ожиданиями",
+            "patch": "function checkLimits(isValid) {\n  assert.equal(isValid(0), false);\n  assert.equal(isValid(1), true);\n  assert.equal(isValid(100), true);\n  assert.equal(isValid(101), false);\n}"
+          }
+        ],
+        "correctOptionId": "boundary-assertions-c",
+        "explanation": "Диапазон включает 1 и 100, а ближайшие целые снаружи 0 и 101 недопустимы. Все четыре проверки нужны по заданному контракту."
+      },
+      {
+        "id": "conflict-no-write",
+        "prompt": "Как заменить checkConflict, чтобы подтвердить отсутствие записи при конфликте?",
+        "options": [
+          {
+            "id": "conflict-no-write-a",
+            "label": "Проверить статус и глубокое равенство снимков",
+            "patch": "function checkConflict(response, before, after) {\n  assert.equal(response.status, 409);\n  assert.deepEqual(after, before);\n}"
+          },
+          {
+            "id": "conflict-no-write-b",
+            "label": "Проверить статус и прежний id",
+            "patch": "function checkConflict(response, before, after) {\n  assert.equal(response.status, 409);\n  assert.equal(after.id, before.id);\n}"
+          },
+          {
+            "id": "conflict-no-write-c",
+            "label": "Проверить только неизменность снимков",
+            "patch": "function checkConflict(response, before, after) {\n  assert.deepEqual(after, before);\n}"
+          }
+        ],
+        "correctOptionId": "conflict-no-write-a",
+        "explanation": "Необходимы и корректный HTTP-ответ, и отсутствие побочного изменения всей записи. Неизменный id ничего не говорит об остальных полях."
+      },
+      {
+        "id": "bounded-polling",
+        "prompt": "Как заменить waitDone для проверки eventual done?",
+        "options": [
+          {
+            "id": "bounded-polling-a",
+            "label": "Принять любой непустой статус",
+            "patch": "async function waitDone(getStatus, waitFor) {\n  await waitFor(async () => Boolean(await getStatus()), { timeoutMs: 3000, intervalMs: 50 });\n}"
+          },
+          {
+            "id": "bounded-polling-b",
+            "label": "Повторять точное условие с ограничением времени",
+            "patch": "async function waitDone(getStatus, waitFor) {\n  await waitFor(async () => (await getStatus()) === \"done\", { timeoutMs: 3000, intervalMs: 50 });\n}"
+          },
+          {
+            "id": "bounded-polling-c",
+            "label": "Проверить один раз после 100 ms",
+            "patch": "async function waitDone(getStatus, waitFor) {\n  await new Promise(resolve => setTimeout(resolve, 100));\n  assert.equal(await getStatus(), \"done\");\n}"
+          }
+        ],
+        "correctOptionId": "bounded-polling-b",
+        "explanation": "Асинхронный predicate ожидается и сравнивает статус именно с done. pending — непустая строка, поэтому Boolean даёт ложный успех; 100 ms не покрывают разрешённую задержку."
+      }
+    ],
+    "rubric": [
+      {
+        "id": "boundary-assertions",
+        "label": "Как заменить checkLimits для четырёх обязательных точек?",
+        "maxPoints": 1
+      },
+      {
+        "id": "conflict-no-write",
+        "label": "Как заменить checkConflict, чтобы подтвердить отсутствие записи при конфликте?",
+        "maxPoints": 1
+      },
+      {
+        "id": "bounded-polling",
+        "label": "Как заменить waitDone для проверки eventual done?",
+        "maxPoints": 1
+      }
+    ],
+    "skill": "Playwright"
+  },
+  {
+    "id": "qa-concurrency-isolation",
+    "role": "QA",
+    "title": "Повторы, изоляция и порядок операций",
+    "summary": "Тесты идемпотентности, двух владельцев и чтения после записи.",
+    "scenario": "Каждая функция запускается на своей свежей фикстуре. API и storage — внедрённые тестовые объекты; assert импортирован из node:assert/strict. create для одного ключа возвращает объект с id после commit, а все одинаковые запросы обязаны вернуть один и тот же id. listByKey читает все реальные строки данного ключа. Других писателей в тестах нет.",
+    "artifact": "import assert from \"node:assert/strict\";\n\nasync function checkRetry(api, storage) {\n  const first = await api.create({ key: \"k1\", value: \"v\" });\n  assert.ok(first.id);\n}\nasync function checkTenantIsolation(api) {\n  await api.update(\"A\", 7, \"new-A\");\n  assert.equal((await api.read(\"A\", 7)).value, \"new-A\");\n}\nasync function checkReadAfterWrite(cell) {\n  const pending = cell.write(1);\n  assert.equal(await cell.read(), 1);\n  await pending;\n}\n// retry: storage пуст; два одинаковых вызова create должны выполняться конкурентно.\n// tenants: A/id7 = {value:\"old-A\"}, B/id7 = {value:\"old-B\"}.\n// cell: начальное значение 0; write Promise разрешается после commit;\n// read возвращает актуальное значение на момент вызова.",
+    "requirements": [
+      "checkRetry запускает два одинаковых create конкурентно; проверяет один id у обоих ответов и ровно одну фактическую строку с этим id.",
+      "checkTenantIsolation меняет A/id7, проверяет новое значение A/id7 и неизменное B/id7. A и B — заранее созданные доверенные тестовые сессии, не пользовательские поля запроса.",
+      "checkReadAfterWrite проверяет чтение после завершения write; write может фиксироваться с произвольной задержкой."
+    ],
+    "estimatedMinutes": 20,
+    "decisions": [
+      {
+        "id": "idempotency-observation",
+        "prompt": "Как заменить checkRetry, проверяя конкурентный повтор и единственную строку?",
+        "options": [
+          {
+            "id": "idempotency-observation-a",
+            "label": "Запустить конкурентно и проверить только ответы",
+            "patch": "async function checkRetry(api, storage) {\n  const [a, b] = await Promise.all([\n    api.create({ key: \"k1\", value: \"v\" }),\n    api.create({ key: \"k1\", value: \"v\" })\n  ]);\n  assert.equal(a.id, b.id);\n}"
+          },
+          {
+            "id": "idempotency-observation-b",
+            "label": "Выполнить повторы последовательно и проверить хранилище",
+            "patch": "async function checkRetry(api, storage) {\n  const a = await api.create({ key: \"k1\", value: \"v\" });\n  const b = await api.create({ key: \"k1\", value: \"v\" });\n  assert.equal(a.id, b.id);\n  const rows = await storage.listByKey(\"k1\");\n  assert.equal(rows.length, 1);\n  assert.equal(rows[0].id, a.id);\n}"
+          },
+          {
+            "id": "idempotency-observation-c",
+            "label": "Конкурентно проверить ответы и реальные строки",
+            "patch": "async function checkRetry(api, storage) {\n  const [a, b] = await Promise.all([\n    api.create({ key: \"k1\", value: \"v\" }),\n    api.create({ key: \"k1\", value: \"v\" })\n  ]);\n  assert.equal(a.id, b.id);\n  const rows = await storage.listByKey(\"k1\");\n  assert.equal(rows.length, 1);\n  assert.equal(rows[0].id, a.id);\n}"
+          }
+        ],
+        "correctOptionId": "idempotency-observation-c",
+        "explanation": "Promise.all запускает оба вызова до ожидания их завершения. Одинаковые ответы ещё не доказывают отсутствие лишней строки; отдельная проверка storage подтверждает состояние. Последовательный вариант не выполняет требование конкурентного запуска."
+      },
+      {
+        "id": "cross-tenant-oracle",
+        "prompt": "Как заменить checkTenantIsolation для проверки обеих записей?",
+        "options": [
+          {
+            "id": "cross-tenant-oracle-a",
+            "label": "Проверить изменение A и сохранность B",
+            "patch": "async function checkTenantIsolation(api) {\n  await api.update(\"A\", 7, \"new-A\");\n  assert.equal((await api.read(\"A\", 7)).value, \"new-A\");\n  assert.equal((await api.read(\"B\", 7)).value, \"old-B\");\n}"
+          },
+          {
+            "id": "cross-tenant-oracle-b",
+            "label": "Проверить только успешное изменение A",
+            "patch": "async function checkTenantIsolation(api) {\n  await api.update(\"A\", 7, \"new-A\");\n  assert.equal((await api.read(\"A\", 7)).value, \"new-A\");\n}"
+          },
+          {
+            "id": "cross-tenant-oracle-c",
+            "label": "Ожидать одинаковое изменение у A и B",
+            "patch": "async function checkTenantIsolation(api) {\n  await api.update(\"A\", 7, \"new-A\");\n  assert.equal((await api.read(\"A\", 7)).value, \"new-A\");\n  assert.equal((await api.read(\"B\", 7)).value, \"new-A\");\n}"
+          }
+        ],
+        "correctOptionId": "cross-tenant-oracle-a",
+        "explanation": "Одинаковый локальный id не объединяет владельцев. Проверка B ловит слишком широкий UPDATE, а проверка A подтверждает, что целевая операция действительно состоялась."
+      },
+      {
+        "id": "read-after-commit",
+        "prompt": "Как заменить checkReadAfterWrite согласно гарантии write?",
+        "options": [
+          {
+            "id": "read-after-commit-a",
+            "label": "Начать чтение одновременно с записью",
+            "patch": "async function checkReadAfterWrite(cell) {\n  const [, value] = await Promise.all([cell.write(1), cell.read()]);\n  assert.equal(value, 1);\n}"
+          },
+          {
+            "id": "read-after-commit-b",
+            "label": "Дождаться commit, затем читать",
+            "patch": "async function checkReadAfterWrite(cell) {\n  await cell.write(1);\n  assert.equal(await cell.read(), 1);\n}"
+          },
+          {
+            "id": "read-after-commit-c",
+            "label": "Сначала читать, затем дождаться записи",
+            "patch": "async function checkReadAfterWrite(cell) {\n  const value = await cell.read();\n  await cell.write(1);\n  assert.equal(value, 1);\n}"
+          }
+        ],
+        "correctOptionId": "read-after-commit-b",
+        "explanation": "Разрешение write обозначает завершённый commit. Последовательное await задаёт нужный порядок; параллельное чтение законно может увидеть исходный 0."
+      }
+    ],
+    "rubric": [
+      {
+        "id": "idempotency-observation",
+        "label": "Как заменить checkRetry, проверяя конкурентный повтор и единственную строку?",
+        "maxPoints": 1
+      },
+      {
+        "id": "cross-tenant-oracle",
+        "label": "Как заменить checkTenantIsolation для проверки обеих записей?",
+        "maxPoints": 1
+      },
+      {
+        "id": "read-after-commit",
+        "label": "Как заменить checkReadAfterWrite согласно гарантии write?",
+        "maxPoints": 1
+      }
+    ],
+    "skill": "JavaScript"
+  }
+]

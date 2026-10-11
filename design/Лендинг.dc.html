@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<!--
+ * Copyright (c) 2026 Криницин Вячеслав Александрович - Oladievic.
+ * Все права сохранены.
+ *
+ * Автор: Криницин Вячеслав Александрович
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="./responsive.css">
+<script src="./backend.js"></script>
+<script src="./support.js"></script>
+</head>
+<body class="fsp-page">
+<x-dc>
+<helmet>
+<title>Profectium · ФСП — вход</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="fx.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#EFEFEC;color:#1B1C21;font-family:'Golos Text',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#402FFF;text-decoration:none}
+a:hover{color:#2A1BD9}
+input::placeholder,textarea::placeholder{color:#8B8D94}
+html{scroll-behavior:smooth}
+</style>
+</helmet>
+
+<div style="background:#1B1C21;color:#EDEDED;position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;pointer-events:none;max-width:1440px;margin:0 auto;padding:0 48px;display:grid;grid-template-columns:repeat(4,1fr)">
+    <div style="border-left:1px solid rgba(255,255,255,0.05)"></div>
+    <div style="border-left:1px solid rgba(255,255,255,0.05)"></div>
+    <div style="border-left:1px solid rgba(255,255,255,0.05)"></div>
+    <div style="border-left:1px solid rgba(255,255,255,0.05);border-right:1px solid rgba(255,255,255,0.05)"></div>
+  </div>
+
+  <header class="fsp-header fsp-header-shell" style="position:relative;z-index:2;max-width:1440px;margin:0 auto;padding:0 48px;height:84px;display:flex;align-items:center;gap:40px">
+    <a href="Лендинг.dc.html" style="display:flex;align-items:center;gap:16px;color:#EDEDED">
+      <img src="assets/logo_01.svg" alt="ФСП" style="height:30px;display:block">
+    </a>
+    <nav style="display:flex;flex-wrap:nowrap;white-space:nowrap;gap:22px;margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.08em;text-transform:uppercase">
+      <a href="#mechanics" style="color:#A3A5AD" style-hover="color:#FFFFFF">Механика</a>
+      <a href="#fsp" style="color:#A3A5AD" style-hover="color:#FFFFFF">Достижения ФСП</a>
+      <a href="#rules" style="color:#A3A5AD" style-hover="color:#FFFFFF">Правила</a>
+      <a href="#integrations" style="color:#A3A5AD" style-hover="color:#FFFFFF">Интеграции</a>
+      <a href="Каталог.dc.html" style="color:#A3A5AD" style-hover="color:#FFFFFF">Каталог</a>
+    </nav>
+    <a href="#login" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#1B1C21;background:#EDEDED;padding:11px 16px;border-radius:4px" style-hover="background:#FFFFFF;color:#1B1C21">Войти</a>
+  </header>
+
+  <section id="login" style="position:relative;z-index:1;max-width:1440px;margin:0 auto;padding:48px 48px 96px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,540px),1fr));gap:56px;align-items:center">
+    <div style="display:flex;flex-direction:column;gap:32px;min-width:0">
+      <div style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#A3A5AD">
+        <span style="width:8px;height:8px;border-radius:50%;background:#EC1D35"></span>
+        Отраслевой подбор ИТ · платформа ФСП
+      </div>
+      <h1 data-reveal="blur" data-dur="1100" style="margin:0;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:clamp(44px,5.2vw,76px);line-height:1.04;letter-spacing:-0.045em;color:#FFFFFF;text-wrap:balance">Работодатель пишет первым. <span style="background:#402FFF;padding:0 0.12em;-webkit-box-decoration-break:clone;box-decoration-break:clone">С&nbsp;зарплатой.</span></h1>
+      <p data-reveal="up" data-delay="180" style="margin:0;max-width:560px;font-size:18px;line-height:1.55;color:#C8C9CA;text-wrap:pretty">Пройдите опрос и тест на грейд — получите категорию. Компании ищут по категориям, а не по ключевым словам, и присылают предложение с вилкой в рублях. Призовые места ФСП поднимают вас выше в выдаче.</p>
+
+      <div data-reveal="up" data-delay="320" style="background:#FFFFFF;color:#1B1C21;border-radius:8px;max-width:520px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(0,0,0,0.6)">
+        <div style="display:grid;grid-template-columns:1fr 1fr">
+          <button onClick="{{ setCand }}" style="{{ tabCand }}">Я кандидат</button>
+          <button onClick="{{ setEmp }}" style="{{ tabEmp }}">Я работодатель</button>
+        </div>
+        <div style="padding:24px 28px 28px;display:flex;flex-direction:column;gap:16px">
+          <sc-if value="{{ hasSession }}" hint-placeholder-val="{{ false }}">
+            <strong>{{ currentName }}</strong>
+            <button onClick="{{ resume }}" style="height:48px;border:0;border-radius:4px;background:#402FFF;color:white;font:inherit;font-weight:600;cursor:pointer">Продолжить работу →</button>
+            <button onClick="{{ logout }}" style="border:0;background:transparent;color:#5B5D65;font:inherit;cursor:pointer">Выйти из аккаунта</button>
+          </sc-if>
+          <sc-if value="{{ noSession }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+              <strong style="font-size:18px">{{ authTitle }}</strong>
+              <button onClick="{{ toggleAuth }}" style="border:0;background:transparent;color:#402FFF;font:inherit;font-size:13px;cursor:pointer">{{ toggleLabel }}</button>
+            </div>
+            <sc-if value="{{ register }}" hint-placeholder-val="{{ true }}">
+              <label style="display:flex;flex-direction:column;gap:8px">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase">{{ nameLabel }}</span>
+                <input value="{{ fullName }}" onChange="{{ onName }}" placeholder="Алексей Тестов" maxLength="80" style="height:48px;border:1px solid #CFCFCB;border-radius:4px;padding:0 14px;font:inherit;color:#1B1C21;background:#FFFFFF">
+              </label>
+            </sc-if>
+            <label style="display:flex;flex-direction:column;gap:8px">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase">{{ emailLabel }}</span>
+              <input type="email" value="{{ email }}" onChange="{{ onEmail }}" placeholder="name@example.ru" maxLength="150" autoComplete="username" style="height:48px;border:1px solid #CFCFCB;border-radius:4px;padding:0 14px;font:inherit;font-size:16px;color:#1B1C21;background:#FFFFFF">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:8px">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase">Пароль</span>
+              <input type="password" value="{{ password }}" onChange="{{ onPassword }}" placeholder="От 6 символов" maxLength="128" style="height:48px;border:1px solid #CFCFCB;border-radius:4px;padding:0 14px;font:inherit;font-size:16px;color:#1B1C21;background:#FFFFFF">
+            </label>
+            <sc-if value="{{ err }}" hint-placeholder-val="{{ false }}"><span role="alert" style="font-size:13px;color:#C8102E">{{ err }}</span></sc-if>
+            <button disabled="{{ busy }}" onClick="{{ submitAuth }}" style="height:48px;border:0;border-radius:4px;background:#402FFF;color:#FFFFFF;font:inherit;font-weight:600;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:0 18px"><span>{{ submitLabel }}</span><span>→</span></button>
+            <div style="display:flex;align-items:center;gap:12px;color:#8B8D94;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em"><span style="flex:1;height:1px;background:#E4E4E1"></span>ИЛИ<span style="flex:1;height:1px;background:#E4E4E1"></span></div>
+            <button disabled="{{ busy }}" onClick="{{ guest }}" style="height:48px;border:1px solid #1B1C21;border-radius:4px;background:#FFFFFF;color:#1B1C21;font:inherit;font-weight:600;font-size:15px;cursor:pointer">Попробовать без регистрации</button>
+            <span style="font-size:12px;line-height:1.5;color:#6E7078">Можно указать вымышленные имя и email. Подтверждение почты не требуется. В демо сохранены тестовые профили и организация «Орбита».</span>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+
+    <sc-if value="{{ heroFace }}" hint-placeholder-val="{{ true }}">
+      <div style="position:relative;min-height:600px;display:flex;align-items:center;justify-content:center">
+        <img src="assets/lineline1.png" alt="" data-parallax="34" data-reveal="wipe" data-dur="2000" data-delay="300" style="position:absolute;left:-4%;top:2%;width:86%;opacity:0.55;pointer-events:none">
+        <img src="assets/face1.png" alt="" data-parallax="-16" data-reveal="blur" data-dur="1600" style="position:relative;width:min(100%,520px);aspect-ratio:332/313;mix-blend-mode:lighten;-webkit-mask-image:radial-gradient(closest-side,#000 70%,transparent 100%);mask-image:radial-gradient(closest-side,#000 70%,transparent 100%)">
+        <span data-fx="scan" style="position:absolute;left:24%;right:24%;top:4%;height:1px;background:#9A92FF;box-shadow:0 0 14px 2px rgba(154,146,255,0.55);pointer-events:none"></span>
+        <div data-fx="float" data-fx-delay="400" style="position:absolute;right:0;bottom:56px;width:300px;background:#FFFFFF;color:#1B1C21;border-radius:8px;padding:18px 20px;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 60px -20px rgba(0,0,0,0.7)">
+          <div style="display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#5B5D65">
+            <span style="display:flex;align-items:center;gap:8px"><span style="width:7px;height:7px;border-radius:50%;background:#EC1D35"></span>Новое приглашение</span><span>09:14</span>
+          </div>
+          <div style="font-size:15px;font-weight:600;line-height:1.35">Backend-разработчик в платёжную команду</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:600;letter-spacing:-0.03em">240–290<span style="font-size:15px;color:#5B5D65"> тыс ₽</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:#5B5D65;border-top:1px solid #E4E4E1;padding-top:10px"><span>Орбита Технологии</span><span>Backend · Middle</span></div>
+        </div>
+        <div data-fx="float" data-fx-delay="1500" style="position:absolute;left:4%;top:64px;background:#402FFF;color:#FFFFFF;border-radius:6px;padding:12px 14px;font-family:'JetBrains Mono',monospace;display:flex;flex-direction:column;gap:2px">
+          <span style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;opacity:0.85">Категория</span>
+          <span style="font-size:18px;font-weight:600">Backend · Middle</span>
+        </div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ heroPhoto }}" hint-placeholder-val="{{ false }}">
+      <div style="position:relative;min-height:600px;border-radius:8px;overflow:hidden;background:#131418">
+        <img src="assets/photo.jpeg" alt="Стенд ФСП" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:28% 50%">
+        <div style="position:absolute;left:0;right:0;bottom:0;padding:20px 24px;background:#1B1C21;display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#C8C9CA"><span>Стенд ФСП</span><span>Гостиный двор · Москва</span></div>
+      </div>
+    </sc-if>
+  </section>
+</div>
+
+<section id="mechanics" style="max-width:1440px;margin:0 auto;padding:112px 48px 120px;display:flex;flex-direction:column;gap:64px">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:32px 64px;align-items:end">
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#5B5D65">01 — Механика</span>
+      <h2 data-reveal="blur" style="margin:0;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:clamp(34px,3.6vw,52px);line-height:1.05;letter-spacing:-0.04em;text-wrap:balance">Категория вместо отклика</h2>
+    </div>
+    <p style="margin:0;font-size:17px;line-height:1.6;color:#5B5D65;max-width:560px;text-wrap:pretty">Кандидат один раз подтверждает уровень. Дальше инициатива у компании: она открывает нужную категорию, видит, почему человек в топе, и приглашает его с конкретной зарплатой.</p>
+  </div>
+
+  <div class="fsp-mobile-scroll" style="overflow-x:auto;padding-bottom:8px">
+    <div data-stagger="up" style="min-width:1120px;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:auto 72px auto;column-gap:24px">
+      <sc-for list="{{ candSteps }}" as="s" hint-placeholder-count="4">
+        <div style="display:flex;flex-direction:column;gap:8px;padding-bottom:20px;padding-right:8px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#5B5D65">{{ s.n }}</span>
+          <span style="font-size:20px;font-weight:600;letter-spacing:-0.01em">{{ s.t }}</span>
+          <span style="font-size:14px;line-height:1.5;color:#5B5D65;text-wrap:pretty">{{ s.d }}</span>
+        </div>
+      </sc-for>
+      <div style="grid-column:5 / 9"></div>
+
+      <div style="grid-column:1 / -1;position:relative">
+        <div data-reveal="draw-x" data-delay="250" data-dur="1100" style="position:absolute;left:0;width:50%;top:35px;height:2px;background:#1B1C21"></div>
+        <div data-reveal="draw-x" data-delay="1100" data-dur="1100" style="position:absolute;left:50%;right:48px;top:35px;height:2px;background:#402FFF"></div>
+        <div style="position:absolute;right:0;top:35px;width:48px;height:36px;border-top:2px solid #402FFF;border-right:2px solid #402FFF;border-top-right-radius:28px"></div>
+        <span data-reveal="pop" style="position:absolute;left:0;top:30px;width:12px;height:12px;border-radius:50%;background:#1B1C21"></span>
+        <span data-reveal="pop" style="position:absolute;left:calc(12.5% + 3px);top:30px;width:12px;height:12px;border-radius:50%;background:#1B1C21"></span>
+        <span data-reveal="pop" style="position:absolute;left:calc(25% + 6px);top:30px;width:12px;height:12px;border-radius:50%;background:#1B1C21"></span>
+        <span data-reveal="pop" style="position:absolute;left:calc(37.5% + 9px);top:30px;width:12px;height:12px;border-radius:50%;background:#1B1C21"></span>
+        <span data-reveal="pop" style="position:absolute;left:calc(50% + 12px);top:26px;width:20px;height:20px;border-radius:50%;background:#402FFF;box-shadow:0 0 0 6px #EFEFEC,0 0 0 7px #402FFF"></span>
+        <span data-reveal="pop" style="position:absolute;left:calc(62.5% + 15px);top:30px;width:12px;height:12px;border-radius:50%;background:#402FFF"></span>
+        <span data-reveal="pop" style="position:absolute;left:calc(75% + 18px);top:30px;width:12px;height:12px;border-radius:50%;background:#402FFF"></span>
+        <span data-reveal="pop" style="position:absolute;left:calc(87.5% + 21px);top:30px;width:12px;height:12px;border-radius:50%;background:#402FFF"></span>
+        <span data-reveal="pop" style="position:absolute;left:0;top:0;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#1B1C21;background:#EFEFEC;padding-right:8px">Кандидат</span>
+        <span data-reveal="pop" style="position:absolute;left:calc(50% + 12px);top:54px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#402FFF">Работодатель</span>
+      </div>
+
+      <div style="grid-column:1 / 5"></div>
+      <sc-for list="{{ empSteps }}" as="s" hint-placeholder-count="4">
+        <div style="display:flex;flex-direction:column;gap:8px;padding-top:24px;padding-right:8px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#402FFF">{{ s.n }}</span>
+          <span style="font-size:20px;font-weight:600;letter-spacing:-0.01em">{{ s.t }}</span>
+          <span style="font-size:14px;line-height:1.5;color:#5B5D65;text-wrap:pretty">{{ s.d }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="fsp" style="background:#1B1C21;color:#EDEDED;position:relative;overflow:hidden">
+  <div style="max-width:1440px;margin:0 auto;padding:112px 48px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,500px),1fr));gap:56px;align-items:center">
+    <div style="display:flex;flex-direction:column;gap:28px">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#A3A5AD">02 — Подтверждено делом</span>
+      <h2 data-reveal="blur" style="margin:0;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:clamp(34px,3.6vw,52px);line-height:1.05;letter-spacing:-0.04em;color:#FFFFFF;text-wrap:balance">Спортивный результат становится карьерным сигналом</h2>
+      <p style="margin:0;font-size:17px;line-height:1.6;color:#C8C9CA;max-width:540px;text-wrap:pretty">В демонстрации сохранены примеры результатов ФСП. Они видны рядом с тестом и показывают, как достижения помогают при подборе. Официальная проверка ФСП ID пока не подключена.</p>
+      <div data-reveal="up" data-delay="200" style="border:1px solid #33343A;border-radius:8px;max-width:540px">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid #33343A;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#A3A5AD">
+          <span>Запись реестра ФСП</span>
+          <span style="display:flex;align-items:center;gap:8px;color:#9A92FF"><span style="width:7px;height:7px;border-radius:50%;background:#9A92FF"></span>Демозапись</span>
+        </div>
+        <sc-for list="{{ record }}" as="r" hint-placeholder-count="4">
+          <div style="display:grid;grid-template-columns:150px 1fr;gap:16px;padding:12px 20px;border-bottom:1px solid #2A2B31;font-size:15px">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#A3A5AD;padding-top:2px">{{ r.k }}</span>
+            <span style="color:#EDEDED">{{ r.v }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="position:relative;display:flex;justify-content:center;align-items:center;min-height:440px">
+      <img src="assets/map1.png" alt="Карта России" data-reveal="scale" data-dur="1300" style="width:min(100%,640px);aspect-ratio:471/312;display:block">
+      <img src="assets/lineline1.png" alt="" style="position:absolute;right:0;top:-24px;width:46%;opacity:0.5">
+      <span data-reveal="pop" style="position:absolute;left:23%;top:56%;width:10px;height:10px;border-radius:50%;background:#EC1D35;box-shadow:0 0 0 5px rgba(236,29,53,0.25)"></span>
+      <span data-reveal="pop" style="position:absolute;left:58%;top:52%;width:10px;height:10px;border-radius:50%;background:#FFFFFF;box-shadow:0 0 0 5px rgba(255,255,255,0.2)"></span>
+      <span data-reveal="pop" style="position:absolute;left:12%;top:48%;width:10px;height:10px;border-radius:50%;background:#FFFFFF;box-shadow:0 0 0 5px rgba(255,255,255,0.2)"></span>
+    </div>
+  </div>
+</section>
+
+<section id="rules" style="max-width:1440px;margin:0 auto;padding:112px 48px 120px;display:flex;flex-direction:column;gap:56px">
+  <div style="display:flex;flex-direction:column;gap:20px">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#5B5D65">03 — Правила площадки</span>
+    <h2 data-reveal="blur" style="margin:0;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:clamp(34px,3.6vw,52px);line-height:1.05;letter-spacing:-0.04em;max-width:900px;text-wrap:balance">Три вещи, которых нет на обычных сайтах вакансий</h2>
+  </div>
+  <figure style="margin:0;position:relative;border-radius:8px;overflow:hidden;aspect-ratio:1440/600;min-height:300px;background:#1B1C21">
+    <img src="assets/photo.jpeg" alt="Стенд Федерации спортивного программирования" data-parallax="18" style="position:absolute;inset:-14px;width:calc(100% + 28px);height:calc(100% + 28px);object-fit:cover;object-position:50% 40%;display:block">
+    <img src="assets/lineline1.png" alt="" style="position:absolute;right:-40px;top:-30px;width:38%;opacity:0.55;pointer-events:none">
+    <figcaption style="position:absolute;left:24px;bottom:24px;display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:4px;background:#1B1C21;color:#FFFFFF;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.08em;text-transform:uppercase">
+      <span style="width:8px;height:8px;border-radius:50%;background:#EC1D35;flex-shrink:0"></span>Стенд ФСП · соревнования по спортивному программированию
+    </figcaption>
+  </figure>
+  <div data-stagger="up" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));border-top:2px solid #1B1C21">
+    <sc-for list="{{ rules }}" as="r" hint-placeholder-count="3">
+      <div style="display:flex;flex-direction:column;gap:14px;padding:28px 32px 8px 0">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:44px;font-weight:600;letter-spacing:-0.04em;color:#402FFF;line-height:1">{{ r.n }}</span>
+        <span style="font-size:21px;font-weight:600;letter-spacing:-0.01em">{{ r.t }}</span>
+        <span style="font-size:15px;line-height:1.6;color:#5B5D65;text-wrap:pretty">{{ r.d }}</span>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<section id="integrations" style="background:#1B1C21;color:#EDEDED;position:relative;overflow:hidden">
+  <img src="assets/lineline1.png" alt="" data-parallax="26" style="position:absolute;left:-60px;bottom:-80px;width:520px;opacity:0.18;pointer-events:none">
+  <div style="position:relative;max-width:1440px;margin:0 auto;padding:112px 48px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,500px),1fr));gap:56px;align-items:center">
+    <div style="display:flex;flex-direction:column;gap:28px">
+      <span data-reveal="fade" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#A3A5AD">04 — Для команд с интеграциями</span>
+      <h2 data-reveal="blur" style="margin:0;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:clamp(34px,3.6vw,52px);line-height:1.05;letter-spacing:-0.04em;color:#FFFFFF;text-wrap:balance">Инструменты для подбора в вашей команде</h2>
+      <div data-stagger="up" style="display:flex;flex-direction:column;border-top:1px solid #33343A;max-width:560px">
+        <div style="display:grid;grid-template-columns:56px minmax(0,1fr);gap:16px;padding:18px 0;border-bottom:1px solid #33343A"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#9A92FF">API</span><span style="display:flex;flex-direction:column;gap:4px"><span style="font-size:17px;font-weight:600;color:#FFFFFF">Бесплатный поиск по запросу</span><span style="font-size:14px;line-height:1.55;color:#C8C9CA">Каталог распознаёт специализацию, навыки и зарплату в обычном тексте. Для поиска не нужны платные ключи.</span></span></div>
+        <div style="display:grid;grid-template-columns:56px minmax(0,1fr);gap:16px;padding:18px 0;border-bottom:1px solid #33343A"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#9A92FF">TOOLS</span><span style="display:flex;flex-direction:column;gap:4px"><span style="font-size:17px;font-weight:600;color:#FFFFFF">Помощник для работы с каталогом</span><span style="font-size:14px;line-height:1.55;color:#C8C9CA">Поиск по категориям, профили и приглашения через помощника на сайте. Приглашение отправляется только после вашего подтверждения.</span></span></div>
+        <div style="display:grid;grid-template-columns:56px minmax(0,1fr);gap:16px;padding:18px 0;border-bottom:1px solid #33343A"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#9A92FF">HOOK</span><span style="display:flex;flex-direction:column;gap:4px"><span style="font-size:17px;font-weight:600;color:#FFFFFF">Проверка сценариев интеграций</span><span style="font-size:14px;line-height:1.55;color:#C8C9CA">REST API работает по вашему ключу. Экран вебхуков показывает локальный макет без отправки во внешнюю ATS.</span></span></div>
+      </div>
+      <a href="Интеграции.dc.html" style="align-self:flex-start;height:52px;padding:0 24px;border-radius:4px;background:#402FFF;color:#FFFFFF;font-size:15px;font-weight:600;display:flex;align-items:center;gap:18px" style-hover="background:#2F1FE6;color:#FFFFFF">Настроить интеграции<span style="font-family:'JetBrains Mono',monospace">→</span></a>
+    </div>
+    <div data-reveal="right" data-tilt="5" style="background:#131418;border-radius:8px;box-shadow:0 0 0 1px #2A2B31,0 40px 80px -30px rgba(0,0,0,0.7);overflow:hidden">
+      <div style="display:flex;align-items:center;gap:8px;padding:14px 18px;border-bottom:1px solid #2A2B31;font-family:'JetBrains Mono',monospace;font-size:12px;color:#8B8D94"><span style="width:10px;height:10px;border-radius:50%;background:#33343A"></span><span style="width:10px;height:10px;border-radius:50%;background:#33343A"></span><span style="width:10px;height:10px;border-radius:50%;background:#33343A"></span><span style="margin-left:10px">помощник · profectium</span></div>
+      <div style="padding:22px 22px 26px;display:flex;flex-direction:column;gap:14px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.6">
+        <span data-reveal="fade" data-delay="300" style="color:#FFFFFF">› найди Backend Middle с Kafka и призами ФСП</span>
+        <span data-reveal="left" data-delay="700" style="padding:10px 12px;border:1px solid #33343A;border-radius:4px;color:#A3A5AD"><span style="color:#9A92FF">search_candidates</span> {"role":"Backend","grade":"Middle","skills":["Kafka"],"fsp_only":true}</span>
+        <span data-reveal="fade" data-delay="1200" style="color:#C8C9CA">Нашёл 3. Лучшая — Вера Снежина: 76/100, тест 5/6, 5 место «Открытая задача», ждёт 190–250.</span>
+        <span data-reveal="left" data-delay="1600" style="padding:10px 12px;border:1px solid #EC1D35;border-radius:4px;color:#FFFFFF;background:#26191C"><span style="color:#FF8A98">send_invitation</span> · 240–290 тыс ₽ · ждёт вашего подтверждения</span>
+        <span data-reveal="fade" data-delay="2000" style="display:flex;align-items:center;gap:6px;color:#8B8D94">›<span data-fx="blink" style="display:inline-block;width:8px;height:15px;background:#9A92FF"></span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer style="background:#131418;color:#C8C9CA">
+  <div style="max-width:1440px;margin:0 auto;padding:64px 48px 40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:40px">
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <img src="assets/logo_big.svg" alt="Федерация спортивного программирования России" style="height:32px;align-self:flex-start">
+      <span style="font-size:13px;line-height:1.6;color:#A3A5AD;max-width:360px">Profectium — прототип сервиса подбора ИТ-специалистов для ФСП. Тестовые профили и компании доступны в гостевом демо.</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#6E7078">Кандидату</span>
+      <a href="Кабинет-кандидата.dc.html" style="color:#EDEDED" style-hover="color:#9A92FF">Категория и грейд</a>
+      <a href="Тестирование.dc.html" style="color:#EDEDED" style-hover="color:#9A92FF">Тестирование</a>
+      <a href="Приглашения.dc.html" style="color:#EDEDED" style-hover="color:#9A92FF">Приглашения</a>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#6E7078">Работодателю</span>
+      <a href="Пульт.dc.html" style="color:#EDEDED" style-hover="color:#9A92FF">Рабочий пульт</a>
+      <a href="Каталог.dc.html" style="color:#EDEDED" style-hover="color:#9A92FF">Каталог специалистов</a>
+      <a href="Каталог.dc.html" style="color:#EDEDED" style-hover="color:#9A92FF">Профиль кандидата</a>
+      <a href="Интеграции.dc.html" style="color:#EDEDED" style-hover="color:#9A92FF">Помощник и API</a>
+    </div>
+  </div>
+  <div style="max-width:1440px;margin:0 auto;padding:20px 48px 32px;border-top:1px solid #26272D;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.06em;color:#6E7078">
+    <span>© 2026 · ДЕМО НА СИНТЕТИЧЕСКИХ ДАННЫХ</span><span>КОД: КРИНИЦИН ВЯЧЕСЛАВ · OLADIEVIC</span>
+  </div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;heroVariant&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;face&quot;,&quot;photo&quot;],&quot;default&quot;:&quot;face&quot;,&quot;tsType&quot;:&quot;'face' | 'photo'&quot;}}">
+class Component extends DCLogic {
+  state = { role: 'cand', register: new URLSearchParams(location.search).get('auth') !== 'login', email: '', password: '', fullName: '', err: '', busy: false, current: null };
+  componentDidMount() {
+    fetch('/api/auth/session').then(r => r.ok ? r.json() : null).then(r => { if (r && r.user) this.setState({ current: r.user }); }).catch(() => {});
+  }
+  async authenticate(action) {
+    if (this.state.busy) return;
+    this.setState({ busy: true, err: '' });
+    try {
+      const s = this.state;
+      await window.ProfectiumAPI.auth(action, { email: s.email, password: s.password, ...(action === 'register' ? { fullName: s.fullName, role: s.role === 'cand' ? 'candidate' : 'employer' } : {}) });
+      if (action === 'guest') await window.ProfectiumAPI.ensureRole(s.role === 'cand' ? 'candidate' : 'employer');
+      window.location.assign(window.ProfectiumAPI.home());
+    } catch (e) { this.setState({ err: e.message, busy: false }); }
+  }
+  renderVals() {
+    const { role, email, err, register, fullName, password, busy, current } = this.state;
+    const tab = on => ({
+      height: 56, border: 0, cursor: 'pointer', font: 'inherit', fontSize: 15, fontWeight: 600,
+      background: on ? '#FFFFFF' : '#F3F3F0', color: on ? '#1B1C21' : '#6E7078',
+      borderBottom: on ? '2px solid #402FFF' : '2px solid #E4E4E1'
+    });
+
+    const hero = this.props.heroVariant ?? 'face';
+    return {
+      tabCand: tab(role === 'cand'), tabEmp: tab(role === 'emp'),
+      setCand: () => this.setState({ role: 'cand' }), setEmp: () => this.setState({ role: 'emp' }),
+      emailLabel: role === 'cand' ? 'Почта кандидата' : 'Рабочая почта компании',
+      register, email, fullName, password, err, busy,
+      hasSession: !!current, noSession: !current, currentName: current ? current.fullName : '',
+      resume: async () => { try { await window.ProfectiumAPI.ready(); window.location.assign(window.ProfectiumAPI.home()); } catch (e) { this.setState({err:e.message}); } },
+      logout: () => window.ProfectiumAPI.logout(),
+      authTitle: register ? 'Создать аккаунт' : 'Войти в аккаунт',
+      toggleLabel: register ? 'Уже есть аккаунт?' : 'Регистрация',
+      toggleAuth: () => this.setState({register: !register, err: ''}),
+      nameLabel: role === 'cand' ? 'Ваше имя' : 'Название команды или имя',
+      onEmail: e => this.setState({ email: e.target.value, err: '' }),
+      onName: e => this.setState({ fullName: e.target.value, err: '' }),
+      onPassword: e => this.setState({ password: e.target.value, err: '' }),
+      submitLabel: busy ? 'Подождите…' : register ? 'Зарегистрироваться' : 'Войти',
+      submitAuth: () => this.authenticate(register ? 'register' : 'login'),
+      guest: () => this.authenticate('guest'),
+      heroFace: hero === 'face', heroPhoto: hero === 'photo',
+      candSteps: [
+        { n: '01', t: 'Опрос', d: 'Отрасль, специализация и задачи, которые вы уже решали.' },
+        { n: '02', t: 'Грейд', d: 'Сами выбираете уровень, на который претендуете.' },
+        { n: '03', t: 'Тест', d: '6 заданий, 30 минут. Вариант уникален, сложность одинакова для всех.' },
+        { n: '04', t: 'Категория', d: 'Связка специализации и грейда — например, Backend · Middle.' }
+      ],
+      empSteps: [
+        { n: '05', t: 'Подборка', d: 'Компания описывает потребность и открывает нужную категорию.' },
+        { n: '06', t: 'Ранжирование', d: 'Выше — сильный тест и призовые места ФСП. Причина видна в каждой строке.' },
+        { n: '07', t: 'Приглашение', d: 'Адресно, с текстом предложения и вилкой «от–до» в рублях.' },
+        { n: '08', t: 'Контакт', d: 'Почта и телефон открываются, только когда кандидат ответил «да».' }
+      ],
+      record: [
+        { k: 'Соревнование', v: 'Кубок «Северный круг» · 2024' },
+        { k: 'Дисциплина', v: 'Алгоритмическое программирование' },
+        { k: 'Результат', v: '2 место из 64 участников' },
+        { k: 'Роль', v: 'Индивидуальный участник' }
+      ],
+      rules: [
+        { n: '01', t: 'Зарплата до разговора', d: 'В каждом приглашении и вакансии — диапазон «от–до» в рублях. Никаких «по итогам собеседования».' },
+        { n: '02', t: 'Контакты — после согласия', d: 'Компания видит категорию, тест и достижения. Почту и телефон — только после вашего «да».' },
+        { n: '03', t: 'Тест не понижает грейд', d: 'Не прошли на Middle — категория остаётся прежней. Повтор через 24 часа, смена грейда раз в 90 дней.' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,302 @@
+[
+  {
+    "id": "demo-candidate-001",
+    "fullName": "Алина Вересова",
+    "initials": "АВ",
+    "role": "Frontend",
+    "grade": "Middle",
+    "city": "Казань",
+    "workFormat": "Удалённо",
+    "salaryMin": 180000,
+    "salaryMax": 230000,
+    "yearsExperience": 3,
+    "skills": ["TypeScript", "React", "Next.js", "CSS", "Playwright", "Доступность интерфейсов"],
+    "bio": "Разрабатывала личный кабинет с таблицами, поиском и ролевым доступом. Хочет работать над продуктом, где качество интерфейса проверяют исследованиями и автоматическими тестами.",
+    "achievements": [
+      {
+        "id": "demo-achievement-001",
+        "competition": "Демо-турнир «Код и команда — 2025»",
+        "discipline": "Продуктовое программирование",
+        "place": 3,
+        "participants": 28,
+        "year": 2025,
+        "teamRole": "Разработчик интерфейса",
+        "source": "mock-fsp"
+      }
+    ]
+  },
+  {
+    "id": "demo-candidate-002",
+    "fullName": "Марк Ладов",
+    "initials": "МЛ",
+    "role": "Frontend",
+    "grade": "Junior",
+    "city": "Томск",
+    "workFormat": "Гибрид",
+    "salaryMin": 80000,
+    "salaryMax": 110000,
+    "yearsExperience": 1,
+    "skills": ["JavaScript", "TypeScript", "Vue", "Pinia", "HTML", "CSS"],
+    "bio": "Собрал учебную систему записи на мероприятия с календарём и состояниями загрузки. Ищет команду с регулярным ревью кода и возможностью развиваться в проектировании интерфейсов.",
+    "achievements": [
+      {
+        "id": "demo-achievement-002",
+        "competition": "Демо-лига «Алгоритмический маршрут — 2026»",
+        "discipline": "Алгоритмическое программирование",
+        "place": 18,
+        "participants": 96,
+        "year": 2026,
+        "teamRole": "Индивидуальный участник",
+        "source": "mock-fsp"
+      }
+    ]
+  },
+  {
+    "id": "demo-candidate-003",
+    "fullName": "Илья Берестов",
+    "initials": "ИБ",
+    "role": "Backend",
+    "grade": "Senior",
+    "city": "Санкт-Петербург",
+    "workFormat": "Удалённо",
+    "salaryMin": 300000,
+    "salaryMax": 380000,
+    "yearsExperience": 7,
+    "skills": ["Go", "PostgreSQL", "Redis", "Kafka", "gRPC", "Docker"],
+    "bio": "Проектировал сервисы обработки заказов и идемпотентные операции для очередей событий. Интересуется задачами надёжности, наблюдаемости и развитием инженерных практик команды.",
+    "achievements": [
+      {
+        "id": "demo-achievement-003",
+        "competition": "Демо-кубок «Алгоритмы северного круга — 2024»",
+        "discipline": "Алгоритмическое программирование",
+        "place": 2,
+        "participants": 64,
+        "year": 2024,
+        "teamRole": "Индивидуальный участник",
+        "source": "mock-fsp"
+      },
+      {
+        "id": "demo-achievement-004",
+        "competition": "Демо-турнир «Код и команда — 2025»",
+        "discipline": "Продуктовое программирование",
+        "place": 3,
+        "participants": 28,
+        "year": 2025,
+        "teamRole": "Разработчик серверной части",
+        "source": "mock-fsp"
+      }
+    ]
+  },
+  {
+    "id": "demo-candidate-004",
+    "fullName": "Вера Снежина",
+    "initials": "ВС",
+    "role": "Backend",
+    "grade": "Middle",
+    "city": "Новосибирск",
+    "workFormat": "Гибрид",
+    "salaryMin": 190000,
+    "salaryMax": 250000,
+    "yearsExperience": 4,
+    "skills": ["Python", "FastAPI", "Django", "PostgreSQL", "Celery", "pytest"],
+    "bio": "Разрабатывала API для внутреннего документооборота и фоновые задачи импорта данных. Предпочитает задачи с ясными контрактами, миграциями и интеграционными тестами.",
+    "achievements": [
+      {
+        "id": "demo-achievement-005",
+        "competition": "Демо-хакатон «Открытая задача — 2026»",
+        "discipline": "Продуктовое программирование",
+        "place": 5,
+        "participants": 32,
+        "year": 2026,
+        "teamRole": "Разработчик API",
+        "source": "mock-fsp"
+      }
+    ]
+  },
+  {
+    "id": "demo-candidate-005",
+    "fullName": "Денис Кленов",
+    "initials": "ДК",
+    "role": "Fullstack",
+    "grade": "Middle",
+    "city": "Екатеринбург",
+    "workFormat": "Офис",
+    "salaryMin": 200000,
+    "salaryMax": 260000,
+    "yearsExperience": 4,
+    "skills": ["TypeScript", "React", "Node.js", "NestJS", "PostgreSQL", "Prisma"],
+    "bio": "Вёл функции от схемы данных до интерфейса в сервисе бронирования оборудования. Любит небольшие продуктовые команды и задачи, в которых можно проверить результат на пользователях.",
+    "achievements": [
+      {
+        "id": "demo-achievement-006",
+        "competition": "Демо-чемпионат «Командный прототип — 2025»",
+        "discipline": "Продуктовое программирование",
+        "place": 1,
+        "participants": 20,
+        "year": 2025,
+        "teamRole": "Разработчик полного цикла",
+        "source": "mock-fsp"
+      }
+    ]
+  },
+  {
+    "id": "demo-candidate-006",
+    "fullName": "Полина Ракитина",
+    "initials": "ПР",
+    "role": "Fullstack",
+    "grade": "Senior",
+    "city": "Москва",
+    "workFormat": "Удалённо",
+    "salaryMin": 290000,
+    "salaryMax": 360000,
+    "yearsExperience": 6,
+    "skills": ["TypeScript", "Vue", "Nuxt", "Python", "FastAPI", "PostgreSQL", "Docker"],
+    "bio": "Развивала B2B-сервис с несколькими организациями, разграничением прав и аудитом действий. Ищет возможность отвечать за архитектуру отдельных продуктовых направлений и наставничество.",
+    "achievements": [
+      {
+        "id": "demo-achievement-007",
+        "competition": "Демо-хакатон «Открытая задача — 2026»",
+        "discipline": "Продуктовое программирование",
+        "place": 2,
+        "participants": 32,
+        "year": 2026,
+        "teamRole": "Капитан команды, разработчик полного цикла",
+        "source": "mock-fsp"
+      }
+    ]
+  },
+  {
+    "id": "demo-candidate-007",
+    "fullName": "Тимур Озеров",
+    "initials": "ТО",
+    "role": "Data Science",
+    "grade": "Middle",
+    "city": "Нижний Новгород",
+    "workFormat": "Удалённо",
+    "salaryMin": 210000,
+    "salaryMax": 280000,
+    "yearsExperience": 3,
+    "skills": ["Python", "SQL", "pandas", "scikit-learn", "CatBoost", "MLflow"],
+    "bio": "Строил модели прогноза спроса с временной валидацией и сравнением с простыми базовыми моделями. Хочет работать над задачами, где качество модели связано с измеримым продуктовым результатом.",
+    "achievements": [
+      {
+        "id": "demo-achievement-008",
+        "competition": "Демо-турнир «Данные и решение — 2025»",
+        "discipline": "Анализ данных",
+        "place": 2,
+        "participants": 44,
+        "year": 2025,
+        "teamRole": "Разработчик моделей",
+        "source": "mock-fsp"
+      }
+    ]
+  },
+  {
+    "id": "demo-candidate-008",
+    "fullName": "Ника Белова",
+    "initials": "НБ",
+    "role": "Data Science",
+    "grade": "Junior",
+    "city": "Пермь",
+    "workFormat": "Гибрид",
+    "salaryMin": 100000,
+    "salaryMax": 140000,
+    "yearsExperience": 1,
+    "skills": ["Python", "SQL", "pandas", "NumPy", "scikit-learn", "Matplotlib"],
+    "bio": "Готовила наборы данных для классификации обращений и проверяла качество разметки. Ищет задачи на стыке анализа данных и прикладного машинного обучения с поддержкой опытного коллеги.",
+    "achievements": [
+      {
+        "id": "demo-achievement-009",
+        "competition": "Демо-лига «Первый датасет — 2026»",
+        "discipline": "Анализ данных",
+        "place": 7,
+        "participants": 52,
+        "year": 2026,
+        "teamRole": "Подготовка данных и оценка качества",
+        "source": "mock-fsp"
+      }
+    ]
+  },
+  {
+    "id": "demo-candidate-009",
+    "fullName": "Артём Вязов",
+    "initials": "АВ",
+    "role": "DevOps",
+    "grade": "Senior",
+    "city": "Краснодар",
+    "workFormat": "Удалённо",
+    "salaryMin": 280000,
+    "salaryMax": 350000,
+    "yearsExperience": 8,
+    "skills": ["Linux", "Kubernetes", "Terraform", "Docker", "Prometheus", "Grafana", "GitLab CI"],
+    "bio": "Поддерживал инфраструктуру продуктовой команды, автоматизировал развёртывание и восстановление резервных копий. Ищет роль с ответственностью за надёжность сервисов и понятными правилами дежурств.",
+    "achievements": []
+  },
+  {
+    "id": "demo-candidate-010",
+    "fullName": "Софья Липина",
+    "initials": "СЛ",
+    "role": "DevOps",
+    "grade": "Middle",
+    "city": "Самара",
+    "workFormat": "Гибрид",
+    "salaryMin": 190000,
+    "salaryMax": 250000,
+    "yearsExperience": 4,
+    "skills": ["Linux", "Docker", "Ansible", "Nginx", "Bash", "Python", "GitHub Actions"],
+    "bio": "Настраивала тестовые окружения, сборку контейнеров и сбор журналов для нескольких сервисов. Хочет развивать платформенные инструменты, которые сокращают ручные действия разработчиков.",
+    "achievements": [
+      {
+        "id": "demo-achievement-010",
+        "competition": "Демо-чемпионат «Командный прототип — 2025»",
+        "discipline": "Продуктовое программирование",
+        "place": 1,
+        "participants": 20,
+        "year": 2025,
+        "teamRole": "Инфраструктура и развёртывание",
+        "source": "mock-fsp"
+      }
+    ]
+  },
+  {
+    "id": "demo-candidate-011",
+    "fullName": "Лев Травин",
+    "initials": "ЛТ",
+    "role": "QA",
+    "grade": "Middle",
+    "city": "Воронеж",
+    "workFormat": "Удалённо",
+    "salaryMin": 150000,
+    "salaryMax": 200000,
+    "yearsExperience": 4,
+    "skills": ["Тест-дизайн", "Postman", "SQL", "Python", "pytest", "Allure"],
+    "bio": "Тестировал API и пользовательские сценарии сервиса согласования заявок, поддерживал регрессионный набор. Ищет команду, где QA участвует в обсуждении требований до начала разработки.",
+    "achievements": []
+  },
+  {
+    "id": "demo-candidate-012",
+    "fullName": "Ева Яснова",
+    "initials": "ЕЯ",
+    "role": "QA",
+    "grade": "Middle",
+    "city": "Санкт-Петербург",
+    "workFormat": "Офис",
+    "salaryMin": 170000,
+    "salaryMax": 220000,
+    "yearsExperience": 3,
+    "skills": ["TypeScript", "Playwright", "REST API", "SQL", "Тест-дизайн", "CI/CD"],
+    "bio": "Автоматизировала ключевые пользовательские сценарии веб-приложения и разбирала нестабильные тесты в CI. Интересуется тестируемостью интерфейсов и ранним поиском пограничных случаев.",
+    "achievements": [
+      {
+        "id": "demo-achievement-011",
+        "competition": "Демо-турнир «Код и команда — 2025»",
+        "discipline": "Продуктовое программирование",
+        "place": 8,
+        "participants": 28,
+        "year": 2025,
+        "teamRole": "Тестирование и проверка пользовательских сценариев",
+        "source": "mock-fsp"
+      }
+    ]
+  }
+]

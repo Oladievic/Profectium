@@ -1,0 +1,12 @@
+# Third-party resources
+
+These files are included so the local design demo can start without downloading browser dependencies. Their original licenses are retained in `licenses/`.
+
+| Resource | Version/source | License |
+| --- | --- | --- |
+| React and ReactDOM | 18.3.1, [React repository](https://github.com/facebook/react/tree/v18.3.1) | [MIT](licenses/React-LICENSE.txt) |
+| Babel Standalone | 7.29.0, [Babel repository](https://github.com/babel/babel/tree/v7.29.0) | [MIT](licenses/Babel-LICENSE.txt) |
+| Golos Text | [Google Fonts](https://github.com/google/fonts/tree/main/ofl/golostext) | [SIL OFL 1.1](licenses/Golos-Text-OFL.txt) |
+| JetBrains Mono | [Google Fonts](https://github.com/google/fonts/tree/main/ofl/jetbrainsmono) | [SIL OFL 1.1](licenses/JetBrains-Mono-OFL.txt) |
+
+The font files are cached Google Fonts subsets; local filenames identify their source URLs. `fonts-4c5d80bb8671.css` maps the files to their font families. Copyright notices embedded in the JavaScript files remain intact.

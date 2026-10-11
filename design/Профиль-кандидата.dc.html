@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<!--
+ * Copyright (c) 2026 Криницин Вячеслав Александрович - Oladievic.
+ * Все права сохранены.
+ *
+ * Автор: Криницин Вячеслав Александрович
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="./responsive.css">
+<script src="./backend.js"></script>
+<script src="./backend-candidate.js"></script>
+<script src="./support.js"></script>
+</head>
+<body class="fsp-page">
+<x-dc>
+<helmet>
+<title>Профиль кандидата · Profectium</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="data.js"></script>
+<script src="search.js"></script>
+<script src="fx.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#EFEFEC;color:#1B1C21;font-family:'Golos Text',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#402FFF;text-decoration:none}
+a:hover{color:#2A1BD9}
+input::placeholder,textarea::placeholder{color:#8B8D94}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes popIn{from{transform:translateY(12px);opacity:0}to{transform:none;opacity:1}}
+</style>
+</helmet>
+
+<header class="fsp-header" style="position:sticky;top:0;z-index:30;background:#1B1C21;color:#EDEDED;border-bottom:1px solid #2A2B31">
+  <div class="fsp-header-shell" style="max-width:1440px;margin:0 auto;height:64px;padding:0 32px;display:flex;align-items:center;gap:24px">
+    <a href="Лендинг.dc.html" style="display:flex;align-items:center;gap:14px;color:#EDEDED;flex-shrink:0">
+      <img src="assets/logo_01.svg" alt="ФСП" style="height:24px;display:block">
+      <span style="width:1px;height:20px;background:#3A3B42"></span>
+      <span style="font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px;letter-spacing:-0.02em">Profectium</span>
+    </a>
+    <nav style="display:flex;align-self:stretch;gap:4px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.08em;text-transform:uppercase">
+      <a href="Пульт.dc.html" style="display:flex;align-items:center;padding:0 14px;color:#A3A5AD" style-hover="color:#FFFFFF">Пульт</a>
+      <a href="Каталог.dc.html" style="display:flex;align-items:center;padding:0 14px;color:#FFFFFF;box-shadow:inset 0 -2px 0 #402FFF">Каталог</a>
+      <a href="Интеграции.dc.html" style="display:flex;align-items:center;padding:0 14px;color:#A3A5AD" style-hover="color:#FFFFFF">Интеграции</a>
+    </nav>
+    <div class="fsp-header-controls" style="margin-left:auto;display:flex;align-items:center;gap:16px">
+      <button data-palette="1" title="Поиск" style="height:34px;padding:0 10px;border-radius:4px;border:1px solid #3A3B42;background:#202126;color:#C8C9CA;font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;white-space:nowrap" style-hover="border-color:#6E7078;color:#FFFFFF">Ctrl K</button>
+      <div style="display:flex;background:#26272D;border-radius:999px;padding:3px;font-size:13px">
+        <a href="Кабинет-кандидата.dc.html" style="padding:6px 14px;border-radius:999px;color:#A3A5AD" style-hover="color:#FFFFFF">Кандидат</a>
+        <span style="padding:6px 14px;border-radius:999px;background:#EDEDED;color:#1B1C21;font-weight:600">Работодатель</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="width:34px;height:34px;border-radius:6px;background:#402FFF;color:#FFFFFF;display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600">ОТ</span>
+
+      </div>
+    </div>
+  </div>
+</header>
+<sc-if value="{{ error }}"><div role="alert" style="max-width:1376px;margin:20px auto;padding:16px 24px;background:#FFF0F2;color:#A00024;border-radius:4px">{{ error }}</div></sc-if>
+<sc-if value="{{ notice }}"><div role="status" style="max-width:1376px;margin:20px auto;padding:16px 24px;background:#ECEAFF;color:#2A1BD9;border-radius:4px">{{ notice }}</div></sc-if>
+
+<section style="background:#1B1C21;color:#EDEDED;position:relative;overflow:hidden">
+  <img src="assets/lineline1.png" alt="" style="position:absolute;right:2%;top:-30px;width:420px;opacity:0.18;pointer-events:none">
+  <div style="position:relative;max-width:1440px;margin:0 auto;padding:28px 32px 0;display:flex;flex-direction:column;gap:32px">
+    <a href="{{ backHref }}" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#A3A5AD;align-self:flex-start" style-hover="color:#FFFFFF">← Каталог / {{ catLabel }}</a>
+    <div style="display:flex;flex-wrap:wrap;gap:40px;align-items:flex-end;justify-content:space-between">
+      <div style="display:flex;gap:28px;align-items:flex-end;flex-wrap:wrap;min-width:0">
+        <div style="width:132px;height:132px;border-radius:8px;background:#402FFF;display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:48px;font-weight:600;letter-spacing:-0.04em;color:#FFFFFF;flex-shrink:0;position:relative">
+          {{ initials }}
+          <span style="position:absolute;right:-5px;bottom:-5px;width:14px;height:14px;border-radius:50%;background:#EC1D35;box-shadow:0 0 0 4px #1B1C21"></span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;padding:5px 10px;border-radius:3px;background:#EDEDED;color:#1B1C21;font-weight:600">{{ catLabel }}</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;padding:5px 10px;border-radius:3px;border:1px solid #3A3B42;color:#C8C9CA">{{ profileTestLabel }}</span>
+            <sc-if value="{{ hasFsp }}" hint-placeholder-val="{{ true }}">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:12px;padding:5px 10px;border-radius:3px;border:1px solid #3A3B42;color:#C8C9CA">ФСП ID связан</span>
+            </sc-if>
+          </div>
+          <h1 style="margin:0;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:clamp(36px,4.2vw,60px);line-height:1;letter-spacing:-0.045em;color:#FFFFFF">{{ name }}</h1>
+          <span style="font-size:16px;color:#C8C9CA">{{ meta }}</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button onClick="{{ fav }}" style="{{ favStyle }}">{{ favLabel }}</button>
+        <sc-if value="{{ notInvited }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ openInvite }}" style="height:48px;padding:0 22px;border:0;border-radius:4px;background:#402FFF;color:#FFFFFF;font:inherit;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:16px" style-hover="background:#2F1FE6">Пригласить с зарплатой<span style="font-family:'JetBrains Mono',monospace">→</span></button>
+        </sc-if>
+        <sc-if value="{{ invited }}" hint-placeholder-val="{{ false }}">
+          <span style="height:48px;padding:0 18px;border-radius:4px;background:#EDEDED;color:#1B1C21;font-size:15px;font-weight:600;display:flex;align-items:center;gap:10px"><span style="width:8px;height:8px;border-radius:50%;background:#402FFF"></span>Приглашение отправлено · {{ invitedSal }}</span>
+        </sc-if>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));border-top:1px solid #33343A">
+      <div style="padding:20px 24px 24px 0;display:flex;flex-direction:column;gap:6px;border-right:1px solid #33343A">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#A3A5AD">Сила профиля</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:44px;font-weight:600;letter-spacing:-0.04em;line-height:1;color:#FFFFFF">{{ total }}<span style="font-size:16px;color:#A3A5AD">/100</span></span>
+      </div>
+      <sc-for list="{{ parts }}" as="p" hint-placeholder-count="4">
+        <div style="padding:20px 24px 24px;display:flex;flex-direction:column;gap:10px;border-right:1px solid #33343A">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#A3A5AD">{{ p.k }}</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;letter-spacing:-0.03em;color:#FFFFFF">{{ p.v }}<span style="font-size:13px;color:#A3A5AD">/{{ p.max }}</span></span>
+          <div style="height:4px;background:#33343A;border-radius:2px"><div data-reveal="draw-x" data-delay="300" style="{{ p.bar }}"></div></div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<div style="background:#26272D;color:#C8C9CA">
+  <div style="max-width:1440px;margin:0 auto;padding:14px 32px;display:flex;flex-wrap:wrap;gap:12px 32px;align-items:center;font-size:14px">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#A3A5AD">Контакты</span>
+    <span style="font-family:'JetBrains Mono',monospace;letter-spacing:0.1em;color:#C8C9CA">{{ contactValue }}</span>
+    <span style="margin-left:auto">{{ contactNote }}</span>
+  </div>
+</div>
+
+<main style="max-width:1440px;margin:0 auto;padding:32px 32px 80px;display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start">
+  <div style="flex:999 1 640px;min-width:0;display:flex;flex-direction:column;gap:24px">
+
+    <section data-reveal="up" style="background:#FFFFFF;border-radius:8px;padding:28px">
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:20px">
+        <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.01em">Почему в подборке</h2>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5B5D65">{{ needTitle }}</span>
+      </div>
+      <div style="display:flex;flex-direction:column">
+        <sc-for list="{{ reasons }}" as="r" hint-placeholder-count="4">
+          <div class="fsp-mobile-stack" style="display:grid;grid-template-columns:120px minmax(0,1fr) 72px;gap:20px;align-items:baseline;padding:14px 0;border-top:1px solid #E4E4E1">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:#5B5D65">{{ r.k }}</span>
+            <span style="font-size:15px;line-height:1.5">{{ r.v }}</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;text-align:right">{{ r.s }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <sc-if value="{{ hasNeedSkills }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;padding-top:16px;border-top:1px solid #E4E4E1">
+          <sc-for list="{{ needChips }}" as="k" hint-placeholder-count="5">
+            <span style="{{ k.style }}">{{ k.t }}</span>
+          </sc-for>
+        </div>
+      </sc-if>
+    </section>
+
+    <section data-reveal="up" style="background:#1B1C21;color:#EDEDED;border-radius:8px;padding:24px 28px;display:flex;flex-direction:column;gap:16px;position:relative;overflow:hidden">
+      <img src="assets/lineline1.png" alt="" data-fx="breathe" style="position:absolute;right:-50px;top:-50px;width:280px;opacity:0.3;pointer-events:none">
+      <div style="position:relative;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px">
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#9A92FF">Подготовка к интервью</span>
+          <span style="font-size:19px;font-weight:600;color:#FFFFFF">Почему в топе и что спросить</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <a href="Интеграции.dc.html?tab=helper" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#8B8D94" style-hover="color:#9A92FF">{{ briefLabel }}</a>
+          <sc-if value="{{ briefIdle }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ briefRun }}" style="height:42px;padding:0 16px;border:0;border-radius:4px;background:#EDEDED;color:#1B1C21;font:inherit;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:12px" style-hover="background:#FFFFFF">Собрать разбор<span style="font-family:'JetBrains Mono',monospace">→</span></button>
+          </sc-if>
+        </div>
+      </div>
+      <sc-if value="{{ briefBusy }}" hint-placeholder-val="{{ false }}">
+        <div style="position:relative;display:flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#A3A5AD">
+          <span style="position:relative;width:140px;height:2px;background:#2A2B31;overflow:hidden"><span data-fx="sweep" style="position:absolute;left:0;top:0;width:30%;height:100%;background:#9A92FF"></span></span>Подготовка по тесту, ФСП и опыту
+        </div>
+      </sc-if>
+      <sc-if value="{{ briefHas }}" hint-placeholder-val="{{ false }}">
+        <div style="position:relative;font-size:15px;line-height:1.7;white-space:pre-wrap;color:#EDEDED;max-width:820px">{{ briefText }}<sc-if value="{{ briefTyping }}" hint-placeholder-val="{{ false }}"><span data-fx="blink" style="display:inline-block;width:8px;height:16px;margin-left:2px;vertical-align:-2px;background:#9A92FF"></span></sc-if></div>
+      </sc-if>
+    </section>
+
+    <section data-reveal="up" style="background:#FFFFFF;border-radius:8px;padding:28px;display:flex;flex-direction:column;gap:20px">
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.01em">Квалификационный тест</h2>
+          <span style="font-size:14px;color:#5B5D65">{{ testMeta }}</span>
+        </div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:48px;font-weight:600;letter-spacing:-0.05em;line-height:1">{{ correct }}<span style="color:#A3A5AD">/6</span></span>
+      </div>
+      <sc-if value="{{ noTestDetails }}"><p style="margin:0;font-size:14px;color:#5B5D65">В профиле доступен итог теста. Подробные ответы доступны только владельцу попытки.</p></sc-if>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+        <sc-for list="{{ tasks }}" as="t" hint-placeholder-count="6">
+          <div style="{{ t.style }}">
+            <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:12px">
+              <span>{{ t.n }} · {{ t.kind }}</span><span style="font-weight:600">{{ t.mark }}</span>
+            </div>
+            <span style="font-size:15px;font-weight:500;line-height:1.35">{{ t.topic }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:12px;font-size:13px;line-height:1.55;color:#5B5D65;padding-top:4px">
+        <span style="font-family:'JetBrains Mono',monospace;color:#402FFF">i</span>
+        <span>Четыре задания выбраны из банка категории, два — параметрические. Порог категории — 4 из 6, включая 3 профессиональных ответа. Это сигнал для интервью, а не сертификат.</span>
+      </div>
+    </section>
+
+    <section data-reveal="up" style="background:#FFFFFF;border-radius:8px;padding:28px;display:flex;flex-direction:column;gap:6px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px">
+        <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.01em">Регулярные задачи</h2>
+        <span style="font-size:13px;color:#5B5D65">поддерживают актуальность профиля</span>
+      </div>
+      <p style="margin:0;font-size:14px;color:#5B5D65">Результаты коротких задач в этом профиле пока не опубликованы.</p>
+      <sc-for list="{{ regular }}" as="r" hint-placeholder-count="2">
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;padding:14px 0;border-top:1px solid #E4E4E1;align-items:center">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <span style="font-size:15px;font-weight:600">{{ r.t }}</span>
+            <span style="font-size:13px;color:#5B5D65">{{ r.m }}</span>
+          </div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;padding:5px 10px;border-radius:3px;background:#ECEAFF;color:#2A1BD9;font-weight:600">{{ r.v }}</span>
+        </div>
+      </sc-for>
+    </section>
+
+    <section data-reveal="up" style="background:#FFFFFF;border-radius:8px;padding:28px;display:flex;flex-direction:column;gap:16px">
+      <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.01em">Опыт со слов кандидата</h2>
+      <p style="margin:0;font-size:16px;line-height:1.65;color:#1B1C21;max-width:760px;text-wrap:pretty">{{ bio }}</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <sc-for list="{{ skills }}" as="s" hint-placeholder-count="6">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;padding:5px 10px;border-radius:3px;background:#F3F3F0;color:#1B1C21">{{ s }}</span>
+        </sc-for>
+      </div>
+      <span style="font-size:13px;color:#5B5D65">Самоописание не влияет на категорию — её определяет только тест.</span>
+    </section>
+  </div>
+
+  <aside style="flex:1 1 360px;max-width:440px;display:flex;flex-direction:column;gap:24px">
+    <section data-reveal="right" style="background:#1B1C21;color:#EDEDED;border-radius:8px;overflow:hidden">
+      <div style="padding:20px 24px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #33343A">
+        <span style="display:flex;align-items:center;gap:10px;font-size:17px;font-weight:600"><img src="assets/logo_02.svg" alt="" style="height:22px">Достижения ФСП</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#A3A5AD">{{ fspSource }}</span>
+      </div>
+      <sc-if value="{{ hasFsp }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:24px 24px 8px;position:relative">
+          <div style="position:absolute;left:43px;top:34px;bottom:40px;width:2px;background:#402FFF"></div>
+          <sc-for list="{{ ach }}" as="a" hint-placeholder-count="2">
+            <div style="display:grid;grid-template-columns:40px minmax(0,1fr);gap:16px;padding-bottom:24px;position:relative">
+              <span style="width:40px;height:40px;border-radius:50%;background:#402FFF;color:#FFFFFF;display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;box-shadow:0 0 0 5px #1B1C21">{{ a.place }}</span>
+              <div style="display:flex;flex-direction:column;gap:4px;padding-top:2px">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#9A92FF">{{ a.place }} место из {{ a.of }} · {{ a.year }}</span>
+                <span style="font-size:16px;font-weight:600;color:#FFFFFF">{{ a.comp }}</span>
+                <span style="font-size:14px;color:#C8C9CA">{{ a.disc }}</span>
+                <span style="font-size:13px;color:#A3A5AD">{{ a.role }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+      <sc-if value="{{ noFsp }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:28px 24px;display:flex;flex-direction:column;gap:12px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:44px;font-weight:600;letter-spacing:-0.04em;color:#FFFFFF;line-height:1">—</span>
+          <span style="font-size:16px;font-weight:600;color:#FFFFFF">Истории соревнований нет</span>
+          <span style="font-size:14px;line-height:1.55;color:#C8C9CA">Кандидат не связал ФСП ID или ещё не участвовал. Это не понижает его в выдаче: сила профиля считается по тесту, навыкам и условиям, а 20 баллов ФСП остаются бонусом.</span>
+        </div>
+      </sc-if>
+    </section>
+
+    <section data-reveal="up" style="background:#FFFFFF;border-radius:8px;padding:24px;display:flex;flex-direction:column">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#5B5D65;margin-bottom:8px">Условия кандидата</span>
+      <sc-for list="{{ terms }}" as="t" hint-placeholder-count="4">
+        <div style="display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid #E4E4E1;font-size:15px">
+          <span style="color:#5B5D65">{{ t.k }}</span><span style="font-weight:600;text-align:right">{{ t.v }}</span>
+        </div>
+      </sc-for>
+    </section>
+
+    <section data-reveal="up" style="background:#FFFFFF;border-radius:8px;padding:24px;display:flex;flex-direction:column">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#5B5D65;margin-bottom:8px">Что вам видно</span>
+      <sc-for list="{{ visibility }}" as="v" hint-placeholder-count="4">
+        <div style="display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid #E4E4E1;font-size:15px">
+          <span>{{ v.k }}</span><span style="{{ v.style }}">{{ v.v }}</span>
+        </div>
+      </sc-for>
+    </section>
+  </aside>
+</main>
+
+<sc-if value="{{ modal }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:24px">
+    <div onClick="{{ closeInvite }}" style="position:absolute;inset:0;background:rgba(19,20,24,0.6);animation:fadeIn .2s ease both"></div>
+    <div style="position:relative;width:min(560px,100%);background:#FFFFFF;border-radius:8px;overflow:hidden;animation:popIn .25s cubic-bezier(.2,.8,.2,1) both">
+      <div style="padding:22px 26px;border-bottom:1px solid #E4E4E1;display:flex;justify-content:space-between;align-items:center">
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#5B5D65">Приглашение для</span>
+          <span style="font-size:20px;font-weight:600">{{ name }} · {{ catLabel }}</span>
+        </div>
+        <button onClick="{{ closeInvite }}" style="border:0;background:none;font-size:24px;cursor:pointer;color:#1B1C21;line-height:1">×</button>
+      </div>
+      <div style="padding:22px 26px;display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:#5B5D65"><span>Зарплата, тыс ₽ · обязательно</span><span style="font-family:'JetBrains Mono',monospace">ждёт {{ sal }}</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <input value="{{ fMin }}" onChange="{{ onMin }}" placeholder="от" style="height:52px;border:1px solid #CFCFCB;border-radius:4px;padding:0 14px;font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;outline:none;color:#1B1C21" style-focus="border-color:#402FFF;box-shadow:0 0 0 3px #E2DFFF">
+          <input value="{{ fMax }}" onChange="{{ onMax }}" placeholder="до" style="height:52px;border:1px solid #CFCFCB;border-radius:4px;padding:0 14px;font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;outline:none;color:#1B1C21" style-focus="border-color:#402FFF;box-shadow:0 0 0 3px #E2DFFF">
+        </div>
+        <sc-if value="{{ err }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;color:#C8102E">{{ err }}</span></sc-if>
+        <textarea value="{{ fText }}" onChange="{{ onText }}" rows="4" style="border:1px solid #CFCFCB;border-radius:4px;padding:12px;font:inherit;font-size:15px;line-height:1.5;outline:none;resize:vertical;color:#1B1C21" style-focus="border-color:#402FFF;box-shadow:0 0 0 3px #E2DFFF"></textarea>
+      </div>
+      <div style="padding:16px 26px;border-top:1px solid #E4E4E1;display:flex;gap:10px;justify-content:flex-end">
+        <button onClick="{{ closeInvite }}" style="height:46px;padding:0 18px;border:1px solid #CFCFCB;background:#FFFFFF;border-radius:4px;font:inherit;font-size:15px;cursor:pointer;color:#1B1C21">Отмена</button>
+        <button disabled="{{ busy }}" onClick="{{ send }}" style="height:46px;padding:0 22px;border:0;border-radius:4px;background:#402FFF;color:#FFFFFF;font:inherit;font-size:15px;font-weight:600;cursor:pointer" style-hover="background:#2F1FE6">Отправить</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;fspHistory&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояния&quot;}}">
+class Component extends DCLogic {
+  state={modal:false,invited:'',fMin:'',fMax:'',fText:'Предлагаем обсудить задачи нашей команды и познакомиться на встрече.',err:'',fav:false,data:null,raw:null,loading:true,error:'',busy:false};
+  componentDidMount(){window.ProfectiumCandidate.mountProfile(this);}
+  renderVals(){return window.ProfectiumCandidate.profileValues(this);}
+}
+</script>
+</body>
+</html>

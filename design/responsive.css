@@ -1,0 +1,175 @@
+/*
+ * Copyright (c) 2026 Криницин Вячеслав Александрович - Oladievic.
+ * Все права сохранены.
+ *
+ * Автор: Криницин Вячеслав Александрович
+ */
+/* Narrow-screen layout for the standalone design export. Desktop styles stay inline. */
+@media (max-width: 700px) {
+  .fsp-page {
+    overflow-wrap: anywhere;
+  }
+
+  .fsp-page :where(main, section, aside, article, nav, label, pre, input, textarea) {
+    min-width: 0 !important;
+    max-width: 100%;
+  }
+
+  .fsp-page :where(div, span, a, button) {
+    min-width: 0;
+  }
+
+  .fsp-page [style*="1440px"],
+  .fsp-page main {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    max-width: 100% !important;
+  }
+
+  .fsp-page main {
+    gap: 24px !important;
+  }
+
+  .fsp-page aside {
+    position: static !important;
+    width: 100%;
+    max-width: none !important;
+  }
+
+  .fsp-page h1 {
+    font-size: clamp(30px, 8.2vw, 44px) !important;
+  }
+
+  .fsp-page :where(input, textarea, select, button) {
+    max-width: 100%;
+  }
+
+  .fsp-page button {
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+  }
+
+  .fsp-page pre {
+    width: 100%;
+    overflow-x: auto !important;
+    overflow-wrap: normal;
+  }
+
+  .fsp-page :where(section, article)[style*="padding:"] {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .fsp-header {
+    position: relative !important;
+  }
+
+  .fsp-header-shell {
+    height: auto !important;
+    min-height: 64px;
+    padding: 12px 16px !important;
+    flex-wrap: wrap !important;
+    gap: 12px 16px !important;
+  }
+
+  .fsp-header-shell > * {
+    max-width: 100%;
+  }
+
+  .fsp-header-shell > nav {
+    order: 3;
+    flex: 1 1 100% !important;
+    width: 100%;
+    margin-left: 0 !important;
+    overflow-x: auto;
+    white-space: nowrap;
+    min-height: 42px;
+    padding-bottom: 2px;
+  }
+
+  .fsp-header-shell > nav > a {
+    flex: 0 0 auto;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .fsp-header-controls {
+    flex-wrap: wrap !important;
+    flex-shrink: 1 !important;
+    gap: 8px !important;
+    margin-left: 0 !important;
+  }
+
+  .fsp-mobile-scroll {
+    min-width: 0 !important;
+    max-width: 100%;
+    overflow-x: auto !important;
+  }
+
+  .fsp-mobile-scroll > button {
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  .fsp-mobile-stack {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .fsp-mobile-stack > * {
+    min-width: 0 !important;
+    max-width: 100%;
+    justify-self: stretch !important;
+  }
+
+  .fsp-mobile-stack > [style*="justify-content"] {
+    justify-content: flex-start !important;
+    flex-wrap: wrap;
+  }
+
+  .fsp-mobile-table-header {
+    display: none !important;
+  }
+
+  .fsp-mobile-feature {
+    grid-template-columns: 24px minmax(0, 1fr) 40px !important;
+    gap: 12px !important;
+  }
+
+  .fsp-mobile-feature > a {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
+  }
+
+  .fsp-mobile-feature > :last-child {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .fsp-mobile-history {
+    grid-template-columns: 80px 28px minmax(0, 1fr) !important;
+  }
+
+  .fsp-mobile-history > :last-child {
+    grid-column: 3;
+    justify-self: start;
+    margin: 8px 0 0 12px;
+  }
+
+  .fsp-mobile-history-line {
+    left: 93px !important;
+  }
+
+  .fsp-page [style*="grid-template-columns"][style*="auto-fit"],
+  .fsp-page [style*="grid-template-columns"][style*="auto-fill"] {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .fsp-page [style*="display: flex"] > :where(section, aside, article),
+  .fsp-page [style*="display:flex"] > :where(section, aside, article) {
+    flex-basis: 100% !important;
+  }
+}

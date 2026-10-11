@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<!--
+ * Copyright (c) 2026 Криницин Вячеслав Александрович - Oladievic.
+ * Все права сохранены.
+ *
+ * Автор: Криницин Вячеслав Александрович
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="./responsive.css">
+<script src="./backend.js"></script>
+<script src="./backend-candidate.js"></script>
+<script src="./support.js"></script>
+</head>
+<body class="fsp-page">
+<x-dc>
+<helmet>
+<title>Тестирование · Profectium</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="search.js"></script>
+<script src="fx.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#EFEFEC;color:#1B1C21;font-family:'Golos Text',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#402FFF;text-decoration:none}
+a:hover{color:#2A1BD9}
+input::placeholder,textarea::placeholder{color:#8B8D94}
+@keyframes qIn{from{transform:translateY(10px);opacity:0}to{transform:none;opacity:1}}
+</style>
+</helmet>
+
+<header class="fsp-header" style="position:sticky;top:0;z-index:30;background:#1B1C21;color:#EDEDED">
+  <div class="fsp-header-shell" style="max-width:1440px;margin:0 auto;height:64px;padding:0 32px;display:flex;align-items:center;gap:28px">
+    <a href="Кабинет-кандидата.dc.html" style="display:flex;align-items:center;gap:14px;color:#EDEDED;flex-shrink:0">
+      <img src="assets/logo_01.svg" alt="ФСП" style="height:24px;display:block">
+      <span style="width:1px;height:20px;background:#3A3B42"></span>
+      <span style="font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px;letter-spacing:-0.02em">Profectium</span>
+    </a>
+    <div style="display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;flex-wrap:wrap">
+      <sc-for list="{{ rail }}" as="r" hint-placeholder-count="4">
+        <span style="{{ r.style }}">{{ r.n }} {{ r.t }}</span>
+        <sc-if value="{{ r.sep }}" hint-placeholder-val="{{ true }}"><span style="width:20px;height:1px;background:#4A4B52"></span></sc-if>
+      </sc-for>
+    </div>
+    <div class="fsp-header-controls" style="margin-left:auto;display:flex;align-items:center;gap:20px">
+      <sc-if value="{{ inTest }}" hint-placeholder-val="{{ false }}">
+        <span style="display:flex;align-items:center;gap:8px;font-size:13px;color:#A3A5AD"><span style="width:7px;height:7px;border-radius:50%;background:#9A92FF"></span>{{ saveStatus }}</span>
+        <span style="{{ timerStyle }}">{{ timer }}</span>
+      </sc-if>
+      <a href="Кабинет-кандидата.dc.html" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#A3A5AD;border:1px solid #3A3B42;border-radius:4px;padding:9px 12px" style-hover="color:#FFFFFF;border-color:#A3A5AD">Выйти</a>
+    </div>
+  </div>
+  <sc-if value="{{ inTest }}" hint-placeholder-val="{{ false }}">
+    <div style="height:3px;background:#26272D"><div style="{{ timeBar }}"></div></div>
+  </sc-if>
+</header>
+<sc-if value="{{ error }}"><div role="alert" style="max-width:1376px;margin:20px auto;padding:16px 24px;background:#FFF0F2;color:#A00024;border-radius:4px">{{ error }}</div></sc-if>
+<sc-if value="{{ notice }}"><div role="status" style="max-width:1376px;margin:20px auto;padding:16px 24px;background:#ECEAFF;color:#2A1BD9;border-radius:4px">{{ notice }}</div></sc-if>
+
+<sc-if value="{{ inSurvey }}" hint-placeholder-val="{{ true }}">
+  <main style="max-width:1440px;margin:0 auto;padding:48px 32px 96px;display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start">
+    <div style="flex:999 1 640px;min-width:0;display:flex;flex-direction:column;gap:40px">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#5B5D65">Шаги 01–02 · опрос и грейд</span>
+        <h1 style="margin:0;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:clamp(38px,4vw,58px);line-height:1.02;letter-spacing:-0.045em;max-width:820px;text-wrap:balance">На какой уровень вы готовы подтвердить себя?</h1>
+        <p style="margin:0;font-size:17px;line-height:1.6;color:#5B5D65;max-width:640px">Работодатель увидит категорию по результату теста. Если не пройдёте — текущая категория сохранится.</p>
+      </div>
+
+      <section style="display:flex;flex-direction:column;gap:14px">
+        <span style="font-size:15px;font-weight:600">Отрасль</span>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <sc-for list="{{ industries }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.t }}</button>
+          </sc-for>
+        </div>
+      </section>
+
+      <section style="display:flex;flex-direction:column;gap:14px">
+        <span style="font-size:15px;font-weight:600">Специализация</span>
+        <div data-stagger="scale" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px">
+          <sc-for list="{{ specs }}" as="o" hint-placeholder-count="6">
+            <button onClick="{{ o.pick }}" style="{{ o.style }}">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:600;letter-spacing:-0.02em">{{ o.t }}</span>
+              <span style="font-size:13px;opacity:0.8">{{ o.d }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </section>
+
+      <section style="display:flex;flex-direction:column;gap:14px">
+        <span style="font-size:15px;font-weight:600">Заявленный грейд</span>
+        <div data-stagger="up" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px">
+          <sc-for list="{{ gradesOpts }}" as="o" hint-placeholder-count="3">
+            <button onClick="{{ o.pick }}" style="{{ o.style }}">
+              <span style="display:flex;justify-content:space-between;width:100%;font-family:'JetBrains Mono',monospace;font-size:12px;opacity:0.75"><span>{{ o.n }}</span><span>{{ o.tag }}</span></span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:600;letter-spacing:-0.03em">{{ o.t }}</span>
+              <span style="font-size:13px;line-height:1.45;opacity:0.85;text-align:left">{{ o.d }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </section>
+
+      <label style="display:flex;flex-direction:column;gap:10px">
+        <span style="font-size:15px;font-weight:600">Какие задачи вы уже решали? <span style="font-weight:400;color:#5B5D65">— необязательно</span></span>
+        <textarea value="{{ motivation }}" onChange="{{ onMotivation }}" rows="3" placeholder="Например: API документооборота, фоновый импорт, миграции PostgreSQL" style="border:1px solid #CFCFCB;border-radius:4px;padding:14px;font:inherit;font-size:15px;line-height:1.5;outline:none;resize:vertical;background:#FFFFFF;color:#1B1C21" style-focus="border-color:#402FFF;box-shadow:0 0 0 3px #E2DFFF"></textarea>
+      </label>
+
+      <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center">
+        <button disabled="{{ busy }}" onClick="{{ start }}" style="height:56px;padding:0 26px;border:0;border-radius:4px;background:#402FFF;color:#FFFFFF;font:inherit;font-size:16px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:20px" style-hover="background:#2F1FE6">Начать тест · {{ spec }} · {{ grade }}<span style="font-family:'JetBrains Mono',monospace">→</span></button>
+        <span style="font-size:14px;color:#5B5D65">6 заданий · 30 минут · можно прерваться, ответы сохраняются</span>
+      </div>
+    </div>
+
+    <aside style="flex:1 1 340px;max-width:420px;background:#1B1C21;color:#EDEDED;border-radius:8px;padding:28px;display:flex;flex-direction:column;gap:22px;position:sticky;top:96px">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#A3A5AD">Как собирается ваш вариант</span>
+      <div style="display:flex;flex-direction:column;position:relative">
+        <div style="position:absolute;left:15px;top:16px;bottom:16px;width:2px;background:#402FFF"></div>
+        <sc-for list="{{ howto }}" as="h" hint-placeholder-count="4">
+          <div style="display:grid;grid-template-columns:32px minmax(0,1fr);gap:14px;padding-bottom:20px;position:relative">
+            <span style="width:32px;height:32px;border-radius:50%;background:#1B1C21;border:2px solid #402FFF;display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:12px;color:#FFFFFF">{{ h.n }}</span>
+            <div style="display:flex;flex-direction:column;gap:4px;padding-top:4px">
+              <span style="font-size:15px;font-weight:600;color:#FFFFFF">{{ h.t }}</span>
+              <span style="font-size:13px;line-height:1.5;color:#C8C9CA">{{ h.d }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="border-top:1px solid #33343A;padding-top:18px;display:flex;flex-direction:column;gap:10px;font-size:13px;line-height:1.5;color:#C8C9CA">
+        <span><span style="font-family:'JetBrains Mono',monospace;color:#FFFFFF">4/6</span> — порог категории</span>
+        <span><span style="font-family:'JetBrains Mono',monospace;color:#FFFFFF">24 ч</span> — до повторной попытки</span>
+        <span><span style="font-family:'JetBrains Mono',monospace;color:#FFFFFF">90 дн</span> — между сменами грейда</span>
+      </div>
+    </aside>
+  </main>
+</sc-if>
+
+<sc-if value="{{ inTest }}" hint-placeholder-val="{{ false }}">
+  <main style="max-width:1440px;margin:0 auto;padding:40px 32px 96px;display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start">
+    <div style="flex:999 1 640px;min-width:0;display:flex;flex-direction:column;gap:28px">
+      <div style="display:flex;gap:4px">
+        <sc-for list="{{ segs }}" as="g" hint-placeholder-count="6">
+          <button aria-label="{{ g.label }}" onClick="{{ g.go }}" style="{{ g.style }}"></button>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:18px;animation:qIn .3s ease both" key="{{ qi }}">
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:baseline">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;color:#5B5D65">Задание {{ qn }} из 6 · {{ q.kind }}</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#5B5D65">{{ q.topic }}</span>
+        </div>
+        <h2 style="margin:0;font-size:clamp(22px,2.1vw,28px);font-weight:600;line-height:1.35;letter-spacing:-0.015em;max-width:860px;text-wrap:pretty">{{ q.prompt }}</h2>
+        <sc-if value="{{ q.code }}" hint-placeholder-val="{{ false }}">
+          <pre style="margin:0;background:#1B1C21;color:#EDEDED;border-radius:6px;padding:20px 22px;font-family:'JetBrains Mono',monospace;font-size:15px;line-height:1.7;overflow-x:auto;max-width:860px">{{ q.code }}</pre>
+        </sc-if>
+        <sc-if value="{{ q.isChoice }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:8px;max-width:860px">
+            <sc-for list="{{ opts }}" as="o" hint-placeholder-count="4">
+              <button onClick="{{ o.pick }}" style="{{ o.style }}">
+                <span style="{{ o.keyStyle }}">{{ o.key }}</span>
+                <span style="{{ o.textStyle }}">{{ o.t }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ q.isNum }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+            <input value="{{ numVal }}" onChange="{{ onNum }}" placeholder="0" style="width:180px;height:64px;border:2px solid #1B1C21;border-radius:4px;padding:0 18px;font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:600;outline:none;background:#FFFFFF;color:#1B1C21" style-focus="border-color:#402FFF;box-shadow:0 0 0 3px #E2DFFF">
+            <span style="font-size:16px;color:#5B5D65">инстансов</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{ q.isText }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:8px;max-width:860px">
+            <textarea value="{{ textVal }}" onChange="{{ onText }}" rows="7" placeholder="Шаги, порядок, как проверите и как откатите" style="border:2px solid #1B1C21;border-radius:4px;padding:16px;font:inherit;font-size:16px;line-height:1.55;outline:none;resize:vertical;background:#FFFFFF;color:#1B1C21" style-focus="border-color:#402FFF;box-shadow:0 0 0 3px #E2DFFF"></textarea>
+            <span style="font-size:13px;color:#5B5D65">Оценивается по трём критериям: безопасность для продакшена, порядок шагов, план отката. {{ textCount }}</span>
+          </div>
+        </sc-if>
+      </div>
+      <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;max-width:860px;padding-top:8px;border-top:1px solid #DCDCD8">
+        <button onClick="{{ prev }}" style="{{ prevStyle }}">← Назад</button>
+        <div style="display:flex;gap:10px">
+          <button onClick="{{ skip }}" style="height:50px;padding:0 18px;border:1px solid #CFCFCB;background:transparent;border-radius:4px;font:inherit;font-size:15px;cursor:pointer;color:#1B1C21">Пропустить</button>
+          <button disabled="{{ busy }}" onClick="{{ next }}" style="height:50px;padding:0 24px;border:0;border-radius:4px;background:#402FFF;color:#FFFFFF;font:inherit;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:16px" style-hover="background:#2F1FE6">{{ nextLabel }}<span style="font-family:'JetBrains Mono',monospace">→</span></button>
+        </div>
+      </div>
+    </div>
+
+    <aside style="flex:1 1 320px;max-width:380px;display:flex;flex-direction:column;gap:16px;position:sticky;top:100px">
+      <div style="background:#FFFFFF;border-radius:8px;padding:22px;display:flex;flex-direction:column;gap:16px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#5B5D65">Карта заданий</span>
+        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px">
+          <sc-for list="{{ map }}" as="m" hint-placeholder-count="6">
+            <button onClick="{{ m.go }}" style="{{ m.style }}">{{ m.n }}</button>
+          </sc-for>
+        </div>
+        <span style="font-size:13px;color:#5B5D65">Отвечено {{ answered }} из 6 · {{ saveStatus }}</span>
+      </div>
+      <div style="background:#1B1C21;color:#EDEDED;border-radius:8px;padding:22px;display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden">
+        <img src="assets/lineline1.png" alt="" style="position:absolute;right:-40px;bottom:-30px;width:200px;opacity:0.2">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#A3A5AD;position:relative">Ваш вариант</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:#FFFFFF;position:relative">{{ variantLabel }}</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.6;color:#A3A5AD;position:relative;overflow-wrap:anywhere">{{ variantId }} · {{ variantBlueprint }}</span>
+        <span style="font-size:13px;line-height:1.55;color:#C8C9CA;position:relative">Четыре профессиональных задания из банка и два параметрических задания с новыми числами показаны в случайном порядке. Ответы и итоговую оценку проверяет сервер.</span>
+      </div>
+    </aside>
+  </main>
+</sc-if>
+
+<sc-if value="{{ inResult }}" hint-placeholder-val="{{ false }}">
+  <main style="max-width:1440px;margin:0 auto;padding:48px 32px 96px;display:flex;flex-direction:column;gap:32px">
+    <section data-reveal="scale" data-dur="900" style="{{ verdictStyle }}">
+      <img src="assets/lineline1.png" alt="" style="position:absolute;right:3%;top:-20px;width:380px;opacity:0.3;pointer-events:none">
+      <div style="position:relative;display:flex;flex-wrap:wrap;gap:40px;align-items:flex-end;justify-content:space-between">
+        <div style="display:flex;flex-direction:column;gap:16px;max-width:720px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;opacity:0.8">Шаг 04 · категория</span>
+          <h1 style="margin:0;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:clamp(38px,4.4vw,64px);line-height:1;letter-spacing:-0.045em">{{ verdictTitle }}</h1>
+          <p style="margin:0;font-size:17px;line-height:1.6;opacity:0.9">{{ verdictText }}</p>
+        </div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:clamp(80px,9vw,140px);font-weight:600;letter-spacing:-0.06em;line-height:0.85"><span>{{ score }}</span><span style="opacity:0.5">/6</span></span>
+      </div>
+      <div style="position:relative;display:flex;flex-wrap:wrap;gap:10px;margin-top:32px">
+        <a href="Кабинет-кандидата.dc.html" style="height:50px;padding:0 22px;border-radius:4px;background:#FFFFFF;color:#1B1C21;font-size:15px;font-weight:600;display:flex;align-items:center;gap:14px" style-hover="color:#1B1C21;background:#EDEDED">В кабинет<span style="font-family:'JetBrains Mono',monospace">→</span></a>
+        <a href="Приглашения.dc.html" style="height:50px;padding:0 20px;border-radius:4px;border:1px solid rgba(255,255,255,0.5);color:#FFFFFF;font-size:15px;display:flex;align-items:center" style-hover="color:#FFFFFF;border-color:#FFFFFF">Приглашения</a>
+        <button onClick="{{ restart }}" style="height:50px;padding:0 20px;border-radius:4px;border:1px solid rgba(255,255,255,0.5);background:transparent;color:#FFFFFF;font:inherit;font-size:15px;cursor:pointer">Выбрать следующий тест</button>
+      </div>
+    </section>
+    <sc-if value="{{ rubricShow }}" hint-placeholder-val="{{ false }}">
+      <section data-reveal="up" style="background:#1B1C21;color:#EDEDED;border-radius:8px;padding:24px 28px;display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#9A92FF">Задание 06 · проверка по критериям</span>
+            <span style="font-size:19px;font-weight:600;color:#FFFFFF">Миграция без простоя</span>
+          </div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#8B8D94">{{ rubricEngine }}</span>
+        </div>
+        <sc-if value="{{ rubricBusy }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#A3A5AD"><span style="position:relative;width:140px;height:2px;background:#2A2B31;overflow:hidden"><span data-fx="sweep" style="position:absolute;left:0;top:0;width:30%;height:100%;background:#9A92FF"></span></span>Сверяем ответ с критериями</div>
+        </sc-if>
+        <div data-stagger="left" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px">
+          <sc-for list="{{ rubricItems }}" as="r" hint-placeholder-count="0">
+            <div style="{{ r.style }}">
+              <span style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:12px"><span>{{ r.t }}</span><span style="font-weight:600">{{ r.mark }}</span></span>
+              <span style="font-size:14px;line-height:1.5;color:#C8C9CA">{{ r.note }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <span style="font-size:13px;line-height:1.5;color:#A3A5AD">Комментарий помогает разобрать ответ. Балл и категорию считает алгоритм теста, одинаковый для всех.</span>
+      </section>
+    </sc-if>
+    <section data-reveal="up" style="background:#FFFFFF;border-radius:8px;padding:28px">
+      <h2 style="margin:0 0 12px;font-size:22px;font-weight:600">Разбор ответов</h2>
+      <sc-for list="{{ review }}" as="r" hint-placeholder-count="6">
+        <div class="fsp-mobile-stack" style="display:grid;grid-template-columns:44px minmax(0,1fr) 120px;gap:20px;padding:16px 0;border-top:1px solid #E4E4E1;align-items:start">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600">{{ r.n }}</span>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:16px;font-weight:600">{{ r.topic }}</span>
+            <span style="font-size:14px;line-height:1.55;color:#5B5D65">{{ r.exp }}</span>
+          </div>
+          <span style="{{ r.style }}">{{ r.mark }}</span>
+        </div>
+      </sc-for>
+    </section>
+  </main>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;startPhase&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;survey&quot;,&quot;test&quot;,&quot;result&quot;],&quot;default&quot;:&quot;survey&quot;,&quot;tsType&quot;:&quot;'survey' | 'test' | 'result'&quot;,&quot;section&quot;:&quot;Состояния&quot;}}">
+class DesignTest extends DCLogic {
+  Q = [{kind:'',topic:'Загрузка',prompt:'Загружаем вопросы',options:[]}];
+  isOk(i) { return !!this._attempt?.feedback?.[i]?.correct; }
+  renderVals() {
+    const s = this.state, Q = this.Q, q = Q[s.qi];
+    const phaseIdx = s.phase === 'survey' ? 1 : s.phase === 'test' ? 2 : 3;
+    const rail = [['01', 'Опрос'], ['02', 'Грейд'], ['03', 'Тест'], ['04', 'Категория']].map(([n, t], i) => ({ n, t, sep: i < 3,
+      style: { color: i < phaseIdx || (phaseIdx === 1 && i === 0) ? '#FFFFFF' : i === phaseIdx ? '#FFFFFF' : '#6E7078', padding: '5px 8px', borderRadius: 3, background: i === phaseIdx || (phaseIdx === 1 && i === 0) ? '#402FFF' : 'transparent', whiteSpace: 'nowrap' } }));
+    const tile = on => ({ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6, padding: '16px 18px', borderRadius: 6, cursor: 'pointer', font: 'inherit', textAlign: 'left', border: on ? '2px solid #402FFF' : '1px solid #DCDCD8', background: on ? '#402FFF' : '#FFFFFF', color: on ? '#FFFFFF' : '#1B1C21', margin: on ? 0 : 1 });
+    const chip = on => ({ height: 40, padding: '0 16px', borderRadius: 999, font: 'inherit', fontSize: 14, cursor: 'pointer', border: on ? '1px solid #1B1C21' : '1px solid #CFCFCB', background: on ? '#1B1C21' : '#FFFFFF', color: on ? '#FFFFFF' : '#1B1C21' });
+    const specD = { Frontend: 'интерфейсы, браузер', Backend: 'API, данные, очереди', Fullstack: 'от схемы до UI', 'Data Science': 'модели и метрики', DevOps: 'инфраструктура, CI', QA: 'качество и тест-дизайн' };
+    const ans = s.answers[s.qi];
+    const answered = Object.keys(s.answers).filter(k => s.answers[k] !== '' && s.answers[k] !== undefined).length;
+    const score = Q.reduce((n, _, i) => n + (this.isOk(i, s.answers[i]) ? 1 : 0), 0);
+    const pass = score >= 4;
+    const mm = String(Math.floor(s.left / 60)).padStart(2, '0'), ss = String(s.left % 60).padStart(2, '0');
+    const lower = s.grade === 'Senior' ? 'Middle' : 'Junior';
+    return {
+      rail, inSurvey: s.phase === 'survey', inTest: s.phase === 'test', inResult: s.phase === 'result',
+      industries: ['ИТ-продукты', 'Финтех', 'Госсектор', 'Промышленность', 'Медиа'].map(t => ({ t, style: chip(s.industry === t), pick: () => this.setState({ industry: t }) })),
+      specs: Object.keys(specD).map(t => ({ t, d: specD[t], style: tile(s.spec === t), pick: () => this.setState({ spec: t }) })),
+      gradesOpts: [['Junior', 'до 2 лет: задачи с наставником', 'пройден'], ['Middle', '2–5 лет: самостоятельно ведёт задачи', 'текущий'], ['Senior', '5+ лет: архитектура и наставничество', 'окно открыто']].map(([t, d, tag], i) => ({ n: '0' + (i + 1), t, d, tag, style: tile(s.grade === t), pick: () => this.setState({ grade: t }) })),
+      spec: s.spec, grade: s.grade,
+      howto: [
+        { n: '01', t: 'Банк категории', d: '108 заданий для ' + s.spec + ' · ' + s.grade + ', у каждого измерена доля верных ответов.' },
+        { n: '02', t: '4 задания по темам', d: 'По одному из каждой темы и одной полосы сложности — варианты сопоставимы.' },
+        { n: '03', t: '2 уникальных', d: 'Параметрическая задача с вашими числами и вопрос на подход с проверкой по критериям.' },
+        { n: '04', t: 'Категория', d: '4 из 6 — категория подтверждена и видна работодателям.' }
+      ],
+      start: () => { window.scrollTo(0, 0); this.setState({ phase: 'test', qi: 0, left: 1800 }); },
+      timer: mm + ':' + ss,
+      timerStyle: { fontFamily: "'JetBrains Mono',monospace", fontSize: 20, fontWeight: 600, letterSpacing: '-0.02em', color: s.left < 300 ? '#FF5A6E' : '#FFFFFF', minWidth: 72, textAlign: 'right' },
+      timeBar: { height: 3, width: (s.left / 1800 * 100) + '%', background: s.left < 300 ? '#EC1D35' : '#402FFF', transition: 'width 1s linear' },
+      segs: Q.map((_, i) => ({ go: () => this.setState({ qi: i }), style: { flex: 1, height: 6, border: 0, padding: 0, cursor: 'pointer', borderRadius: 2, background: i === s.qi ? '#402FFF' : s.answers[i] !== undefined && s.answers[i] !== '' ? '#1B1C21' : '#D3D3CF' } })),
+      qi: s.qi, qn: s.qi + 1,
+      q: { kind: q.kind, topic: q.topic, prompt: q.prompt, code: q.code || '', isChoice: !!q.options, isNum: !!q.num, isText: !!q.text },
+      opts: (q.options || []).map((t, i) => {
+        const on = ans === i;
+        return { key: 'ABCD'[i], t, pick: () => this.answer(i),
+          style: { display: 'grid', gridTemplateColumns: '40px minmax(0,1fr)', gap: 16, alignItems: 'center', textAlign: 'left', padding: '14px 18px', borderRadius: 6, cursor: 'pointer', font: 'inherit', background: on ? '#ECEAFF' : '#FFFFFF', border: on ? '2px solid #402FFF' : '2px solid transparent', color: '#1B1C21', transition: 'background .15s, border-color .15s' },
+          keyStyle: { width: 32, height: 32, borderRadius: 4, display: 'grid', placeItems: 'center', fontFamily: "'JetBrains Mono',monospace", fontSize: 13, fontWeight: 600, background: on ? '#402FFF' : '#EFEFEC', color: on ? '#FFFFFF' : '#1B1C21' },
+          textStyle: { fontSize: 16, lineHeight: 1.45, fontFamily: q.mono ? "'JetBrains Mono',monospace" : 'inherit' } };
+      }),
+      numVal: q.num ? (ans ?? '') : '', onNum: e => this.answer(e.target.value.replace(/\D/g, '')),
+      textVal: q.text ? (ans ?? '') : '', onText: e => this.answer(e.target.value),
+      textCount: q.text ? String(ans || '').length + ' зн.' : '',
+      map: Q.map((_, i) => { const done = s.answers[i] !== undefined && s.answers[i] !== ''; return { n: i + 1, go: () => this.setState({ qi: i }), style: { height: 40, borderRadius: 4, cursor: 'pointer', fontFamily: "'JetBrains Mono',monospace", fontSize: 14, fontWeight: 600, border: i === s.qi ? '2px solid #402FFF' : '1px solid #DCDCD8', background: done ? '#1B1C21' : '#FFFFFF', color: done ? '#FFFFFF' : '#1B1C21' } }; }),
+      answered,
+      prev: () => this.setState({ qi: Math.max(0, s.qi - 1) }),
+      prevStyle: { height: 50, padding: '0 18px', border: 0, background: 'transparent', font: 'inherit', fontSize: 15, cursor: s.qi ? 'pointer' : 'default', color: s.qi ? '#1B1C21' : '#A3A5AD' },
+      skip: () => s.qi < 5 ? this.setState({ qi: s.qi + 1 }) : this.setState({ phase: 'result' }),
+      next: () => { if (s.qi < 5) this.setState({ qi: s.qi + 1 }); else { window.scrollTo(0, 0); this.setState({ phase: 'result' }); this.rubric(); } },
+      rubricShow: !!s.rubric, rubricBusy: !!(s.rubric && s.rubric.busy), rubricEngine: s.rubric && s.rubric.engine ? s.rubric.engine : '',
+      rubricItems: (s.rubric && s.rubric.items || []).map(r => ({ t: r.t, note: r.note, mark: r.ok ? '✓' : '×', style: { padding: '14px 16px', borderRadius: 6, display: 'flex', flexDirection: 'column', gap: 8, background: r.ok ? '#26236B' : '#202126', border: r.ok ? '1px solid #402FFF' : '1px dashed #EC1D35', color: r.ok ? '#FFFFFF' : '#FF8A98' } })),
+      nextLabel: s.qi < 5 ? 'Ответить и дальше' : 'Завершить тест',
+      score,
+      verdictTitle: pass ? s.spec + ' · ' + s.grade + ' подтверждён' : 'Пока не ' + s.grade + ' — и это не минус',
+      verdictText: pass ? 'Категория обновлена и уже видна работодателям в каталоге. Следующая смена грейда — не раньше чем через 90 дней.' : 'Текущая категория ' + s.spec + ' · ' + lower + ' сохранена. Повторить тест можно через 24 часа — по разбору ниже видно, что подтянуть.',
+      verdictStyle: { position: 'relative', overflow: 'hidden', borderRadius: 8, padding: '40px 40px 36px', background: pass ? '#402FFF' : '#1B1C21', color: '#FFFFFF' },
+      review: Q.map((x, i) => { const ok = this.isOk(i, s.answers[i]); const none = s.answers[i] === undefined || s.answers[i] === ''; return { n: String(i + 1).padStart(2, '0'), topic: x.topic, exp: x.exp, mark: none ? 'Пропущено' : x.text ? (ok ? 'Принято' : 'Слишком кратко') : ok ? 'Верно' : 'Неверно', style: { justifySelf: 'end', fontFamily: "'JetBrains Mono',monospace", fontSize: 12, fontWeight: 600, padding: '5px 10px', borderRadius: 3, background: ok ? '#ECEAFF' : '#FFFFFF', color: ok ? '#2A1BD9' : none ? '#5B5D65' : '#C8102E', border: ok ? '1px solid #ECEAFF' : '1px dashed currentColor' } }; }),
+      restart: () => { window.scrollTo(0, 0); this.setState({ phase: 'survey', qi: 0, answers: {}, left: 1800, rubric: null }); }
+    };
+  }
+}
+
+class Component extends DesignTest {
+  state = { phase:'survey', industry:'ИТ-продукты', spec:new URLSearchParams(location.search).get('role')||'Frontend', grade:new URLSearchParams(location.search).get('grade')||'Junior', qi:0, answers:{}, left:1800, rubric:null, loading:true, error:'', busy:false, motivation:'' };
+  componentDidMount(){ window.ProfectiumCandidate.mountTest(this); }
+  componentWillUnmount(){ clearInterval(this._timer);window.removeEventListener('beforeunload',this._beforeUnload); }
+  answer(value){ window.ProfectiumCandidate.answer(this,value); }
+  renderVals(){ return window.ProfectiumCandidate.testValues(this,super.renderVals()); }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<!--
+ * Copyright (c) 2026 Криницин Вячеслав Александрович - Oladievic.
+ * Все права сохранены.
+ *
+ * Автор: Криницин Вячеслав Александрович
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="./responsive.css">
+<script src="./support.js"></script>
+</head>
+<body class="fsp-page">
+<x-dc>
+<helmet>
+<title>Каталог специалистов · Profectium</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="data.js"></script>
+<script src="search.js"></script>
+<script src="fx.js"></script>
+<script src="backend-employer.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#EFEFEC;color:#1B1C21;font-family:'Golos Text',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#402FFF;text-decoration:none}
+a:hover{color:#2A1BD9}
+input::placeholder,textarea::placeholder{color:#8B8D94}
+@keyframes slideIn{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes rowIn{from{transform:translateY(6px);opacity:0}to{transform:none;opacity:1}}
+</style>
+</helmet>
+
+<header class="fsp-header" style="position:sticky;top:0;z-index:30;background:#1B1C21;color:#EDEDED">
+  <div class="fsp-header-shell" style="max-width:1440px;margin:0 auto;height:64px;padding:0 32px;display:flex;align-items:center;gap:24px">
+    <a href="Лендинг.dc.html" style="display:flex;align-items:center;gap:14px;color:#EDEDED;flex-shrink:0">
+      <img src="assets/logo_01.svg" alt="ФСП" style="height:24px;display:block">
+      <span style="width:1px;height:20px;background:#3A3B42"></span>
+      <span style="font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px;letter-spacing:-0.02em">Profectium</span>
+    </a>
+    <nav style="display:flex;align-self:stretch;gap:4px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.08em;text-transform:uppercase">
+      <a href="Пульт.dc.html" style="display:flex;align-items:center;padding:0 14px;color:#A3A5AD" style-hover="color:#FFFFFF">Пульт</a>
+      <a href="Каталог.dc.html" style="display:flex;align-items:center;padding:0 14px;color:#FFFFFF;box-shadow:inset 0 -2px 0 #402FFF">Каталог</a>
+      <a href="Интеграции.dc.html" style="display:flex;align-items:center;padding:0 14px;color:#A3A5AD" style-hover="color:#FFFFFF">Интеграции</a>
+    </nav>
+    <div class="fsp-header-controls" style="margin-left:auto;display:flex;align-items:center;gap:16px">
+      <button data-palette="1" title="Поиск" style="height:34px;padding:0 10px;border-radius:4px;border:1px solid #3A3B42;background:#202126;color:#C8C9CA;font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;white-space:nowrap" style-hover="border-color:#6E7078;color:#FFFFFF">Ctrl K</button>
+      <div style="display:flex;background:#26272D;border-radius:999px;padding:3px;font-size:13px">
+        <a href="Кабинет-кандидата.dc.html" style="padding:6px 14px;border-radius:999px;color:#A3A5AD" style-hover="color:#FFFFFF">Кандидат</a>
+        <span style="padding:6px 14px;border-radius:999px;background:#EDEDED;color:#1B1C21;font-weight:600">Работодатель</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="width:34px;height:34px;border-radius:6px;background:#402FFF;color:#FFFFFF;display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600">ОТ</span>
+
+      </div>
+    </div>
+  </div>
+</header>
+
+<main style="max-width:1440px;margin:0 auto;padding:40px 32px 80px;display:flex;flex-direction:column;gap:32px">
+  <sc-if value="{{ backendLoading }}"><div role="status" style="padding:16px 20px;background:#FFFFFF;border-radius:8px">Загружаем каталог из базы…</div></sc-if>
+  <sc-if value="{{ backendError }}"><div role="alert" style="padding:16px 20px;background:#FFFFFF;border:1px solid #C8102E;border-radius:8px;color:#C8102E">{{ backendError }} <button onClick="{{ refresh }}" style="font:inherit;color:#402FFF;border:0;background:none;cursor:pointer">Обновить</button></div></sc-if>
+  <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#5B5D65">Каталог специалистов / категория</span>
+      <h1 data-flash="1" style="margin:0;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:clamp(40px,4.4vw,64px);line-height:1;letter-spacing:-0.045em">{{ role }} <span style="color:#402FFF">·</span> {{ grade }}</h1>
+    </div>
+    <div style="display:flex;gap:40px;align-items:flex-end">
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <span data-flash="1" style="font-family:'JetBrains Mono',monospace;font-size:40px;font-weight:600;letter-spacing:-0.04em;line-height:1">{{ catCount }}</span>
+        <span style="font-size:13px;color:#5B5D65">в категории</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <span data-flash="1" style="font-family:'JetBrains Mono',monospace;font-size:40px;font-weight:600;letter-spacing:-0.04em;line-height:1">{{ fspCount }}</span>
+        <span style="font-size:13px;color:#5B5D65">с достижениями ФСП</span>
+      </div>
+    </div>
+  </div>
+
+  <section data-reveal="up" style="background:#1B1C21;color:#EDEDED;border-radius:8px;padding:6px;display:flex;flex-direction:column;position:relative;overflow:hidden">
+    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+      <span style="display:flex;align-items:center;gap:8px;padding:0 10px 0 14px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#9A92FF;white-space:nowrap"><span style="position:relative;width:7px;height:7px"><span style="position:absolute;inset:0;border-radius:50%;background:#9A92FF"></span><span data-fx="pulse" style="position:absolute;inset:0;border-radius:50%;background:#9A92FF"></span></span>Поиск по запросу</span>
+      <input value="{{ searchQuery }}" onChange="{{ onSearchQuery }}" onKeyDown="{{ onSearchKey }}" placeholder="Опишите, кого ищете: «бэкендер на Python с Kafka и призами ФСП, удалёнка, до 260»" style="flex:1 1 320px;min-width:0;height:52px;border:0;background:transparent;color:#FFFFFF;font:inherit;font-size:16px;outline:none">
+      <button onClick="{{ runSearch }}" style="{{ searchButton }}">{{ searchButtonLabel }}</button>
+    </div>
+    <sc-if value="{{ searchBusy }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;left:0;right:0;bottom:0;height:2px;overflow:hidden"><span data-fx="sweep" style="position:absolute;left:0;top:0;width:25%;height:100%;background:#9A92FF"></span></div>
+    </sc-if>
+    <sc-if value="{{ hasSearchResult }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:10px 12px 8px 14px;border-top:1px solid #2A2B31;animation:rowIn .35s ease both">
+        <span style="font-size:13px;color:#A3A5AD;margin-right:4px">Понял так:</span>
+        <sc-for list="{{ searchChips }}" as="k" hint-placeholder-count="3">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;padding:4px 9px;border-radius:3px;background:#2E2F36;color:#FFFFFF">{{ k }}</span>
+        </sc-for>
+        <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;color:#8B8D94">{{ searchEngine }}</span>
+        <button onClick="{{ clearSearch }}" style="border:0;background:none;color:#9A92FF;font:inherit;font-size:13px;cursor:pointer;padding:0 4px">Сбросить</button>
+      </div>
+    </sc-if>
+    <sc-if value="{{ noSearchResult }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 12px 8px 14px;border-top:1px solid #2A2B31">
+        <span style="font-size:13px;color:#8B8D94;margin-right:4px">Например:</span>
+        <sc-for list="{{ searchExamples }}" as="x" hint-placeholder-count="3">
+          <button onClick="{{ x.run }}" style="height:28px;padding:0 10px;border-radius:999px;border:1px solid #3A3B42;background:transparent;color:#C8C9CA;font:inherit;font-size:13px;cursor:pointer;white-space:nowrap" style-hover="border-color:#9A92FF;color:#FFFFFF">{{ x.t }}</button>
+        </sc-for>
+        <a href="Интеграции.dc.html?tab=helper" style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;color:#8B8D94" style-hover="color:#9A92FF">{{ searchLabel }}</a>
+      </div>
+    </sc-if>
+  </section>
+
+  <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:14px 16px;background:#FFFFFF;border-radius:8px">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#5B5D65;margin-right:6px">Потребность</span>
+    <sc-for list="{{ needs }}" as="n" hint-placeholder-count="4">
+      <button onClick="{{ n.pick }}" style="{{ n.style }}">{{ n.title }}</button>
+    </sc-for>
+    <span style="margin-left:auto;font-size:13px;color:#5B5D65">{{ needHint }}</span>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start">
+    <aside style="display:flex;flex-direction:column;gap:16px;flex:1 1 300px;max-width:340px;position:sticky;top:88px">
+      <div style="background:#1B1C21;color:#EDEDED;border-radius:8px;padding:20px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#A3A5AD">Категории</span>
+          <span style="font-size:12px;color:#A3A5AD">по тесту, не по резюме</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 52px 52px 52px;gap:4px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#A3A5AD;letter-spacing:0.06em;margin-bottom:6px">
+          <span></span><span style="text-align:center">JUN</span><span style="text-align:center">MID</span><span style="text-align:center">SEN</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <sc-for list="{{ matrix }}" as="row" hint-placeholder-count="6">
+            <div style="display:grid;grid-template-columns:1fr 52px 52px 52px;gap:4px;align-items:center">
+              <span style="font-size:14px;color:#EDEDED">{{ row.role }}</span>
+              <sc-for list="{{ row.cells }}" as="cell" hint-placeholder-count="3">
+                <button onClick="{{ cell.pick }}" style="{{ cell.style }}">{{ cell.n }}</button>
+              </sc-for>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="background:#FFFFFF;border-radius:8px;padding:20px;display:flex;flex-direction:column;gap:20px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#5B5D65">Уточнить</span>
+          <sc-if value="{{ hasFilters }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ resetFilters }}" style="border:0;background:none;color:#402FFF;font:inherit;font-size:13px;cursor:pointer;padding:0">Сбросить</button>
+          </sc-if>
+        </div>
+        <button onClick="{{ toggleFsp }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;border:0;background:none;padding:0;cursor:pointer;font:inherit;text-align:left">
+          <span style="display:flex;align-items:center;gap:10px;font-size:14px;color:#1B1C21"><img src="assets/logo_03w.svg" alt="" style="height:18px">Только с достижениями ФСП</span>
+          <span style="{{ fspTrack }}"><span style="{{ fspKnob }}"></span></span>
+        </button>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <span style="font-size:13px;color:#5B5D65">Формат работы</span>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <sc-for list="{{ formats }}" as="f" hint-placeholder-count="4">
+              <button onClick="{{ f.pick }}" style="{{ f.style }}">{{ f.t }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <span style="font-size:13px;color:#5B5D65">Обязательный стек</span>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <sc-for list="{{ stackChips }}" as="s" hint-placeholder-count="8">
+              <button onClick="{{ s.pick }}" style="{{ s.style }}">{{ s.t }}</button>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <section style="flex:999 1 680px;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding:4px 0 8px">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:18px;font-size:13px;color:#5B5D65">
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;background:#402FFF;border-radius:2px"></span>Тест · 60</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;background:#1B1C21;border-radius:2px"></span>ФСП · 20</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;background:#9A92FF;border-radius:2px"></span>Навыки · 15</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;background:#C8C9CA;border-radius:2px"></span>Зарплата · 5</span>
+        </div>
+        <div style="display:flex;background:#E2E2DE;border-radius:6px;padding:3px">
+          <sc-for list="{{ sorts }}" as="s" hint-placeholder-count="3">
+            <button onClick="{{ s.pick }}" style="{{ s.style }}">{{ s.t }}</button>
+          </sc-for>
+        </div>
+      </div>
+
+      <sc-if value="{{ hiddenCount }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;border:1px dashed #A3A5AD;border-radius:8px;font-size:14px;color:#1B1C21">
+          <span>Подборка из {{ total }} сохранена — фильтры скрыли {{ hiddenCount }}.</span>
+          <button onClick="{{ resetFilters }}" style="border:0;background:none;color:#402FFF;font:inherit;font-size:14px;cursor:pointer;padding:0">Показать всех</button>
+        </div>
+      </sc-if>
+
+      <sc-for list="{{ rows }}" as="c" hint-placeholder-count="6">
+        <article class="fsp-mobile-stack" data-flip="{{ c.id }}" style="background:#FFFFFF;border-radius:8px;padding:20px 24px;display:grid;grid-template-columns:56px minmax(0,1.5fr) minmax(0,1fr) 128px auto;gap:24px;align-items:center;animation:rowIn .35s ease both" style-hover="box-shadow:0 0 0 1px #1B1C21">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:600;letter-spacing:-0.04em;color:#1B1C21;line-height:1">{{ c.rank }}</span>
+          <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <a href="{{ c.href }}" style="font-size:18px;font-weight:600;color:#1B1C21;letter-spacing:-0.01em" style-hover="color:#402FFF">{{ c.display }}</a>
+              <sc-if value="{{ c.hasFsp }}" hint-placeholder-val="{{ false }}">
+                <span style="display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.04em;padding:3px 8px 3px 6px;border-radius:3px;background:#1B1C21;color:#FFFFFF"><img src="assets/logo_02.svg" alt="" style="height:12px">{{ c.fspTag }}</span>
+              </sc-if>
+            </div>
+            <span style="font-size:14px;color:#5B5D65">{{ c.meta }}</span>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+              <sc-for list="{{ c.chips }}" as="k" hint-placeholder-count="4">
+                <span style="{{ k.style }}">{{ k.t }}</span>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+            <div style="display:flex;align-items:baseline;gap:6px">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:600;letter-spacing:-0.04em;line-height:1">{{ c.total }}</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5B5D65">/100</span>
+            </div>
+            <div style="display:flex;height:8px;background:#EFEFEC;border-radius:2px;overflow:hidden;gap:2px">
+              <span style="{{ c.barTest }}"></span><span style="{{ c.barFsp }}"></span><span style="{{ c.barSkill }}"></span><span style="{{ c.barSal }}"></span>
+            </div>
+            <span style="font-size:12px;line-height:1.45;color:#5B5D65">{{ c.why }}</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;letter-spacing:-0.02em">{{ c.sal }}</span>
+            <span style="font-size:12px;color:#5B5D65">тыс ₽ · ожидания</span>
+          </div>
+          <div style="display:flex;gap:8px;justify-content:flex-end">
+            <a href="{{ c.href }}" style="height:40px;padding:0 14px;display:flex;align-items:center;border:1px solid #CFCFCB;border-radius:4px;color:#1B1C21;font-size:14px" style-hover="border-color:#1B1C21;color:#1B1C21">Профиль</a>
+            <sc-if value="{{ c.notInvited }}" hint-placeholder-val="{{ true }}">
+              <button onClick="{{ c.invite }}" style="height:40px;padding:0 16px;border:0;border-radius:4px;background:#402FFF;color:#FFFFFF;font:inherit;font-size:14px;font-weight:600;cursor:pointer" style-hover="background:#2F1FE6">Пригласить</button>
+            </sc-if>
+            <sc-if value="{{ c.invited }}" hint-placeholder-val="{{ false }}">
+              <span style="height:40px;padding:0 14px;display:flex;align-items:center;gap:8px;border-radius:4px;background:#ECEAFF;color:#2A1BD9;font-size:14px;font-weight:600"><span style="width:7px;height:7px;border-radius:50%;background:#402FFF"></span>Отправлено</span>
+            </sc-if>
+          </div>
+        </article>
+      </sc-for>
+
+      <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:48px 24px;text-align:center;background:#FFFFFF;border-radius:8px;display:flex;flex-direction:column;gap:12px;align-items:center">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:600">0</span>
+          <span style="font-size:15px;color:#5B5D65">Под эти условия никто не подходит. Ослабьте один фильтр — подборка вернётся.</span>
+        </div>
+      </sc-if>
+
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:12px 4px;font-size:13px;color:#5B5D65">
+        <span>Показано {{ visibleCount }} из {{ catCount }} · с учётом выбранных фильтров</span>
+        <span style="font-family:'JetBrains Mono',monospace">Контакты скрыты до ответа кандидата</span>
+      </div>
+    </section>
+  </div>
+</main>
+
+<sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:50;display:flex;justify-content:flex-end">
+    <div onClick="{{ closeDrawer }}" style="position:absolute;inset:0;background:rgba(19,20,24,0.55);animation:fadeIn .2s ease both"></div>
+    <div style="position:relative;width:min(520px,100%);height:100%;background:#FFFFFF;display:flex;flex-direction:column;animation:slideIn .28s cubic-bezier(.2,.8,.2,1) both">
+      <div style="background:#1B1C21;color:#EDEDED;padding:24px 28px;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden">
+        <img src="assets/lineline1.png" alt="" style="position:absolute;right:-30px;top:-20px;width:200px;opacity:0.35">
+        <div style="display:flex;justify-content:space-between;align-items:center;position:relative">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#A3A5AD">Адресное приглашение</span>
+          <button onClick="{{ closeDrawer }}" style="border:0;background:none;color:#EDEDED;font-size:22px;cursor:pointer;line-height:1;padding:4px">×</button>
+        </div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:600;letter-spacing:-0.03em;position:relative">{{ dName }}</span>
+        <span style="font-size:14px;color:#C8C9CA;position:relative">{{ dMeta }}</span>
+      </div>
+      <div style="flex:1;overflow:auto;padding:24px 28px;display:flex;flex-direction:column;gap:20px">
+        <label style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-size:13px;color:#5B5D65">Роль в команде</span>
+          <input value="{{ fTitle }}" onChange="{{ onTitle }}" style="height:44px;border:1px solid #CFCFCB;border-radius:4px;padding:0 12px;font:inherit;font-size:15px;outline:none;color:#1B1C21" style-focus="border-color:#402FFF;box-shadow:0 0 0 3px #E2DFFF">
+        </label>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-size:13px;color:#5B5D65">Привязка к вакансии</span>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <sc-for list="{{ vacOpts }}" as="v" hint-placeholder-count="2">
+              <button onClick="{{ v.pick }}" style="{{ v.style }}">{{ v.t }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline">
+            <span style="font-size:13px;color:#5B5D65">Зарплата, тыс ₽ в месяц · обязательно</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5B5D65">ждёт {{ dSal }}</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <input value="{{ fMin }}" onChange="{{ onMin }}" placeholder="от" style="height:52px;border:1px solid #CFCFCB;border-radius:4px;padding:0 14px;font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;outline:none;color:#1B1C21" style-focus="border-color:#402FFF;box-shadow:0 0 0 3px #E2DFFF">
+            <input value="{{ fMax }}" onChange="{{ onMax }}" placeholder="до" style="height:52px;border:1px solid #CFCFCB;border-radius:4px;padding:0 14px;font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;outline:none;color:#1B1C21" style-focus="border-color:#402FFF;box-shadow:0 0 0 3px #E2DFFF">
+          </div>
+          <span style="{{ salNoteStyle }}">{{ salNote }}</span>
+        </div>
+        <label style="display:flex;flex-direction:column;gap:8px">
+          <span style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span style="font-size:13px;color:#5B5D65">Предложение</span><button type="button" onClick="{{ makeDraft }}" style="{{ draftBtn }}">{{ draftLabel }}</button></span>
+          <textarea value="{{ fText }}" onChange="{{ onText }}" rows="5" style="border:1px solid #CFCFCB;border-radius:4px;padding:12px;font:inherit;font-size:15px;line-height:1.5;outline:none;resize:vertical;color:#1B1C21" style-focus="border-color:#402FFF;box-shadow:0 0 0 3px #E2DFFF"></textarea>
+        </label>
+        <label style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-size:13px;color:#5B5D65">Как с вами связаться</span>
+          <input value="{{ fContact }}" onChange="{{ onContact }}" style="height:44px;border:1px solid #CFCFCB;border-radius:4px;padding:0 12px;font:inherit;font-size:15px;outline:none;color:#1B1C21" style-focus="border-color:#402FFF;box-shadow:0 0 0 3px #E2DFFF">
+        </label>
+        <div style="display:flex;gap:12px;padding:14px 16px;background:#F3F3F0;border-radius:6px;font-size:13px;line-height:1.5;color:#1B1C21">
+          <span style="font-family:'JetBrains Mono',monospace;color:#402FFF">i</span>
+          <span>Кандидат увидит компанию, роль, зарплату и способ связи. Его почта и телефон откроются вам после того, как он примет приглашение.</span>
+        </div>
+      </div>
+      <div style="padding:16px 28px;border-top:1px solid #E4E4E1;display:flex;gap:10px">
+        <button onClick="{{ closeDrawer }}" style="height:48px;padding:0 18px;border:1px solid #CFCFCB;background:#FFFFFF;border-radius:4px;font:inherit;font-size:15px;cursor:pointer;color:#1B1C21">Отмена</button>
+        <button onClick="{{ send }}" disabled="{{ backendBusy }}" style="flex:1;height:48px;border:0;border-radius:4px;background:#402FFF;color:#FFFFFF;font:inherit;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:0 18px" style-hover="background:#2F1FE6"><span>{{ sendLabel }}</span><span style="font-family:'JetBrains Mono',monospace">→</span></button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:60;background:#1B1C21;color:#EDEDED;border-radius:6px;padding:14px 18px;display:flex;gap:14px;align-items:center;font-size:14px;animation:rowIn .25s ease both;box-shadow:0 20px 40px -12px rgba(0,0,0,0.5)">
+    <span style="width:8px;height:8px;border-radius:50%;background:#9A92FF"></span>
+    <span>{{ toast }}</span>
+    <a href="Пульт.dc.html" style="color:#9A92FF;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase">В пульт →</a>
+  </div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;anonymous&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Каталог&quot;}}">
+class Component extends DCLogic {
+  state = { role: 'Backend', grade: 'Middle', need: 'none', fspOnly: false, format: 'all', stackSel: [], sort: 'total', invited: {}, drawer: null, fTitle: '', fMin: '', fMax: '', fText: '', fContact: '', fVac: 'none', err: '', toast: '', backend: null, backendLoading: true };
+  async componentDidMount() {
+    if (!window.FSPEmployer || !window.ProfectiumAPI) { this._boot = setTimeout(() => this.componentDidMount(), 40); return; }
+    await window.FSPEmployer.connect(this, 'employer', snapshot => ({ invited: Object.fromEntries(snapshot.offers.filter(offer => ['pending', 'accepted'].includes(offer.status)).map(offer => [offer.candidateId, true])), fContact: this.state.fContact || snapshot.company.contact || '' }));
+    const q = new URLSearchParams(window.location.search);
+    const boot = () => {
+      const F = window.FSP, role = q.get('role'), grade = q.get('grade');
+      if (F.roles.includes(role) && F.grades.includes(grade)) this.setState({ role, grade, need: 'none' });
+      if (q.get('q')) { this.setState({ searchQuery: q.get('q') }); this.searchCatalog(q.get('q')); }
+      this.forceUpdate();
+    };
+    if (window.FSP && window.ProfectiumSearch) boot();
+    else this._t = setInterval(() => { if (window.FSP && window.ProfectiumSearch) { clearInterval(this._t); boot(); } }, 40);
+  }
+  flip(patch) { const snap = window.FX ? window.FX.snap() : null; this.setState(patch); if (snap) setTimeout(() => window.FX.play(snap), 0); }
+  async searchCatalog(q) {
+    q = (q || '').trim();
+    if (!q || this.state.searchBusy || !window.ProfectiumSearch) return;
+    this.setState({ searchBusy: true, searchQuery: q });
+    const F = window.FSP;
+    const r = await window.ProfectiumSearch.understand(q);
+    const role = r.role || this.state.role, grade = r.grade || this.state.grade;
+    const skills = (r.skills || []).filter(Boolean).slice(0, 6);
+    const i = F.needs.findIndex(n => n.id === 'helper');
+    if (i >= 0) F.needs.splice(i, 1);
+    if (skills.length) F.needs.push({ id: 'helper', title: 'Поиск: ' + skills.slice(0, 2).join(', '), role, grade, skills });
+    const chips = [role + ' · ' + grade].concat(skills, r.format ? [r.format] : [], r.fsp_only ? ['с достижениями ФСП'] : [], r.max_salary ? ['до ' + r.max_salary + ' тыс ₽'] : []);
+    this.flip({ searchBusy: false, role, grade, need: skills.length ? 'helper' : 'none', stackSel: skills, format: r.format || 'all', fspOnly: !!r.fsp_only, maxSal: r.max_salary || null, searchResult: { chips, engine: r.engine + (r.ms ? ' · ' + r.ms + ' мс' : '') } });
+    window.FX && window.FX.toast((r.summary || 'Подборка обновлена') + ' · ' + chips.length + ' условий', { tone: 'blue' });
+  }
+  clearSearch() {
+    const F = window.FSP, i = F.needs.findIndex(n => n.id === 'helper');
+    if (i >= 0) F.needs.splice(i, 1);
+    this.flip({ searchResult: null, searchQuery: '', need: 'none', stackSel: [], maxSal: null, fspOnly: false, format: 'all' });
+  }
+  async draft(dc, need) {
+    if (this.state.drafting || !dc) return;
+    this.setState({ drafting: true });
+    const text = 'Здравствуйте! Компания «' + this.state.backend.company.name + '» приглашает вас обсудить роль «' + this.state.fTitle + '». Нас заинтересовал ваш опыт в категории ' + dc.role + ' · ' + dc.grade + ' и навыки: ' + dc.skills.slice(0, 3).join(', ') + '. Готовы рассказать подробнее о задачах и обсудить удобный формат общения.';
+    this.setState({ fText: '' });
+    window.FX.type(String(text).trim(), p => this.setState({ fText: p }), () => this.setState({ drafting: false }), 180);
+  }
+  componentWillUnmount() { window.FSPEmployer && window.FSPEmployer.disconnect(this); clearTimeout(this._boot); clearInterval(this._t); clearTimeout(this._toast); }
+  chip(on, dark) {
+    return { height: 30, padding: '0 10px', whiteSpace: 'nowrap', borderRadius: 4, font: 'inherit', fontSize: 13, cursor: 'pointer', border: on ? '1px solid #1B1C21' : '1px solid #D9D9D5', background: on ? '#1B1C21' : '#FFFFFF', color: on ? '#FFFFFF' : '#1B1C21' };
+  }
+  renderVals() {
+    const F = window.FSP;
+    const s = this.state;
+    if (!F || !s.backend) return Object.assign(window.FSPEmployer ? window.FSPEmployer.common(this) : { backendLoading: true }, { role: s.role, grade: s.grade, catCount: 0, fspCount: 0, rows: [], matrix: [], needs: [], formats: [], stackChips: [], sorts: [], searchExamples: [] });
+    const anon = this.props.anonymous ?? false;
+    const need = F.needs.find(n => n.id === s.need);
+    const all = F.category(s.role, s.grade, s.need);
+    const sorted = all.slice().sort((a, b) => s.sort === 'test' ? b.test - a.test : s.sort === 'fsp' ? b.fsp - a.fsp || b.total - a.total : b.total - a.total);
+    const pass = c => (!s.fspOnly || c.ach.length) && (s.format === 'all' || c.format === s.format) && s.stackSel.every(k => c.skills.includes(k)) && (!s.maxSal || c.smin <= s.maxSal);
+    const vis = sorted.filter(pass);
+    const gi = F.grades.indexOf(s.grade);
+    const catCount = F.counts[s.role][gi];
+    const needSkills = need && need.skills ? need.skills : [];
+    const rows = vis.map((c, i) => ({
+      id: c.id, rank: String(i + 1).padStart(2, '0'),
+      display: anon ? 'Кандидат #' + c.id.slice(-3).toUpperCase().replace(/-/g, '') : c.name,
+      meta: c.city + ' · ' + c.format + ' · ' + c.years + ' ' + (c.years === 1 ? 'год' : c.years < 5 && c.years > 0 ? 'года' : 'лет') + ' опыта',
+      hasFsp: c.ach.length > 0,
+      fspTag: (() => { const b = c.ach.slice().sort((x, y) => x.place - y.place)[0]; return b ? b.place + ' место · ' + b.year : ''; })(),
+      chips: c.skills.slice(0, 6).map(t => {
+        const m = needSkills.includes(t) || s.stackSel.includes(t);
+        return { t, style: { fontFamily: "'JetBrains Mono',monospace", fontSize: 12, padding: '3px 8px', borderRadius: 3, background: m ? '#ECEAFF' : '#F3F3F0', color: m ? '#2A1BD9' : '#45474E', fontWeight: m ? 600 : 400 } };
+      }),
+      total: c.total,
+      barTest: { width: c.test + '%', background: '#402FFF' },
+      barFsp: { width: c.fsp + '%', background: '#1B1C21' },
+      barSkill: { width: c.skillFit + '%', background: '#9A92FF' },
+      barSal: { width: c.salaryFit + '%', background: '#C8C9CA' },
+      why: need && need.skills ? 'Тест ' + c.test + '/60 · ' + c.fspLine + ' · стек ' + c.matched.length + ' из ' + needSkills.length + (c.missing.length ? ' (нет: ' + c.missing.join(', ') + ')' : '') : c.why,
+      sal: c.smin + '–' + c.smax,
+      href: 'Профиль-кандидата.dc.html?id=' + c.id + '&need=' + s.need,
+      invited: !!s.invited[c.id], notInvited: !s.invited[c.id],
+      invite: () => this.setState({ drawer: c.id, fTitle: need && need.skills ? (c.roleRu + ' · ' + need.title) : c.roleRu, fMin: '', fMax: '', fText: 'Здравствуйте! Приглашаем обсудить роль «' + c.roleRu + '» в компании «' + s.backend.company.name + '». Будем рады рассказать о задачах и обсудить условия сотрудничества.', fVac: 'none', err: '' })
+    }));
+    const cellStyle = on => ({ height: 36, border: 0, borderRadius: 4, cursor: 'pointer', fontFamily: "'JetBrains Mono',monospace", fontSize: 13, fontWeight: on ? 600 : 400, background: on ? '#402FFF' : '#26272D', color: on ? '#FFFFFF' : '#C8C9CA', boxShadow: on ? '0 0 0 1px #9A92FF' : 'none' });
+    const matrix = F.roles.map(r => ({ role: r, cells: F.grades.map((g, j) => ({ n: F.counts[r][j], style: cellStyle(r === s.role && g === s.grade), pick: () => this.flip({ role: r, grade: g, stackSel: [], need: need && need.role === r && need.grade === g ? s.need : 'none' }) })) }));
+    const pill = on => ({ height: 34, padding: '0 14px', whiteSpace: 'nowrap', borderRadius: 999, font: 'inherit', fontSize: 14, cursor: 'pointer', border: on ? '1px solid #1B1C21' : '1px solid #D9D9D5', background: on ? '#1B1C21' : '#FFFFFF', color: on ? '#FFFFFF' : '#1B1C21' });
+    const seg = on => ({ height: 30, padding: '0 12px', border: 0, borderRadius: 4, font: 'inherit', fontSize: 13, cursor: 'pointer', background: on ? '#FFFFFF' : 'transparent', color: on ? '#1B1C21' : '#5B5D65', fontWeight: on ? 600 : 400, boxShadow: on ? '0 1px 2px rgba(0,0,0,0.08)' : 'none' });
+    const dc = s.drawer ? all.find(c => c.id === s.drawer) : null;
+    const mn = parseInt(s.fMin, 10), mx = parseInt(s.fMax, 10);
+    let salNote = 'Укажите диапазон — без него приглашение не отправится.', salOk = null;
+    if (mn && mx && dc) {
+      if (mx < mn) { salNote = '«До» должно быть больше «от».'; salOk = false; }
+      else if (mx >= dc.smin) { salNote = 'Пересекается с ожиданиями кандидата — хороший шанс на ответ.'; salOk = true; }
+      else { salNote = 'Ниже ожиданий кандидата. Отправить можно, но шанс ответа ниже.'; salOk = false; }
+    }
+    if (s.err) { salNote = s.err; salOk = false; }
+    const hidden = all.length - vis.length;
+    return {
+      ...window.FSPEmployer.common(this), sendLabel: s.backendBusy ? 'Отправляем…' : 'Отправить приглашение',
+      role: s.role, grade: s.grade, catCount, fspCount: all.filter(c => c.ach.length).length,
+      needs: F.needs.map(n => ({ title: n.title, style: pill(n.id === s.need), pick: () => this.flip(n.role ? { need: n.id, role: n.role, grade: n.grade, stackSel: [] } : { need: n.id }) })),
+      needHint: need && need.skills ? 'Стек потребности: ' + need.skills.join(' · ') : 'Ранжирование только по силе профиля',
+      matrix,
+      hasFilters: s.fspOnly || s.format !== 'all' || s.stackSel.length > 0 || !!s.maxSal,
+      resetFilters: () => this.flip({ fspOnly: false, format: 'all', stackSel: [], maxSal: null }),
+      toggleFsp: () => this.flip({ fspOnly: !s.fspOnly }),
+      fspTrack: { width: 40, height: 22, borderRadius: 999, background: s.fspOnly ? '#402FFF' : '#D9D9D5', position: 'relative', flexShrink: 0, transition: 'background .2s' },
+      fspKnob: { position: 'absolute', top: 3, left: s.fspOnly ? 21 : 3, width: 16, height: 16, borderRadius: '50%', background: '#FFFFFF', transition: 'left .2s' },
+      formats: ['all', 'Удалённо', 'Гибрид', 'Офис'].map(f => ({ t: f === 'all' ? 'Любой' : f, style: this.chip(s.format === f), pick: () => this.flip({ format: f }) })),
+      stackChips: F.stack[s.role].map(t => ({ t, style: this.chip(s.stackSel.includes(t)), pick: () => this.flip({ stackSel: s.stackSel.includes(t) ? s.stackSel.filter(x => x !== t) : s.stackSel.concat(t) }) })),
+      sorts: [['total', 'Сила профиля'], ['test', 'Тест'], ['fsp', 'ФСП']].map(([k, t]) => ({ t, style: seg(s.sort === k), pick: () => this.flip({ sort: k }) })),
+      rows, total: all.length, visibleCount: vis.length, hiddenCount: hidden || 0, empty: vis.length === 0,
+      drawerOpen: !!dc,
+      dName: dc ? (anon ? 'Кандидат #' + dc.id.slice(-3).toUpperCase().replace(/-/g, '') : dc.name) : '',
+      dMeta: dc ? dc.role + ' · ' + dc.grade + ' · профиль ' + dc.total + '/100 · ' + dc.city : '',
+      dSal: dc ? dc.smin + '–' + dc.smax : '',
+      fTitle: s.fTitle, fMin: s.fMin, fMax: s.fMax, fText: s.fText, fContact: s.fContact,
+      onTitle: e => this.setState({ fTitle: e.target.value }),
+      onMin: e => this.setState({ fMin: e.target.value.replace(/\D/g, ''), err: '' }),
+      onMax: e => this.setState({ fMax: e.target.value.replace(/\D/g, ''), err: '' }),
+      onText: e => this.setState({ fText: e.target.value }),
+      onContact: e => this.setState({ fContact: e.target.value }),
+      vacOpts: [['none', 'Без вакансии']].concat(s.backend.jobs.filter(job => job.status === 'active').map(job => [job.id, job.title])).map(([k, t]) => ({ t, style: this.chip(s.fVac === k), pick: () => this.flip({ fVac: k }) })),
+      salNote, salNoteStyle: { fontSize: 13, color: salOk === true ? '#2A1BD9' : salOk === false ? '#C8102E' : '#5B5D65' },
+      closeDrawer: () => this.setState({ drawer: null }),
+      send: () => window.FSPEmployer.invite(this, dc),
+      toast: s.toast,
+      searchQuery: s.searchQuery || '', onSearchQuery: e => this.setState({ searchQuery: e.target.value }), onSearchKey: e => { if (e.key === 'Enter') this.searchCatalog(s.searchQuery); },
+      runSearch: () => this.searchCatalog(s.searchQuery), searchBusy: !!s.searchBusy, searchButtonLabel: s.searchBusy ? 'Ищем…' : 'Найти →',
+      searchButton: { height: 52, padding: '0 22px', border: 0, borderRadius: 4, background: s.searchBusy ? '#33343A' : '#402FFF', color: '#FFFFFF', font: 'inherit', fontSize: 15, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap', transition: 'background .2s' },
+      hasSearchResult: !!s.searchResult, noSearchResult: !s.searchResult, searchChips: s.searchResult ? s.searchResult.chips : [], searchEngine: s.searchResult ? s.searchResult.engine : '', clearSearch: () => this.clearSearch(),
+      searchLabel: window.ProfectiumSearch ? window.ProfectiumSearch.label() + ' · настроить' : '',
+      searchExamples: ['Python и Kafka, призёр ФСП, удалёнка', 'Senior DevOps с Kubernetes до 340', 'джун фронтенд на Vue'].map(t => ({ t, run: () => this.searchCatalog(t) })),
+      makeDraft: e => { e && e.preventDefault && e.preventDefault(); this.draft(dc, need); },
+      draftLabel: s.drafting ? 'Пишет…' : 'Подготовить черновик',
+      draftBtn: { height: 28, padding: '0 10px', borderRadius: 4, border: '1px solid #402FFF', background: s.drafting ? '#ECEAFF' : '#FFFFFF', color: '#402FFF', font: 'inherit', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: "'JetBrains Mono',monospace" }
+    };
+  }
+}
+</script>
+</body>
+</html>

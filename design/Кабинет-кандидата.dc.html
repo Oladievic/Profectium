@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<!--
+ * Copyright (c) 2026 Криницин Вячеслав Александрович - Oladievic.
+ * Все права сохранены.
+ *
+ * Автор: Криницин Вячеслав Александрович
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="./responsive.css">
+<script src="./backend.js"></script>
+<script src="./backend-candidate.js"></script>
+<script src="./support.js"></script>
+</head>
+<body class="fsp-page">
+<x-dc>
+<helmet>
+<title>Категория и грейд · Profectium</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="fx.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#EFEFEC;color:#1B1C21;font-family:'Golos Text',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#402FFF;text-decoration:none}
+a:hover{color:#2A1BD9}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(154,146,255,0.6)}100%{box-shadow:0 0 0 14px rgba(154,146,255,0)}}
+</style>
+</helmet>
+
+<header class="fsp-header" style="position:sticky;top:0;z-index:30;background:#1B1C21;color:#EDEDED;border-bottom:1px solid #2A2B31">
+  <div class="fsp-header-shell" style="max-width:1440px;margin:0 auto;height:64px;padding:0 32px;display:flex;align-items:center;gap:16px">
+    <a href="Лендинг.dc.html" style="display:flex;align-items:center;gap:14px;color:#EDEDED;flex-shrink:0">
+      <img src="assets/logo_01.svg" alt="ФСП" style="height:24px;display:block">
+    </a>
+    <nav style="display:flex;align-self:stretch;gap:0;flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.08em;text-transform:uppercase">
+      <a href="Кабинет-кандидата.dc.html" style="display:flex;align-items:center;padding:0 12px;white-space:nowrap;color:#FFFFFF;box-shadow:inset 0 -2px 0 #402FFF">Моя категория</a>
+      <a href="Тестирование.dc.html" style="display:flex;align-items:center;padding:0 12px;white-space:nowrap;color:#A3A5AD" style-hover="color:#FFFFFF">Тестирование</a>
+      <a href="Приглашения.dc.html" style="display:flex;align-items:center;gap:8px;padding:0 12px;white-space:nowrap;color:#A3A5AD" style-hover="color:#FFFFFF">Приглашения<span style="min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#EC1D35;color:#FFFFFF;font-size:11px;display:grid;place-items:center">{{ pendingCount }}</span></a>
+    </nav>
+    <div class="fsp-header-controls" style="margin-left:auto;display:flex;align-items:center;gap:12px;flex-shrink:0">
+      <button data-palette="1" title="Поиск" style="height:34px;padding:0 10px;border-radius:4px;border:1px solid #3A3B42;background:#202126;color:#C8C9CA;font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;white-space:nowrap" style-hover="border-color:#6E7078;color:#FFFFFF">Ctrl K</button>
+      <div style="display:flex;background:#26272D;border-radius:999px;padding:3px;font-size:13px">
+        <span style="padding:6px 14px;border-radius:999px;background:#EDEDED;color:#1B1C21;font-weight:600">Кандидат</span>
+        <a href="Пульт.dc.html" style="padding:6px 14px;border-radius:999px;color:#A3A5AD" style-hover="color:#FFFFFF">Работодатель</a>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="width:34px;height:34px;border-radius:50%;background:#EDEDED;color:#1B1C21;display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600">{{ candidateInitials }}</span>
+
+      </div>
+    </div>
+  </div>
+</header>
+<sc-if value="{{ error }}"><div role="alert" style="max-width:1376px;margin:20px auto;padding:16px 24px;background:#FFF0F2;color:#A00024;border-radius:4px">{{ error }}</div></sc-if>
+<sc-if value="{{ notice }}"><div role="status" style="max-width:1376px;margin:20px auto;padding:16px 24px;background:#ECEAFF;color:#2A1BD9;border-radius:4px">{{ notice }}</div></sc-if>
+
+<section style="background:#1B1C21;color:#EDEDED;position:relative;overflow:hidden">
+  <div style="max-width:1440px;margin:0 auto;padding:48px 32px 56px;display:flex;flex-wrap:wrap;gap:48px;align-items:center">
+    <div style="flex:1 1 480px;display:flex;flex-direction:column;gap:22px;min-width:0">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#A3A5AD">{{ profileVisibility }}</span>
+      <h1 style="margin:0;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:clamp(56px,7vw,112px);line-height:0.92;letter-spacing:-0.055em;color:#FFFFFF">{{ categoryRole }}<br><span style="color:#9A92FF">·</span> {{ categoryGrade }}</h1>
+      <span style="font-size:16px;color:#C8C9CA">{{ qualificationNote }}</span>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding-top:6px">
+        <sc-if value="{{ open }}" hint-placeholder-val="{{ true }}">
+          <a href="{{ nextTestHref }}" style="height:52px;padding:0 24px;border-radius:4px;background:#402FFF;color:#FFFFFF;font-size:15px;font-weight:600;display:flex;align-items:center;gap:18px" style-hover="background:#2F1FE6;color:#FFFFFF">{{ nextTestLabel }}<span style="font-family:'JetBrains Mono',monospace">→</span></a>
+        </sc-if>
+        <sc-if value="{{ closed }}" hint-placeholder-val="{{ false }}">
+          <span style="height:52px;padding:0 22px;border-radius:4px;background:#26272D;color:#A3A5AD;font-size:15px;font-weight:600;display:flex;align-items:center">{{ lockText }}</span>
+        </sc-if>
+        <a href="{{ ownProfileHref }}" style="height:52px;padding:0 20px;border-radius:4px;border:1px solid #4A4B52;color:#EDEDED;font-size:15px;display:flex;align-items:center" style-hover="border-color:#EDEDED;color:#FFFFFF">Как меня видит компания</a>
+      </div>
+    </div>
+
+    <div data-reveal="wipe" data-dur="1800" data-delay="200" style="flex:1 1 520px;min-width:0;position:relative;height:300px;margin:0 24px">
+      <div style="position:absolute;left:0;top:150px;width:46%;height:110px;border-bottom:2px solid #EDEDED;border-right:2px solid #EDEDED;border-bottom-right-radius:44px"></div>
+      <div style="{{ seg2 }}"></div>
+      <span style="position:absolute;left:0;top:260px;width:16px;height:16px;border-radius:50%;background:#EDEDED;transform:translate(-50%,-50%)"></span>
+      <span style="position:absolute;left:46%;top:150px;width:28px;height:28px;border-radius:50%;background:#402FFF;border:4px solid #1B1C21;box-shadow:0 0 0 2px #9A92FF;transform:translate(-50%,-50%);animation:pulse 2.4s ease-out infinite"></span>
+      <span style="{{ seniorDot }}"></span>
+      <div style="position:absolute;left:20px;top:206px;display:flex;flex-direction:column;gap:2px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600;color:#EDEDED">Junior</span>
+        <span style="font-size:12px;color:#A3A5AD">{{ juniorNote }}</span>
+      </div>
+      <div style="position:absolute;left:calc(46% + 26px);top:170px;display:flex;flex-direction:column;gap:2px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:#FFFFFF">Middle</span>
+        <span style="font-size:12px;color:#C8C9CA">{{ middleNote }}</span>
+      </div>
+      <div style="position:absolute;right:calc(8% + 24px);top:22px;display:flex;flex-direction:column;gap:2px;align-items:flex-end;text-align:right">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600;color:#9A92FF">Senior</span>
+        <span style="font-size:12px;color:#C8C9CA">{{ seniorNote }}</span>
+      </div>
+    </div>
+  </div>
+  <div style="border-top:1px solid #33343A">
+    <div style="max-width:1440px;margin:0 auto;padding:18px 32px;display:flex;flex-wrap:wrap;gap:16px 40px;align-items:center">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#A3A5AD">Смена грейда · раз в 90 дней</span>
+      <div style="flex:1 1 260px;height:4px;background:#33343A;border-radius:2px;position:relative">
+        <div style="{{ lockBar }}"></div>
+      </div>
+      <span style="font-size:14px;color:#EDEDED">{{ lockText }}</span>
+    </div>
+  </div>
+</section>
+
+<main style="max-width:1440px;margin:0 auto;padding:32px 32px 80px;display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start">
+  <div style="flex:999 1 640px;min-width:0;display:flex;flex-direction:column;gap:24px">
+    <section data-reveal="up" style="background:#FFFFFF;border-radius:8px;padding:28px;display:flex;flex-wrap:wrap;gap:32px">
+      <div style="flex:1 1 220px;display:flex;flex-direction:column;gap:8px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#5B5D65">Результат квалификации</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:72px;font-weight:600;letter-spacing:-0.06em;line-height:0.9">{{ score }}<span style="font-size:22px;color:#5B5D65;letter-spacing:-0.02em">%</span></span>
+        <span style="font-size:14px;line-height:1.5;color:#5B5D65">{{ scoreNote }}</span>
+      </div>
+      <div style="flex:2 1 360px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#5B5D65">Подтверждённый тест</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:600;letter-spacing:-0.04em">{{ score }}<span style="font-size:13px;color:#5B5D65">/100</span></span>
+        </div>
+        <sc-for list="{{ parts }}" as="p" hint-placeholder-count="4">
+          <div style="display:grid;grid-template-columns:90px minmax(0,1fr) 56px;gap:14px;align-items:center">
+            <span style="font-size:14px">{{ p.k }}</span>
+            <div style="height:8px;background:#EFEFEC;border-radius:2px"><div data-reveal="draw-x" data-delay="300" style="{{ p.bar }}"></div></div>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;text-align:right">{{ p.v }}/{{ p.max }}</span>
+          </div>
+        </sc-for>
+        <span style="font-size:13px;line-height:1.5;color:#5B5D65;padding-top:4px">{{ profileVisibility }}</span>
+      </div>
+    </section>
+
+<section id="profile-editor" style="background:#FFFFFF;border-radius:8px;padding:28px;display:flex;flex-direction:column;gap:18px">
+<h2 style="margin:0;font-size:22px;font-weight:600">Мой профиль</h2>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+<sc-for list="{{ editFields }}" as="f"><label style="display:flex;flex-direction:column;gap:8px;font-size:14px">{{ f.label }}<input name="{{ f.name }}" type="{{ f.type }}" value="{{ f.value }}" onChange="{{ f.change }}" style="min-height:44px;border:1px solid #CFCFCB;border-radius:4px;padding:10px 12px;font:inherit;color:#1B1C21;background:#FFFFFF"></label></sc-for>
+<label style="display:flex;flex-direction:column;gap:8px;font-size:14px">Формат работы<select value="{{ editFormat }}" onChange="{{ onFormat }}" style="min-height:44px;border:1px solid #CFCFCB;border-radius:4px;padding:10px 12px;font:inherit;background:#FFFFFF"><option>Удалённо</option><option>Гибрид</option><option>Офис</option></select></label>
+</div><label style="display:flex;flex-direction:column;gap:8px;font-size:14px">О себе<textarea rows="4" value="{{ editBio }}" onChange="{{ onBio }}" style="border:1px solid #CFCFCB;border-radius:4px;padding:12px;font:inherit;line-height:1.5;resize:vertical"></textarea></label>
+<button disabled="{{ busy }}" onClick="{{ saveProfile }}" style="align-self:flex-start;min-height:48px;padding:0 24px;border:0;border-radius:4px;background:#402FFF;color:#FFFFFF;font:inherit;font-weight:600;cursor:pointer">Сохранить профиль</button>
+</section>
+    <section data-reveal="up" style="background:#FFFFFF;border-radius:8px;padding:28px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+        <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.01em">История опроса и тестов</h2>
+        <a href="Тестирование.dc.html?grade=Junior" style="font-size:14px">Пройти тест на уровень ниже</a>
+      </div>
+      <div style="position:relative">
+        <div class="fsp-mobile-history-line" style="position:absolute;left:127px;top:10px;bottom:10px;width:2px;background:#E4E4E1"></div>
+        <sc-if value="{{ historyEmpty }}"><p style="color:#5B5D65">История появится после первой попытки теста.</p></sc-if>
+<sc-for list="{{ history }}" as="h" hint-placeholder-count="5">
+          <div class="fsp-mobile-history" style="display:grid;grid-template-columns:110px 36px minmax(0,1fr) auto;gap:0 0;align-items:start;padding:12px 0">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#5B5D65;padding-top:1px">{{ h.date }}</span>
+            <span style="display:flex;justify-content:center;padding-top:4px;position:relative;z-index:1"><span style="{{ h.dot }}"></span></span>
+            <div style="display:flex;flex-direction:column;gap:4px;padding-left:12px">
+              <span style="font-size:16px;font-weight:600">{{ h.t }}</span>
+              <span style="font-size:14px;line-height:1.5;color:#5B5D65">{{ h.d }}</span>
+            </div>
+            <span style="{{ h.chip }}">{{ h.res }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+  </div>
+
+  <aside style="flex:1 1 360px;max-width:440px;display:flex;flex-direction:column;gap:24px">
+    <section id="tasks" data-reveal="right" style="background:#FFFFFF;border-radius:8px;padding:24px;display:flex;flex-direction:column">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+        <h2 style="margin:0;font-size:20px;font-weight:600;letter-spacing:-0.01em">Короткие задачи</h2>
+        <span style="font-size:13px;color:#5B5D65">от работодателей</span>
+      </div>
+      <sc-if value="{{ tasksEmpty }}"><p style="font-size:14px;color:#5B5D65;line-height:1.5">Назначенных коротких задач пока нет. Пройдите квалификацию и откройте профиль для предложений.</p></sc-if>
+<sc-for list="{{ tasks }}" as="t" hint-placeholder-count="2">
+        <div style="display:flex;flex-direction:column;gap:10px;padding:16px 0;border-top:1px solid #E4E4E1">
+          <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start">
+            <span style="display:flex;flex-direction:column;gap:3px"><span style="font-size:16px;font-weight:600;line-height:1.35">{{ t.t }}</span><span style="font-size:13px;color:#5B5D65">{{ t.m }}</span></span>
+            <span style="{{ t.chip }}">{{ t.state }}</span>
+          </div>
+          <sc-if value="{{ t.canSolve }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ t.solve }}" style="height:42px;border:0;border-radius:4px;background:#1B1C21;color:#FFFFFF;font:inherit;font-size:14px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:0 14px" style-hover="background:#402FFF">Предложить подход<span style="font-family:'JetBrains Mono',monospace">→</span></button>
+          </sc-if>
+        </div>
+      </sc-for>
+    </section>
+
+    <section data-reveal="right" data-delay="80" style="background:#1B1C21;color:#EDEDED;border-radius:8px;padding:24px;display:flex;flex-direction:column;gap:16px">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#A3A5AD">Правила грейда</span>
+      <sc-for list="{{ rules }}" as="r" hint-placeholder-count="3">
+        <div style="display:grid;grid-template-columns:64px minmax(0,1fr);gap:14px;align-items:baseline">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;color:#FFFFFF">{{ r.n }}</span>
+          <span style="font-size:14px;line-height:1.5;color:#C8C9CA">{{ r.t }}</span>
+        </div>
+      </sc-for>
+    </section>
+
+    <section data-reveal="up" style="background:#FFFFFF;border-radius:8px;padding:24px;display:flex;flex-direction:column;gap:6px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="display:flex;align-items:center;gap:10px;font-size:17px;font-weight:600"><img src="assets/logo_03w.svg" alt="" style="height:22px">ФСП ID</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5B5D65">{{ fspId }}</span>
+      </div>
+      <span style="font-size:13px;color:#5B5D65;margin-bottom:10px">{{ fspStatus }}</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#5B5D65;padding-top:12px;border-top:1px solid #E4E4E1">Что видят компании</span>
+      <sc-for list="{{ privacy }}" as="p" hint-placeholder-count="4">
+        <button onClick="{{ p.toggle }}" style="display:flex;justify-content:space-between;align-items:center;gap:16px;padding:10px 0;border:0;background:none;font:inherit;cursor:pointer;text-align:left;color:#1B1C21">
+          <span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px">{{ p.t }}</span><span style="font-size:12px;color:#5B5D65">{{ p.d }}</span></span>
+          <span style="{{ p.track }}"><span style="{{ p.knob }}"></span></span>
+        </button>
+      </sc-for>
+    </section>
+  </aside>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;gradeWindowOpen&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояния&quot;}}">
+class DesignCabinet extends DCLogic {
+  state = { solved: {}, privacy: { name: true, fsp: true, hideCurrent: false, contacts: false } };
+  renderVals() {
+    const s = this.state;
+    const open = this.props.gradeWindowOpen ?? true;
+    const bar = (v, max, c) => ({ width: Math.round(v / max * 100) + '%', height: '100%', background: c, borderRadius: 2 });
+    const chip = (kind) => ({ fontFamily: "'JetBrains Mono',monospace", fontSize: 11, fontWeight: 600, padding: '4px 8px', borderRadius: 3, whiteSpace: 'nowrap', alignSelf: 'flex-start',
+      background: kind === 'ok' ? '#402FFF' : kind === 'info' ? '#EFEFEC' : 'transparent', color: kind === 'ok' ? '#FFFFFF' : kind === 'fail' ? '#C8102E' : '#1B1C21', border: kind === 'fail' ? '1px dashed #C8102E' : '1px solid transparent' });
+    const dot = (kind) => ({ width: kind === 'ok' ? 14 : 10, height: kind === 'ok' ? 14 : 10, borderRadius: '50%', background: kind === 'ok' ? '#402FFF' : kind === 'fail' ? '#FFFFFF' : '#1B1C21', border: kind === 'fail' ? '2px solid #C8102E' : 'none', boxShadow: '0 0 0 4px #FFFFFF' });
+    const H = [
+      ['03.07.2026', 'Тест на Middle', 'Вариант BK-M-7F3A · 26 из 30 минут. Категория обновлена автоматически.', '5/6 · подтверждён', 'ok'],
+      ['02.07.2026', 'Тест на Middle', 'Не хватило одного задания. Категория Junior сохранена, повтор открылся через 24 часа.', '3/6 · не пройден', 'fail'],
+      ['02.07.2026', 'Опрос', 'ИТ-продукты · Backend · заявлен Middle · API документооборота, фоновый импорт.', 'опрос', 'info'],
+      ['14.02.2025', 'Тест на Junior', 'Первая категория присвоена.', '4/6 · подтверждён', 'ok'],
+      ['14.02.2025', 'Опрос', 'ИТ-продукты · Backend · заявлен Junior.', 'опрос', 'info']
+    ];
+    const P = [['name', 'Имя и город', 'иначе — «Кандидат #04F»'], ['fsp', 'Достижения ФСП', 'добавляют до 20 баллов к силе профиля'], ['hideCurrent', 'Скрыть от «Волна Медиа»', 'текущий или бывший работодатель'], ['contacts', 'Контакты до согласия', 'по 152-ФЗ — только после принятия']];
+    return {
+      open, closed: !open,
+      seg2: { position: 'absolute', left: '46%', top: 40, width: '46%', height: 110, borderBottom: '2px dashed #9A92FF', borderRight: '2px dashed #9A92FF', borderBottomRightRadius: 44, opacity: open ? 1 : 0.45 },
+      seniorDot: { position: 'absolute', left: '92%', top: 40, width: 18, height: 18, borderRadius: '50%', background: '#1B1C21', border: '2px solid #9A92FF', transform: 'translate(-50%,-50%)', opacity: open ? 1 : 0.5 },
+      seniorNote: open ? 'окно открыто с 1 октября' : 'доступно с 1 декабря 2026',
+      lockBar: { position: 'absolute', left: 0, top: 0, bottom: 0, width: open ? '100%' : '41%', background: open ? '#9A92FF' : '#EDEDED', borderRadius: 2 },
+      lockText: open ? '90 из 90 дней — можно подтвердить Senior. Не пройдёте — останетесь Middle.' : '37 из 90 дней — следующая смена с 1 декабря 2026',
+      parts: [
+        { k: 'Тест', v: 50, max: 60, bar: bar(50, 60, '#402FFF') },
+        { k: 'ФСП', v: s.privacy.fsp ? 12 : 0, max: 20, bar: bar(s.privacy.fsp ? 12 : 0, 20, '#1B1C21') },
+        { k: 'Навыки', v: 9, max: 15, bar: bar(9, 15, '#9A92FF') },
+        { k: 'Зарплата', v: 5, max: 5, bar: bar(5, 5, '#C8C9CA') }
+      ],
+      history: H.map(([date, t, d, res, k]) => ({ date, t, d, res, chip: chip(k), dot: dot(k) })),
+      tasks: [
+        { id: 't1', t: 'Очередь задач с повторной доставкой', m: 'Тайга Дата · 20 минут · до 12 октября' },
+        { id: 't0', t: 'Повторная доставка событий', m: 'Орбита Технологии · 25 сентября', done: true }
+      ].map(t => {
+        const done = t.done || s.solved[t.id];
+        return { t: t.t, m: t.m, canSolve: !done, state: t.done ? 'подход принят' : done ? 'отправлено' : 'новая', chip: chip(t.done ? 'ok' : done ? 'info' : 'fail'), solve: () => this.setState({ solved: Object.assign({}, s.solved, { [t.id]: true }) }) };
+      }),
+      rules: [
+        { n: '90 дн', t: 'Между сменами грейда. Интервал считается от последнего подтверждения.' },
+        { n: '24 ч', t: 'До повторной попытки, если тест не пройден.' },
+        { n: '↓ нет', t: 'Тест не понижает категорию. На уровень ниже — только по вашему решению.' }
+      ],
+      privacy: P.map(([k, t, d]) => {
+        const on = s.privacy[k];
+        return { t, d, toggle: () => this.setState({ privacy: Object.assign({}, s.privacy, { [k]: !on }) }),
+          track: { width: 40, height: 22, borderRadius: 999, background: on ? '#402FFF' : '#D9D9D5', position: 'relative', flexShrink: 0, transition: 'background .2s' },
+          knob: { position: 'absolute', top: 3, left: on ? 21 : 3, width: 16, height: 16, borderRadius: '50%', background: '#FFFFFF', transition: 'left .2s' } };
+      })
+    };
+  }
+}
+
+class Component extends DesignCabinet {
+  state = {solved:{},privacy:{},data:null,form:{},loading:true,busy:false,error:'',notice:''};
+  componentDidMount(){window.ProfectiumCandidate.mountCabinet(this);}
+  componentWillUnmount(){this._unsubscribe?.();}
+  renderVals(){return window.ProfectiumCandidate.cabinetValues(this,super.renderVals());}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,670 @@
+/*
+ * Copyright (c) 2026 Криницин Вячеслав Александрович - Oladievic.
+ * Все права сохранены.
+ *
+ * Автор: Криницин Вячеслав Александрович
+ */
+
+.signals-shell .studio-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 42px;
+  padding: 0.65rem 1rem;
+  border-radius: 8px;
+  background: #4827f6;
+  color: #fff;
+  border: 1px solid #4827f6;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+  transition:
+    background 0.18s,
+    transform 0.18s;
+}
+.signals-shell .studio-btn:hover:not(:disabled) {
+  background: #3920ce;
+  transform: translateY(-1px);
+}
+.signals-shell .studio-btn.secondary {
+  background: #fff;
+  color: #492cc7;
+  border-color: #dcd5f1;
+}
+.signals-shell .studio-btn.secondary:hover:not(:disabled) {
+  background: #f0edff;
+}
+.signals-shell {
+  max-width: 1320px;
+  margin: auto;
+  padding: 2rem 0 0;
+}
+.signals-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.signals-heading h1 {
+  font-size: clamp(2rem, 3.2vw, 3rem);
+  letter-spacing: -0.045em;
+  line-height: 1.08;
+  margin: 0.6rem 0;
+}
+.signals-heading p,
+.signals-section-title p {
+  color: #676772;
+  margin: 0.6rem 0 0;
+  line-height: 1.55;
+}
+.signals-kicker {
+  font:
+    12px JetBrains,
+    monospace;
+  letter-spacing: 0.12em;
+  color: #777584;
+}
+.signals-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.75rem 0;
+}
+.signals-metrics button {
+  background: #fff;
+  border: 1px solid #e5e3ef;
+  border-radius: 16px;
+  text-align: left;
+  padding: 1.2rem 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.4rem;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+.signals-metrics button:first-child {
+  background: #4527f5;
+  color: white;
+  border-color: #4527f5;
+}
+.signals-metrics button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px #39209110;
+}
+.signals-metrics span {
+  font-size: 14px;
+}
+.signals-metrics strong {
+  font:
+    36px JetBrains,
+    monospace;
+  grid-row: span 2;
+  align-self: center;
+}
+.signals-metrics small {
+  font-size: 12px;
+  opacity: 0.7;
+}
+.signals-tabs {
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #dcdbe8;
+  margin-bottom: 1.5rem;
+}
+.signals-tabs button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.1rem;
+  border-bottom: 3px solid transparent;
+  font-size: 14px;
+  color: #686572;
+}
+.signals-tabs button.active {
+  border-color: #4527f5;
+  color: #4527f5;
+  font-weight: 650;
+}
+.signals-section-title {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  margin: 1.5rem 0;
+}
+.signals-section-title h2 {
+  font-size: 1.6rem;
+  font-weight: 650;
+  letter-spacing: -0.035em;
+  margin: 0;
+}
+.signals-section-title h3 {
+  font-size: 1.25rem;
+  margin: 0.6rem 0;
+}
+.signals-filterbar,
+.signals-select-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: end;
+  flex-wrap: wrap;
+}
+.signals-filterbar button {
+  border: 1px solid #e0deeb;
+  padding: 0.6rem 0.9rem;
+  border-radius: 7px;
+  background: #fff;
+  font-size: 14px;
+}
+.signals-filterbar button[aria-pressed="true"] {
+  background: #eeebff;
+  color: #4327e8;
+  border-color: #b6a8ff;
+}
+.signals-task-list {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+.signals-task {
+  display: grid;
+  grid-template-columns: 150px 1fr auto;
+  gap: 1.5rem;
+  padding: 1.3rem;
+  background: #fff;
+  border: 1px solid #e7e5ee;
+  border-radius: 12px;
+  align-items: center;
+}
+.signals-task.overdue {
+  border-left: 3px solid #b26a0b;
+}
+.signals-task h3 {
+  font-size: 1rem;
+  margin: 0.4rem 0;
+}
+.signals-task p {
+  font-size: 14px;
+  color: #65616d;
+  line-height: 1.6;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.signals-date {
+  display: grid;
+  gap: 0.5rem;
+  font-size: 14px;
+  color: #5e5776;
+}
+.signals-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 0.9rem;
+}
+.signals-task .signals-actions {
+  display: grid;
+  margin: 0;
+}
+.signals-link {
+  color: #4d31cc;
+  font-size: 14px;
+  padding: 0.4rem 0;
+  text-align: left;
+}
+.signals-footnote {
+  font-size: 12px;
+  line-height: 1.65;
+  color: #797382;
+  margin: 1rem 0;
+}
+.signals-save-radar {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr auto;
+  gap: 1.2rem;
+  align-items: center;
+  padding: 1.5rem;
+  background: #ece9ff;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+.signals-save-radar p {
+  font-size: 14px;
+  color: #605779;
+}
+.signals-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.signals-card {
+  background: #fff;
+  border: 1px solid #e2dfeb;
+  border-radius: 14px;
+  padding: 1.5rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.signals-card h3 {
+  font-size: 1.2rem;
+  letter-spacing: -0.025em;
+  margin: 0.9rem 0 0.6rem;
+}
+.signals-card p {
+  line-height: 1.6;
+  font-size: 14px;
+  color: #686171;
+}
+.signals-card a,
+.signals-footnote a {
+  color: #482ed3;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-size: 14px;
+}
+.signals-card.muted {
+  opacity: 0.68;
+}
+.signals-row {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.signals-badge {
+  font-size: 12px;
+  color: #675a96;
+  background: #f0edfa;
+  border-radius: 5px;
+  padding: 0.35rem 0.55rem;
+  display: inline-block;
+}
+.signals-badge.warn {
+  color: #936319;
+  background: #fff5dc;
+}
+.signals-radar-count {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  margin: 1.5rem 0 0.7rem;
+}
+.signals-radar-count strong {
+  font-size: 2.5rem;
+  line-height: 1;
+  color: #4527f5;
+}
+.signals-radar-count span {
+  font-size: 14px;
+  color: #777;
+}
+.signals-delta {
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: #716a80;
+}
+.signals-delta span:first-child {
+  color: #14715c;
+}
+.signals-matches {
+  display: grid;
+  border-top: 1px solid #eee;
+  margin-top: 1rem;
+  padding-top: 0.7rem;
+  gap: 0.5rem;
+}
+.signals-matches button {
+  text-align: left;
+  color: #4327d5;
+  font-size: 14px;
+}
+.signals-source-types {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.signals-source-types > div {
+  border-left: 2px solid #cec4fa;
+  padding-left: 1rem;
+}
+.signals-source-types strong {
+  font-size: 14px;
+}
+.signals-source-types p {
+  font-size: 12px;
+  color: #776d85;
+  line-height: 1.6;
+}
+.signals-disclosure {
+  background: #fff;
+  border: 1px solid #e2dfeb;
+  border-radius: 12px;
+  padding: 1.3rem;
+  margin: 1rem 0;
+}
+.signals-disclosure summary,
+.signals-card summary {
+  cursor: pointer;
+  font-size: 14px;
+  color: #4f387e;
+  font-weight: 600;
+}
+.signals-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.2rem;
+  align-items: end;
+}
+.signals-form-grid .studio-btn {
+  align-self: end;
+}
+.signals-source-list {
+  display: grid;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+.signals-source-list article {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid #e6e2ee;
+  border-radius: 8px;
+  background: #fff;
+}
+.signals-source-list p {
+  font-size: 12px;
+  color: #766b86;
+  margin: 0.3rem 0;
+}
+.signals-source-list strong {
+  font-size: 14px;
+}
+.signals-source-list a {
+  color: #4d31bf;
+}
+.signals-import-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1.3rem 0 2rem;
+  align-items: start;
+}
+.signals-import-grid .studio-field {
+  margin-bottom: 1rem;
+}
+.signals-import-grid textarea {
+  font:
+    12px JetBrains,
+    monospace;
+  line-height: 1.7;
+}
+.signals-import-grid details {
+  margin-top: 1rem;
+}
+.signals-import-lines {
+  max-height: 530px;
+  overflow: auto;
+  margin: 1rem 0;
+}
+.signals-import-lines article {
+  padding: 1rem 0;
+  border-bottom: 1px solid #eee;
+  display: grid;
+  gap: 0.5rem;
+}
+.signals-import-lines strong {
+  font-size: 14px;
+}
+.signals-import-lines .signals-badge {
+  justify-self: start;
+}
+.signals-import-lines p {
+  font-size: 12px;
+  margin: 0;
+}
+.signals-quality {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  font-size: 12px;
+}
+.signals-quality span {
+  padding: 0.5rem;
+  background: #fff7e7;
+  color: #8d631a;
+  border-radius: 4px;
+}
+.signals-quality span.ok {
+  background: #ecf5f1;
+  color: #37745b;
+}
+.signals-template {
+  margin-top: 1.5rem;
+  border: 2px solid #7862ef;
+}
+.signals-empty {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #817590;
+}
+.signals-empty svg {
+  margin: 0 auto;
+  color: #a794d4;
+}
+.signals-empty h3 {
+  font-size: 18px;
+  color: #55486d;
+  margin: 0.8rem 0;
+}
+.signals-empty p {
+  font-size: 14px;
+  line-height: 1.7;
+  max-width: 560px;
+  margin: auto;
+}
+.signals-error {
+  padding: 1rem;
+  color: #9c3838;
+  background: #fff0ef;
+  border: 1px solid #f3c6c2;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 14px;
+}
+.signals-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+  padding: 1.2rem 0;
+  border-top: 1px solid #ddd5ea;
+  font-size: 12px;
+  color: #897f95;
+}
+.signals-footer span {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.signals-shell button:focus-visible,
+.signals-shell summary:focus-visible,
+.signals-shell a:focus-visible {
+  outline: 3px solid #aa97fa;
+  outline-offset: 4px;
+}
+/*
+ * Copyright (c) 2026 Криницин Вячеслав Александрович - Oladievic.
+ * Все права сохранены.
+ *
+ * Автор: Криницин Вячеслав Александрович
+ */
+.signals-shell button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.signals-shell textarea,
+.signals-shell input,
+.signals-shell select {
+  max-width: 100%;
+  min-width: 0;
+}
+.signals-shell section,
+.signals-shell form,
+.signals-shell article {
+  min-width: 0;
+}
+@media (max-width: 1000px) {
+  .signals-save-radar {
+    grid-template-columns: 1fr 1fr;
+  }
+  .signals-save-radar > div:first-child {
+    grid-column: 1/-1;
+  }
+  .signals-task {
+    grid-template-columns: 130px 1fr;
+  }
+  .signals-task .signals-actions {
+    display: flex;
+    grid-column: 2;
+  }
+  .signals-source-types {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 650px) {
+  .signals-shell {
+    padding-top: 1rem;
+  }
+  .signals-heading {
+    align-items: start;
+  }
+  .signals-heading h1 {
+    font-size: 2rem;
+  }
+  .signals-heading > .studio-btn {
+    font-size: 0;
+    padding: 0.6rem;
+  }
+  .signals-heading > .studio-btn svg {
+    width: 18px;
+  }
+  .signals-metrics {
+    gap: 0.5rem;
+  }
+  .signals-metrics button {
+    padding: 0.8rem 0.55rem;
+    display: block;
+  }
+  .signals-metrics span {
+    font-size: 12px;
+    display: block;
+    min-height: 32px;
+  }
+  .signals-metrics strong {
+    font-size: 28px;
+    display: block;
+    margin: 0.4rem 0;
+  }
+  .signals-metrics small {
+    font-size: 11px;
+  }
+  .signals-tabs button {
+    padding: 0.8rem 0.6rem;
+    font-size: 13px;
+  }
+  .signals-section-title {
+    display: block;
+  }
+  .signals-section-title > .studio-btn {
+    margin-top: 1rem;
+  }
+  .signals-task {
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
+    padding: 1rem;
+  }
+  .signals-task .signals-actions {
+    grid-column: 1;
+  }
+  .signals-date {
+    display: flex;
+    align-items: center;
+  }
+  .signals-card-grid,
+  .signals-import-grid,
+  .signals-form-grid,
+  .signals-save-radar {
+    grid-template-columns: 1fr;
+  }
+  .signals-save-radar {
+    padding: 1rem;
+  }
+  .signals-card {
+    padding: 1rem;
+  }
+  .signals-source-list article {
+    align-items: start;
+  }
+  .signals-source-types {
+    gap: 0.8rem;
+  }
+  .signals-select-row {
+    margin-top: 1rem;
+  }
+  .signals-quality {
+    grid-template-columns: 1fr;
+  }
+  .signals-heading p:not(.signals-kicker) {
+    font-size: 14px;
+  }
+  .signals-section-title h2 {
+    font-size: 1.4rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .signals-shell * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+[data-motion="off"] .signals-shell * {
+  transition: none !important;
+  animation: none !important;
+}
+.signals-radar-edit {
+  margin-top: 1rem;
+  border-top: 1px solid #ece8f5;
+  padding-top: 1rem;
+}
+.signals-radar-edit form {
+  display: grid;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+.signals-replace-filters {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.signals-replace-filters input {
+  margin-top: 4px;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}

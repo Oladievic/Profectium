@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<!--
+ * Copyright (c) 2026 Криницин Вячеслав Александрович - Oladievic.
+ * Все права сохранены.
+ *
+ * Автор: Криницин Вячеслав Александрович
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="./responsive.css">
+<script src="./support.js"></script>
+</head>
+<body class="fsp-page">
+<x-dc>
+<helmet>
+<title>Интеграции: помощник и API · Profectium</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="data.js"></script>
+<script src="search.js"></script>
+<script src="fx.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#EFEFEC;color:#1B1C21;font-family:'Golos Text',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#402FFF;text-decoration:none}
+a:hover{color:#2A1BD9}
+input::placeholder,textarea::placeholder{color:#8B8D94}
+@keyframes rowIn{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+</style>
+</helmet>
+
+<header class="fsp-header" style="position:sticky;top:0;z-index:30;background:#1B1C21;color:#EDEDED;border-bottom:1px solid #2A2B31">
+  <div class="fsp-header-shell" style="max-width:1440px;margin:0 auto;height:64px;padding:0 32px;display:flex;align-items:center;gap:28px">
+    <a href="Лендинг.dc.html" style="display:flex;align-items:center;gap:14px;color:#EDEDED;flex-shrink:0">
+      <img src="assets/logo_01.svg" alt="ФСП" style="height:24px;display:block">
+      <span style="width:1px;height:20px;background:#3A3B42"></span>
+      <span style="font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px;letter-spacing:-0.02em">Profectium</span>
+    </a>
+    <nav style="display:flex;align-self:stretch;gap:0;flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.08em;text-transform:uppercase">
+      <a href="Пульт.dc.html" style="display:flex;align-items:center;padding:0 12px;white-space:nowrap;color:#A3A5AD" style-hover="color:#FFFFFF">Пульт</a>
+      <a href="Каталог.dc.html" style="display:flex;align-items:center;padding:0 12px;white-space:nowrap;color:#A3A5AD" style-hover="color:#FFFFFF">Каталог</a>
+      <a href="Интеграции.dc.html" style="display:flex;align-items:center;padding:0 12px;white-space:nowrap;color:#FFFFFF;box-shadow:inset 0 -2px 0 #402FFF">Интеграции</a>
+    </nav>
+    <div class="fsp-header-controls" style="margin-left:auto;display:flex;align-items:center;gap:14px;flex-shrink:0">
+      <button data-palette="1" title="Поиск" style="height:34px;padding:0 10px;border-radius:4px;border:1px solid #3A3B42;background:#202126;color:#C8C9CA;font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;white-space:nowrap" style-hover="border-color:#6E7078;color:#FFFFFF">Ctrl K</button>
+      <span style="width:34px;height:34px;border-radius:6px;background:#402FFF;color:#FFFFFF;display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600">ОТ</span>
+    </div>
+  </div>
+</header>
+
+<section style="background:#1B1C21;color:#EDEDED;position:relative;overflow:hidden">
+  <img src="assets/lineline1.png" alt="" data-parallax="22" style="position:absolute;right:4%;top:-30px;width:440px;opacity:0.2;pointer-events:none">
+  <div style="position:relative;max-width:1440px;margin:0 auto;padding:44px 32px 0;display:flex;flex-direction:column;gap:32px">
+    <div style="display:flex;flex-direction:column;gap:16px;max-width:900px">
+      <span data-reveal="fade" style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#A3A5AD"><span style="width:8px;height:8px;border-radius:50%;background:#9A92FF"></span>Интеграции · {{ companyName }}</span>
+      <h1 data-reveal="blur" style="margin:0;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:clamp(38px,4.4vw,64px);line-height:1.02;letter-spacing:-0.045em;color:#FFFFFF;text-wrap:balance">Ваши данные, инструменты и системы</h1>
+      <p data-reveal="up" data-delay="120" style="margin:0;font-size:17px;line-height:1.6;color:#C8C9CA;max-width:680px;text-wrap:pretty">Поиск обычным языком работает бесплатно по локальным правилам. Создавайте ключи для чтения данных через REST API. Здесь же можно проверить сценарии помощника и макет вебхуков.</p>
+    </div>
+    <div data-stagger="up" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));border-top:1px solid #33343A">
+      <sc-for list="{{ tiles }}" as="t" hint-placeholder-count="3">
+        <button onClick="{{ t.go }}" style="text-align:left;background:none;border:0;border-right:1px solid #33343A;padding:22px 24px 26px 0;display:flex;flex-direction:column;gap:10px;cursor:pointer;font:inherit;color:#EDEDED" style-hover="background:#202126">
+          <span style="display:flex;align-items:center;gap:10px;font-size:14px;color:#C8C9CA"><span style="position:relative;width:8px;height:8px"><span style="{{ t.dot }}"></span><span data-fx="pulse" style="{{ t.ring }}"></span></span>{{ t.k }}</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;letter-spacing:-0.03em;color:#FFFFFF">{{ t.v }}</span>
+          <span style="font-size:13px;color:#A3A5AD">{{ t.d }}</span>
+        </button>
+      </sc-for>
+    </div>
+    <div class="fsp-mobile-scroll" style="display:flex;gap:4px;margin:0 -4px;overflow-x:auto">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+        <button onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.t }}<span style="{{ t.nStyle }}">{{ t.n }}</span></button>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<main style="max-width:1440px;margin:0 auto;padding:32px 32px 96px;display:flex;flex-direction:column;gap:24px">
+  <p style="margin:0;padding:14px 18px;background:#ECEAFF;border-radius:6px;font-size:14px;line-height:1.5;color:#2A1BD9">REST API и ключи работают с текущим аккаунтом. Помощник читает серверные данные и отправляет приглашения после подтверждения. Вебхуки ниже — локальный макет без отправки событий. {{ integrationStatus }}</p>
+
+<sc-if value="{{ isHelper }}" hint-placeholder-val="{{ true }}">
+  <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start">
+    <div style="flex:999 1 640px;min-width:0;display:flex;flex-direction:column;gap:24px">
+      <section data-reveal="up" style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px">
+          <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.01em">Локальный помощник</h2>
+          <span style="font-size:13px;color:#5B5D65">настройки этого браузера</span>
+        </div>
+        <div data-stagger="scale" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px">
+          <div style="display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:16px 18px;border-radius:8px;border:2px solid #402FFF;background:#1B1C21;color:#FFFFFF;min-height:150px">
+            <span style="font-size:10px;letter-spacing:0.06em;text-transform:uppercase;padding:3px 6px;border-radius:3px;background:#402FFF">бесплатно</span>
+            <span style="font-size:17px;font-weight:600;letter-spacing:-0.01em">Правила Profectium</span>
+            <span style="font-size:13px;line-height:1.45;opacity:0.82">Поиск и шаблоны работают в браузере. Инструменты читают данные вашего аккаунта с сервера.</span>
+          </div>
+        </div>
+      </section>
+
+      <section data-reveal="up" style="background:#FFFFFF;border-radius:8px;padding:28px;display:flex;flex-direction:column;gap:22px">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <span style="font-size:13px;color:#5B5D65">Способ работы</span>
+          <span style="font-size:15px;font-weight:600">Правила и шаблоны</span>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <button onClick="{{ runTest }}" style="height:48px;padding:0 18px;border:1px solid #1B1C21;background:#FFFFFF;border-radius:4px;font:inherit;font-size:15px;font-weight:600;cursor:pointer;color:#1B1C21;display:flex;align-items:center;gap:10px" style-hover="background:#F3F3F0">
+            <sc-if value="{{ testing }}" hint-placeholder-val="{{ false }}"><span data-fx="spin" style="width:14px;height:14px;border-radius:50%;border:2px solid #CFCFCB;border-top-color:#402FFF"></span></sc-if>
+            {{ testLabel }}
+          </button>
+          <button onClick="{{ saveCfg }}" style="height:48px;padding:0 22px;border:0;border-radius:4px;background:#402FFF;color:#FFFFFF;font:inherit;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:14px" style-hover="background:#2F1FE6">Сохранить и включить<span style="font-family:'JetBrains Mono',monospace">→</span></button>
+          <sc-if value="{{ hasTest }}" hint-placeholder-val="{{ false }}">
+            <span style="{{ testStyle }}">{{ testText }}</span>
+          </sc-if>
+        </div>
+        <div style="display:flex;gap:12px;padding:14px 16px;background:#F3F3F0;border-radius:6px;font-size:13px;line-height:1.55">
+          <span style="font-family:'JetBrains Mono',monospace;color:#402FFF">i</span>
+          <span>{{ helperNote }}</span>
+        </div>
+      </section>
+
+      <section data-reveal="up" style="background:#FFFFFF;border-radius:8px;padding:28px;display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:8px">
+          <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.01em">Правила, шаблоны и подсказки</h2>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5B5D65">{{ featOn }} из 6 включено</span>
+        </div>
+        <sc-for list="{{ features }}" as="f" hint-placeholder-count="6">
+          <button class="fsp-mobile-feature" onClick="{{ f.toggle }}" style="display:grid;grid-template-columns:36px minmax(0,1fr) auto auto;gap:16px;align-items:center;padding:14px 0;border:0;border-top:1px solid #E4E4E1;background:none;font:inherit;text-align:left;cursor:pointer;color:#1B1C21">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#5B5D65">{{ f.n }}</span>
+            <span style="display:flex;flex-direction:column;gap:3px"><span style="font-size:16px;font-weight:600">{{ f.t }}</span><span style="font-size:13px;line-height:1.45;color:#5B5D65">{{ f.d }}</span></span>
+            <a href="{{ f.href }}" style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:#402FFF;white-space:nowrap">{{ f.where }}</a>
+            <span style="{{ f.track }}"><span style="{{ f.knob }}"></span></span>
+          </button>
+        </sc-for>
+      </section>
+    </div>
+
+    <aside style="flex:1 1 360px;max-width:460px;display:flex;flex-direction:column;gap:24px">
+      <section data-reveal="right" style="background:#1B1C21;color:#EDEDED;border-radius:8px;padding:24px;display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#A3A5AD">Данные локального помощника</span>
+          <button onClick="{{ toggleAnon }}" style="display:flex;align-items:center;gap:10px;border:0;background:none;color:#EDEDED;font:inherit;font-size:13px;cursor:pointer;padding:0">Обезличивать<span style="{{ anonTrack }}"><span style="{{ anonKnob }}"></span></span></button>
+        </div>
+        <pre data-flash="1" style="margin:0;background:#131418;border-radius:6px;padding:16px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.65;color:#C8C9CA;overflow-x:auto;white-space:pre-wrap">{{ payload }}</pre>
+        <span style="font-size:13px;line-height:1.55;color:#C8C9CA">Переключатель обезличивания скрывает имя и город в выводе локального помощника.</span>
+      </section>
+
+      <section data-reveal="right" data-delay="80" style="background:#FFFFFF;border-radius:8px;padding:24px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#5B5D65">Записей в локальном журнале</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px">{{ usedText }}</span>
+        </div>
+        <div style="height:6px;background:#EFEFEC;border-radius:3px;overflow:hidden"><div style="{{ usedBar }}"></div></div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          <sc-for list="{{ budgets }}" as="b" hint-placeholder-count="4">
+            <button onClick="{{ b.pick }}" style="{{ b.style }}">{{ b.t }}</button>
+          </sc-for>
+        </div>
+        <span style="font-size:13px;line-height:1.5;color:#5B5D65">Правила и шаблоны не требуют оплаты. Журнал хранит последние 40 действий в этом браузере.</span>
+      </section>
+    </aside>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isTools }}" hint-placeholder-val="{{ false }}">
+  <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:stretch">
+    <section data-reveal="up" style="flex:999 1 620px;min-width:0;background:#1B1C21;color:#EDEDED;border-radius:8px;overflow:hidden;display:flex;flex-direction:column">
+      <div style="padding:24px 28px;display:flex;flex-direction:column;gap:16px;border-bottom:1px solid #2A2B31">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+          <span style="display:flex;align-items:center;gap:10px;font-size:20px;font-weight:600;color:#FFFFFF">Инструменты Profectium · локальный помощник</span>
+          <span style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#9A92FF"><span style="position:relative;width:8px;height:8px"><span style="position:absolute;inset:0;border-radius:50%;background:#9A92FF"></span><span data-fx="pulse" style="position:absolute;inset:0;border-radius:50%;background:#9A92FF"></span></span>демо · локальная песочница</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:stretch">
+          <span style="flex:1;min-width:0;display:flex;align-items:center;height:46px;padding:0 14px;border-radius:4px;background:#131418;font-family:'JetBrains Mono',monospace;font-size:14px;color:#FFFFFF;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">{{ endpoint }}</span>
+          <button onClick="{{ copyEndpoint }}" style="height:46px;padding:0 16px;border:1px solid #3A3B42;background:transparent;border-radius:4px;color:#EDEDED;font:inherit;font-size:14px;cursor:pointer" style-hover="border-color:#A3A5AD">Копировать</button>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+          <span style="font-size:13px;color:#A3A5AD;margin-right:6px">Транспорт</span>
+          <sc-for list="{{ transports }}" as="t" hint-placeholder-count="2">
+            <button onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.t }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div class="fsp-mobile-scroll" style="display:flex;gap:2px;padding:0 20px;border-bottom:1px solid #2A2B31;overflow-x:auto">
+        <sc-for list="{{ clients }}" as="c" hint-placeholder-count="5">
+          <button onClick="{{ c.pick }}" style="{{ c.style }}">{{ c.t }}</button>
+        </sc-for>
+      </div>
+      <div style="padding:20px 28px 24px;display:flex;flex-direction:column;gap:12px;flex:1">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#A3A5AD">{{ clientFile }}</span>
+          <div style="display:flex;gap:8px">
+            <button onClick="{{ toggleTokShow }}" style="height:32px;padding:0 12px;border:1px solid #3A3B42;background:transparent;border-radius:4px;color:#C8C9CA;font:inherit;font-size:13px;cursor:pointer">{{ tokShowLabel }}</button>
+            <button onClick="{{ copyConfig }}" style="height:32px;padding:0 12px;border:0;background:#EDEDED;border-radius:4px;color:#1B1C21;font:inherit;font-size:13px;font-weight:600;cursor:pointer" style-hover="background:#FFFFFF">Копировать пример REST</button>
+          </div>
+        </div>
+        <pre data-flash="1" style="margin:0;background:#131418;border-radius:6px;padding:18px 20px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.7;color:#EDEDED;overflow-x:auto;flex:1">{{ clientConfig }}</pre>
+        <span style="font-size:13px;color:#A3A5AD">{{ clientHint }}</span>
+      </div>
+    </section>
+
+    <section data-reveal="up" data-delay="80" style="flex:1 1 380px;max-width:520px;background:#FFFFFF;border-radius:8px;padding:24px;display:flex;flex-direction:column;gap:4px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+        <h2 style="margin:0;font-size:20px;font-weight:600;letter-spacing:-0.01em">Инструменты помощника</h2>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5B5D65">{{ toolCount }} tools</span>
+      </div>
+      <sc-for list="{{ tools }}" as="t" hint-placeholder-count="5">
+        <div style="border-top:1px solid #E4E4E1;padding:12px 0;display:flex;flex-direction:column;gap:6px">
+          <button onClick="{{ t.toggle }}" style="display:flex;justify-content:space-between;align-items:center;gap:10px;border:0;background:none;padding:0;cursor:pointer;font:inherit;text-align:left;color:#1B1C21">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600">{{ t.name }}</span>
+            <span style="display:flex;gap:6px;align-items:center">
+              <sc-if value="{{ t.confirm }}" hint-placeholder-val="{{ false }}"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;padding:3px 6px;border-radius:3px;background:#FDE8EB;color:#B00E28">подтверждение</span></sc-if>
+              <span style="{{ t.scopeStyle }}">{{ t.scope }}</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:14px;color:#5B5D65;width:12px">{{ t.caret }}</span>
+            </span>
+          </button>
+          <span style="font-size:13px;line-height:1.5;color:#5B5D65">{{ t.desc }}</span>
+          <sc-if value="{{ t.open }}" hint-placeholder-val="{{ false }}">
+            <pre style="margin:4px 0 0;background:#F3F3F0;border-radius:4px;padding:12px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.55;overflow-x:auto;animation:rowIn .25s ease both">{{ t.schema }}</pre>
+          </sc-if>
+        </div>
+      </sc-for>
+    </section>
+  </div>
+
+  <section data-reveal="up" style="background:#1B1C21;color:#EDEDED;border-radius:8px;overflow:hidden;position:relative">
+    <img src="assets/lineline1.png" alt="" data-fx="breathe" style="position:absolute;right:-40px;top:-60px;width:360px;opacity:0.25;pointer-events:none">
+    <div style="position:relative;padding:24px 28px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:1px solid #2A2B31">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#9A92FF">Песочница помощника</span>
+        <h2 style="margin:0;font-size:24px;font-weight:600;letter-spacing:-0.015em;color:#FFFFFF">Опишите, кого нужно найти</h2>
+      </div>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#A3A5AD">{{ helperStatus }}</span>
+    </div>
+    <div ref="{{ logRef }}" style="position:relative;padding:20px 28px;display:flex;flex-direction:column;gap:12px;min-height:280px;max-height:560px;overflow:auto">
+      <sc-if value="{{ noItems }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:14px;padding:24px 0">
+          <span style="font-size:15px;color:#C8C9CA;max-width:620px;line-height:1.55">Локальный помощник использует текущую сессию сайта: поиск по категориям, профили и приглашения. Отправка настоящего приглашения всегда ждёт вашего подтверждения.</span>
+          <div data-stagger="up" style="display:flex;flex-wrap:wrap;gap:8px">
+            <sc-for list="{{ suggests }}" as="g" hint-placeholder-count="4">
+              <button onClick="{{ g.run }}" style="height:38px;padding:0 14px;border-radius:999px;border:1px solid #3A3B42;background:#202126;color:#EDEDED;font:inherit;font-size:14px;cursor:pointer" style-hover="border-color:#9A92FF;color:#FFFFFF">{{ g.t }}</button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+      <sc-for list="{{ items }}" as="it" hint-placeholder-count="0">
+        <div style="{{ it.wrap }}">
+          <sc-if value="{{ it.isUser }}" hint-placeholder-val="{{ false }}">
+            <span style="align-self:flex-end;max-width:640px;background:#402FFF;color:#FFFFFF;border-radius:8px 8px 2px 8px;padding:12px 16px;font-size:15px;line-height:1.5">{{ it.text }}</span>
+          </sc-if>
+          <sc-if value="{{ it.isThink }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#A3A5AD">
+              <span style="position:relative;width:120px;height:2px;background:#2A2B31;overflow:hidden;border-radius:1px"><span data-fx="sweep" style="position:absolute;left:0;top:0;width:30%;height:100%;background:#9A92FF"></span></span>{{ it.text }}
+            </div>
+          </sc-if>
+          <sc-if value="{{ it.isCall }}" hint-placeholder-val="{{ false }}">
+            <div style="border:1px solid #33343A;border-radius:6px;background:#202126;overflow:hidden">
+              <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:13px">
+                <span style="{{ it.dot }}"></span>
+                <span style="color:#9A92FF;font-weight:600">{{ it.tool }}</span>
+                <span style="flex:1;min-width:0;color:#A3A5AD;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">{{ it.args }}</span>
+                <span style="color:#6E7078">{{ it.ms }}</span>
+              </div>
+              <sc-if value="{{ it.hasOut }}" hint-placeholder-val="{{ false }}">
+                <pre style="margin:0;padding:10px 14px 12px;border-top:1px solid #2A2B31;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.55;color:#C8C9CA;white-space:pre-wrap;word-break:break-word;max-height:140px;overflow:auto">{{ it.out }}</pre>
+              </sc-if>
+            </div>
+          </sc-if>
+          <sc-if value="{{ it.isConfirm }}" hint-placeholder-val="{{ false }}">
+            <div style="border:1px solid #EC1D35;border-radius:6px;background:#26191C;padding:16px;display:flex;flex-direction:column;gap:12px">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#FF8A98">Подтвердите отправку приглашения</span>
+              <span style="font-size:15px;line-height:1.5;color:#FFFFFF">{{ it.text }}</span>
+              <sc-if value="{{ it.pending }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;gap:8px">
+                  <button onClick="{{ it.yes }}" style="height:40px;padding:0 16px;border:0;border-radius:4px;background:#FFFFFF;color:#1B1C21;font:inherit;font-size:14px;font-weight:600;cursor:pointer">Подтвердить отправку</button>
+                  <button onClick="{{ it.no }}" style="height:40px;padding:0 16px;border:1px solid #4A4B52;border-radius:4px;background:transparent;color:#EDEDED;font:inherit;font-size:14px;cursor:pointer">Отклонить</button>
+                </div>
+              </sc-if>
+              <sc-if value="{{ it.done }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;color:#C8C9CA">{{ it.verdict }}</span></sc-if>
+            </div>
+          </sc-if>
+          <sc-if value="{{ it.isText }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;gap:12px;align-items:flex-start;max-width:820px">
+              <span style="width:28px;height:28px;border-radius:4px;background:#EDEDED;flex-shrink:0;display:grid;place-items:center"><img src="assets/logo_03w.svg" alt="" style="height:16px"></span>
+              <span style="font-size:15px;line-height:1.65;color:#EDEDED;white-space:pre-wrap;padding-top:3px">{{ it.text }}<sc-if value="{{ it.typing }}" hint-placeholder-val="{{ false }}"><span data-fx="blink" style="display:inline-block;width:8px;height:16px;margin-left:2px;vertical-align:-2px;background:#9A92FF"></span></sc-if></span>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+    <div style="position:relative;padding:16px 20px;border-top:1px solid #2A2B31;display:flex;gap:10px">
+      <input value="{{ q }}" onChange="{{ onQ }}" onKeyDown="{{ onQKey }}" placeholder="Например: найди Backend Middle с Kafka и призами ФСП" style="flex:1;min-width:0;height:50px;border:1px solid #3A3B42;border-radius:4px;padding:0 16px;background:#131418;color:#FFFFFF;font:inherit;font-size:15px;outline:none" style-focus="border-color:#9A92FF">
+      <button onClick="{{ ask }}" style="{{ askStyle }}">{{ askLabel }}</button>
+      <sc-if value="{{ hasItems }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ resetChat }}" style="height:50px;padding:0 14px;border:1px solid #3A3B42;border-radius:4px;background:transparent;color:#C8C9CA;font:inherit;font-size:14px;cursor:pointer">Сброс</button>
+      </sc-if>
+    </div>
+  </section>
+
+  <section data-reveal="up" style="background:#FFFFFF;border-radius:8px;padding:28px;display:flex;flex-direction:column;gap:16px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px">
+      <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.01em">Ключи доступа к REST API</h2>
+      <span style="font-size:13px;color:#5B5D65">только чтение; отзыв действует на сервере</span>
+    </div>
+    <div data-flash="1" style="display:flex;flex-direction:column">
+      <sc-for list="{{ tokens }}" as="t" hint-placeholder-count="2">
+        <div class="fsp-mobile-stack" style="display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1.6fr) 140px 120px auto;gap:16px;align-items:center;padding:14px 0;border-top:1px solid #E4E4E1;animation:rowIn .35s ease both">
+          <span style="display:flex;flex-direction:column;gap:3px"><span style="font-size:15px;font-weight:600">{{ t.name }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5B5D65">ID {{ t.tail }}</span></span>
+          <span style="display:flex;flex-wrap:wrap;gap:4px"><sc-for list="{{ t.scopes }}" as="sc" hint-placeholder-count="3"><span style="{{ sc.style }}">{{ sc.t }}</span></sc-for></span>
+          <span style="font-size:13px;color:#5B5D65">до {{ t.exp }}</span>
+          <span style="font-size:13px;color:#5B5D65">{{ t.used }}</span>
+          <button onClick="{{ t.revoke }}" style="height:34px;padding:0 12px;border:1px solid #CFCFCB;background:#FFFFFF;border-radius:4px;font:inherit;font-size:13px;cursor:pointer;color:#B00E28" style-hover="border-color:#B00E28">Отозвать</button>
+        </div>
+      </sc-for>
+    </div>
+    <sc-if value="{{ hasFresh }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:16px 18px;background:#1B1C21;color:#EDEDED;border-radius:6px;animation:rowIn .35s ease both">
+        <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#9A92FF">Новый токен · показывается один раз</span>
+          <span data-scramble="900" style="font-family:'JetBrains Mono',monospace;font-size:16px;color:#FFFFFF;word-break:break-all">{{ fresh }}</span>
+        </div>
+        <button onClick="{{ copyFresh }}" style="height:40px;padding:0 16px;border:0;border-radius:4px;background:#EDEDED;color:#1B1C21;font:inherit;font-size:14px;font-weight:600;cursor:pointer">Копировать</button>
+      </div>
+    </sc-if>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;padding-top:16px;border-top:1px solid #E4E4E1">
+      <label style="display:flex;flex-direction:column;gap:8px;flex:1 1 220px">
+        <span style="font-size:13px;color:#5B5D65">Название</span>
+        <input value="{{ tokName }}" onChange="{{ onTokName }}" placeholder="Моя интеграция" style="height:42px;border:1px solid #CFCFCB;border-radius:4px;padding:0 12px;font:inherit;font-size:14px;outline:none;color:#1B1C21" style-focus="border-color:#402FFF;box-shadow:0 0 0 3px #E2DFFF">
+      </label>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:13px;color:#5B5D65">Права</span>
+        <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ scopeOpts }}" as="o" hint-placeholder-count="4"><button onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.t }}</button></sc-for></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:13px;color:#5B5D65">Срок</span>
+        <div style="display:flex;gap:6px"><sc-for list="{{ expOpts }}" as="o" hint-placeholder-count="3"><button onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.t }}</button></sc-for></div>
+      </div>
+      <button onClick="{{ createTok }}" style="height:42px;padding:0 18px;border:0;border-radius:4px;background:#402FFF;color:#FFFFFF;font:inherit;font-size:14px;font-weight:600;cursor:pointer" style-hover="background:#2F1FE6">Выпустить токен</button>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ isApi }}" hint-placeholder-val="{{ false }}">
+  <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start">
+    <div style="flex:999 1 640px;min-width:0;display:flex;flex-direction:column;gap:24px">
+      <section data-reveal="up" style="background:#FFFFFF;border-radius:8px;padding:28px;display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px">
+          <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.01em">REST API</h2>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5B5D65">только чтение · OpenAPI 3.1</span>
+        </div>
+        <div class="fsp-mobile-stack" style="display:grid;grid-template-columns:120px minmax(0,1fr);gap:10px 16px;font-size:14px;align-items:center">
+          <span style="color:#5B5D65">Базовый URL</span><span style="font-family:'JetBrains Mono',monospace">{{ apiBase }}</span>
+          <span style="color:#5B5D65">Ключ</span>
+          <span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span data-flash="1" style="font-family:'JetBrains Mono',monospace">{{ apiKey }}</span><button onClick="{{ rotateKey }}" style="height:30px;padding:0 10px;border:1px solid #CFCFCB;background:#FFFFFF;border-radius:4px;font:inherit;font-size:12px;cursor:pointer;color:#1B1C21">Ключи доступа</button></span>
+        </div>
+        <pre style="margin:0;background:#1B1C21;color:#EDEDED;border-radius:6px;padding:18px 20px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.7;overflow-x:auto">{{ curl }}</pre>
+        <span style="font-size:13px;color:#5B5D65">Интеграционный API всегда исключает контактные данные, включая принятые приглашения. Доступны GET /candidates, /jobs и /offers.</span>
+      </section>
+
+      <section data-reveal="up" style="background:#FFFFFF;border-radius:8px;padding:28px;display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:8px">
+          <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.01em">Вебхуки</h2>
+          <span style="font-size:13px;color:#5B5D65">локальный макет · без сетевых запросов</span>
+        </div>
+        <sc-for list="{{ hooks }}" as="h" hint-placeholder-count="2">
+          <div class="fsp-mobile-stack" style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1.4fr) 110px auto;gap:16px;align-items:center;padding:14px 0;border-top:1px solid #E4E4E1;animation:rowIn .35s ease both">
+            <span style="display:flex;flex-direction:column;gap:3px;min-width:0"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ h.url }}</span><span style="font-size:12px;color:#5B5D65">{{ h.name }}</span></span>
+            <span style="display:flex;flex-wrap:wrap;gap:4px"><sc-for list="{{ h.events }}" as="e" hint-placeholder-count="2"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;padding:3px 7px;border-radius:3px;background:#F3F3F0;color:#45474E">{{ e }}</span></sc-for></span>
+            <span style="{{ h.stStyle }}">{{ h.st }}</span>
+            <span style="display:flex;gap:6px;justify-content:flex-end">
+              <button onClick="{{ h.ping }}" style="height:34px;padding:0 12px;border:0;background:#1B1C21;color:#FFFFFF;border-radius:4px;font:inherit;font-size:13px;cursor:pointer" style-hover="background:#402FFF">Имитация доставки</button>
+              <button onClick="{{ h.remove }}" style="height:34px;padding:0 10px;border:1px solid #CFCFCB;background:#FFFFFF;border-radius:4px;font:inherit;font-size:13px;cursor:pointer;color:#5B5D65">×</button>
+            </span>
+          </div>
+        </sc-for>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;padding-top:16px;border-top:1px solid #E4E4E1">
+          <label style="display:flex;flex-direction:column;gap:8px;flex:1 1 280px">
+            <span style="font-size:13px;color:#5B5D65">URL получателя</span>
+            <input value="{{ hookUrl }}" onChange="{{ onHookUrl }}" placeholder="https://ats.company.ru/hooks/profectium" spellcheck="false" style="height:42px;border:1px solid #CFCFCB;border-radius:4px;padding:0 12px;font-family:'JetBrains Mono',monospace;font-size:13px;outline:none;color:#1B1C21" style-focus="border-color:#402FFF;box-shadow:0 0 0 3px #E2DFFF">
+          </label>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;flex:1 1 360px"><sc-for list="{{ eventOpts }}" as="o" hint-placeholder-count="5"><button onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.t }}</button></sc-for></div>
+          <button onClick="{{ addHook }}" style="height:42px;padding:0 18px;border:0;border-radius:4px;background:#402FFF;color:#FFFFFF;font:inherit;font-size:14px;font-weight:600;cursor:pointer" style-hover="background:#2F1FE6">Добавить</button>
+        </div>
+      </section>
+    </div>
+
+    <aside style="flex:1 1 380px;max-width:500px;display:flex;flex-direction:column;gap:24px">
+      <section data-reveal="right" style="background:#1B1C21;color:#EDEDED;border-radius:8px;padding:24px;display:flex;flex-direction:column;gap:6px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#A3A5AD;margin-bottom:8px">Последние доставки</span>
+        <sc-for list="{{ deliveries }}" as="d" hint-placeholder-count="3">
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:12px 0;border-top:1px solid #2A2B31;animation:rowIn .35s ease both">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#FFFFFF">{{ d.event }}</span>
+            <span style="display:flex;align-items:center;gap:8px;justify-self:end">
+              <sc-if value="{{ d.pending }}" hint-placeholder-val="{{ false }}"><span data-fx="spin" style="width:12px;height:12px;border-radius:50%;border:2px solid #3A3B42;border-top-color:#9A92FF"></span></sc-if>
+              <span style="{{ d.stStyle }}">{{ d.st }}</span>
+            </span>
+            <span style="font-size:12px;color:#A3A5AD;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ d.url }}</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#6E7078;justify-self:end">{{ d.meta }}</span>
+          </div>
+        </sc-for>
+      </section>
+      <section data-reveal="right" data-delay="80" style="background:#FFFFFF;border-radius:8px;padding:24px;display:flex;flex-direction:column;gap:12px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#5B5D65">Пример доставки</span>
+        <pre data-flash="1" style="margin:0;background:#F3F3F0;border-radius:6px;padding:14px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.6;overflow-x:auto;white-space:pre-wrap;word-break:break-word">{{ samplePayload }}</pre>
+      </section>
+    </aside>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isLog }}" hint-placeholder-val="{{ false }}">
+  <section data-reveal="up" style="background:#FFFFFF;border-radius:8px;overflow:hidden">
+    <div style="padding:24px 28px 16px;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px">
+      <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.01em">Журнал локального помощника</h2>
+      <span style="font-size:13px;color:#5B5D65">хранится 90 дней · виден администраторам организации</span>
+    </div>
+    <div class="fsp-mobile-table-header" style="display:grid;grid-template-columns:110px minmax(0,1.4fr) minmax(0,1.2fr) 90px 100px;gap:16px;padding:10px 28px;border-top:1px solid #E4E4E1;border-bottom:1px solid #E4E4E1;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#5B5D65">
+      <span>Время</span><span>Назначение</span><span>Способ / путь</span><span>Время отв.</span><span style="text-align:right">Статус</span>
+    </div>
+    <div data-stagger="fade">
+      <sc-for list="{{ logRows }}" as="l" hint-placeholder-count="4">
+        <div class="fsp-mobile-stack" style="display:grid;grid-template-columns:110px minmax(0,1.4fr) minmax(0,1.2fr) 90px 100px;gap:16px;padding:13px 28px;border-bottom:1px solid #EFEFEC;font-size:14px;align-items:center">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#5B5D65">{{ l.at }}</span>
+          <span style="display:flex;flex-direction:column;gap:2px;min-width:0"><span>{{ l.purpose }}</span><sc-if value="{{ l.err }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#B00E28;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ l.err }}</span></sc-if></span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#45474E;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ l.via }}</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px">{{ l.ms }}</span>
+          <span style="{{ l.stStyle }}">{{ l.st }}</span>
+        </div>
+      </sc-for>
+    </div>
+    <sc-if value="{{ logEmpty }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:40px 28px;font-size:15px;color:#5B5D65">Пока пусто. Запустите Поиск по запросу в <a href="Каталог.dc.html">каталоге</a> или помощника во вкладке инструментов — обращения появятся здесь.</div>
+    </sc-if>
+  </section>
+</sc-if>
+</main>
+</x-dc>
+<!--
+ * Copyright (c) 2026 Криницин Вячеслав Александрович - Oladievic.
+ * Все права сохранены.
+ *
+ * Автор: Криницин Вячеслав Александрович
+-->
+<script type="text/x-dc" data-dc-script data-props="{&quot;defaultTab&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;helper&quot;,&quot;tools&quot;,&quot;api&quot;,&quot;log&quot;],&quot;default&quot;:&quot;helper&quot;,&quot;tsType&quot;:&quot;'helper' | 'tools' | 'api' | 'log'&quot;,&quot;section&quot;:&quot;Интеграции&quot;}}">
+class Component extends DCLogic {
+  state = (() => {
+    const q = new URLSearchParams(window.location.search);
+    const requestedTab = q.get('tab') || this.props.defaultTab;
+    const tab = ['helper', 'tools', 'api', 'log'].includes(requestedTab) ? requestedTab : 'helper';
+    return {
+      ready: !!(window.ProfectiumSearch && window.FSP), tab, cfg: null, testing: false, testRes: null,
+      transport: 'http', client: 'rest', tokShow: false, openTool: null,
+      items: [], q: '', busy: false,
+      tokens: [], tokenBusy: false, freshId: '', integrationStatus: 'Загрузка данных аккаунта…', companyName: 'Profectium',
+      tokName: '', tokScopes: { 'candidates:read': true, 'jobs:read': true, 'offers:read': true }, tokExp: 90, fresh: '',
+      apiKey: 'Создайте ключ во вкладке инструментов',
+      hooks: [
+        { id: 'h1', url: 'https://ats.orbita.example/hooks/profectium', name: 'Пример ATS · локальный макет', events: ['invitation.accepted', 'invitation.declined'], st: 'Не отправлялось' },
+        { id: 'h2', url: 'https://hooks.slack.example/T04/B07/hr-feed', name: 'Пример чата · локальный макет', events: ['invitation.accepted', 'task.solution_submitted'], st: 'Не отправлялось' }
+      ],
+      hookUrl: '', hookEvents: { 'invitation.accepted': true },
+      deliveries: [],
+      lastEvent: 'invitation.accepted'
+    };
+  })();
+  logRef = React.createRef();
+  componentDidMount() {
+    if (!this.state.ready) this._t = setInterval(() => { if (window.ProfectiumSearch && window.FSP) { clearInterval(this._t); this.setState({ ready: true, cfg: window.ProfectiumSearch.config() }); } }, 40);
+    else this.setState({ cfg: window.ProfectiumSearch.config() });
+    this._onCfg = () => this.forceUpdate();
+    window.addEventListener('fsp-search-config', this._onCfg);
+    this.loadIntegrations();
+  }
+  componentWillUnmount() { clearInterval(this._t); window.removeEventListener('fsp-search-config', this._onCfg); this._stopType && this._stopType(); }
+  componentDidUpdate() { if (this._lastItems !== this.state.items) { this._lastItems = this.state.items; const el = this.logRef.current; if (el) el.scrollTop = el.scrollHeight; } }
+  async integrationRequest(body) {
+    const api = window.ProfectiumAPI;
+    if (!api) throw new Error('Откройте опубликованный сайт и войдите как работодатель.');
+    await api.ready();
+    const state = api.ensureRole ? await api.ensureRole('employer') : api.state;
+    if (state.session.role !== 'employer') throw new Error('Раздел ключей доступен работодателю.');
+    const result = await api.request('/api/integrations?mode=' + encodeURIComponent(api.mode || state.session.mode), body ? { method: 'POST', body } : {});
+    return result;
+  }
+  async loadIntegrations() {
+    try {
+      const data = await this.integrationRequest();
+      const state = window.ProfectiumAPI.state;
+      const date = value => value ? new Date(value).toLocaleDateString('ru-RU') : 'не использовался';
+      this.setState({ tokens: data.keys.filter(k => !k.revoked_at && Date.parse(k.expires_at) > Date.now()).map(k => ({ id: k.id, name: k.name, scopes: k.scopes, exp: date(k.expires_at), used: date(k.last_used_at), tail: k.id.slice(0, 8) })), companyName: state?.company?.name || 'Profectium', integrationStatus: 'Ключи загружены с сервера.' });
+    } catch (e) { this.setState({ integrationStatus: e.message || 'Не удалось загрузить интеграции.' }); }
+  }
+  async createToken() {
+    if (this.state.tokenBusy) return;
+    const scopes = Object.keys(this.state.tokScopes).filter(k => this.state.tokScopes[k]);
+    if (!scopes.length) return FX.toast('Выберите хотя бы одно право', { tone: 'red' });
+    this.setState({ tokenBusy: true });
+    try {
+      const result = await this.integrationRequest({ action: 'create', name: this.state.tokName.trim() || 'Моя интеграция', scopes, expiresInDays: this.state.tokExp });
+      this.setState({ fresh: result.token, freshId: result.id, apiKey: result.token, tokName: '', tokShow: true });
+      await this.loadIntegrations();
+      FX.toast('Ключ создан на сервере. Сохраните его сейчас.', { tone: 'blue' });
+    } catch (e) { FX.toast(e.message || 'Ключ не создан', { tone: 'red' }); }
+    finally { this.setState({ tokenBusy: false }); }
+  }
+  async revokeToken(token) {
+    if (this.state.tokenBusy) return;
+    this.setState({ tokenBusy: true });
+    try {
+      await this.integrationRequest({ action: 'revoke', id: token.id });
+      if (this.state.freshId === token.id) this.setState({ fresh: '', freshId: '', apiKey: 'Ключ отозван' });
+      await this.loadIntegrations();
+      FX.toast('Ключ «' + token.name + '» отозван на сервере', { tone: 'blue' });
+    } catch (e) { FX.toast(e.message || 'Ключ не отозван', { tone: 'red' }); }
+    finally { this.setState({ tokenBusy: false }); }
+  }
+  setCfg(patch) { this.setState(s => ({ cfg: Object.assign({}, s.cfg, patch), testRes: null })); }
+  push(item) { const id = 'i' + Math.random().toString(36).slice(2, 8); this.setState(s => ({ items: s.items.concat(Object.assign({ id }, item)) })); return id; }
+  patch(id, p) { this.setState(s => ({ items: s.items.map(i => i.id === id ? Object.assign({}, i, p) : i) })); }
+  drop(id) { this.setState(s => ({ items: s.items.filter(i => i.id !== id) })); }
+  async copy(text, msg) { try { if (!navigator.clipboard) throw new Error('Буфер обмена недоступен'); await navigator.clipboard.writeText(text); FX.toast(msg || 'Скопировано'); } catch (e) { FX.toast('Не удалось скопировать. Выделите текст и скопируйте вручную.', { tone: 'red' }); } }
+  rand(n) { const a = 'abcdefghijklmnopqrstuvwxyz0123456789'; let s = ''; for (let i = 0; i < n; i++) s += a[(Math.random() * a.length) | 0]; return s; }
+
+  planRequest(q, step, ctx) {
+    const P = ProfectiumSearch.parseQuery(q);
+    const wantsInvite = /пригласи|отправь приглаш/i.test(q);
+    if (step === 0) {
+      if (/приглашени|ждут|статус|ответил/i.test(q) && !wantsInvite) return { calls: [{ tool: 'list_invitations', input: {} }] };
+      if (P.role) return { calls: [{ tool: 'search_candidates', input: { role: P.role, grade: P.grade || 'Middle', skills: P.skills, fsp_only: P.fsp_only, format: P.format || undefined, max_salary: P.max_salary || undefined, limit: /сравни/i.test(q) ? 2 : 3 } }] };
+      return { calls: [{ tool: 'list_categories', input: {} }] };
+    }
+    if (step === 1 && wantsInvite && ctx.top) {
+      const m = q.match(/(\d{2,3})\s*[–\-—]\s*(\d{2,3})/);
+      const lo = m ? +m[1] : ctx.top.smin, hi = m ? +m[2] : ctx.top.smax;
+      return { calls: [{ tool: 'send_invitation', input: { candidate_id: ctx.top.id, title: (window.FSP.roleRu[P.role] || 'Разработчик') + ' в команду', salary_from: lo, salary_to: hi, message: 'Нашли вас в категории ' + ctx.top.cat + '. Хотим познакомиться.' } }] };
+    }
+    return { final: this.summarize(ctx) };
+  }
+  summarize(ctx) {
+    const r = ctx.results[ctx.results.length - 1];
+    if (!r) return 'Данных нет.';
+    let j; try { j = JSON.parse(r.out); } catch (e) { return r.out; }
+    if (r.tool === 'search_candidates') return j.length ? 'Нашёл ' + j.length + ':\n' + j.map((c, i) => (i + 1) + '. ' + c.name + ' — результат теста ' + c.score + '/100, вклад теста ' + c.test + ', ' + c.fsp + ', ждёт ' + c.expectations).join('\n') + '\n\nКонтакты откроются после принятия приглашения.' : 'В этой категории под условия никто не подошёл — ослабьте фильтр.';
+    if (r.tool === 'list_invitations') { const by = {}; j.forEach(i => by[i.status] = (by[i.status] || 0) + 1); const n = j.length, w = n % 10 === 1 && n % 100 !== 11 ? 'приглашение' : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 'приглашения' : 'приглашений'; return 'Всего ' + n + ' ' + w + ': принято ' + (by.accepted || 0) + ', ждут ответа ' + ((by.pending || 0) + (by.sent || 0) + (by.viewed || 0)) + ', отклонено ' + (by.declined || 0) + '.'; }
+    if (r.tool === 'send_invitation') return j.status === 'sent' ? 'Приглашение отправлено (' + j.invitation_id + '). ' + j.note + '.' : 'Отправку отменили — приглашение не ушло.';
+    if (r.tool === 'list_categories') { const top = j.map(c => [c.role + ' · Middle', c.Middle]).sort((a, b) => b[1] - a[1]).slice(0, 3); return 'Самые большие категории: ' + top.map(t => t[0] + ' (' + t[1] + ')').join(', ') + '. Уточните специализацию и грейд — найду лучших.'; }
+    return r.out;
+  }
+  async ask(text) {
+    const q = (text || this.state.q).trim();
+    if (!q || this.state.busy) return;
+    this.setState({ q: '', busy: true });
+    this.push({ kind: 'user', text: q });
+    const calls = {};
+    const tools = ProfectiumSearch.catalogTools({
+      onCall: (name, input) => { const id = this.push({ kind: 'call', tool: name, args: JSON.stringify(input), st: 'run', t0: performance.now() }); calls[id] = 1; return id; },
+      onResult: (id, out, err) => { const it = this.state.items.find(i => i.id === id); this.patch(id, { st: err ? 'err' : 'ok', out: String(out).slice(0, 900), ms: it ? Math.round(performance.now() - it.t0) + ' мс' : '' }); },
+      confirm: a => new Promise(res => {
+        const c = window.FSP.byId(a.candidate_id, 'none');
+        const id = this.push({ kind: 'confirm', pending: true, text: (c ? c.name + ' · ' + c.role + ' · ' + c.grade : a.candidate_id) + ' — «' + a.title + '», ' + a.salary_from + '–' + a.salary_to + ' тыс ₽. ' + (a.message || '') });
+        this['_res_' + id] = ok => { this.patch(id, { pending: false, done: true, verdict: ok ? 'Подтверждено вами · ' + new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }) : 'Отклонено вами — помощник получил отказ' }); res(ok); };
+      })
+    });
+    const ctx = { results: [], top: null };
+    const seen = new Set();
+    for (let step = 0; step < 4; step++) {
+      const think = this.push({ kind: 'think', text: step === 0 ? 'Помощник выбирает инструмент · ' + ProfectiumSearch.label() : 'Помощник обрабатывает результат' });
+      const plan = this.planRequest(q, step, ctx);
+      this.drop(think);
+      if (plan.final) { await this.typeOut(String(plan.final) + '\n\n— бесплатный локальный помощник; данные с сервера'); break; }
+      const fresh = plan.calls.slice(0, 2).filter(c => { const sig = c.tool + JSON.stringify(c.input || {}); if (seen.has(sig)) return false; seen.add(sig); return true; });
+      if (!fresh.length) { await this.typeOut(this.summarize(ctx)); break; }
+      for (const c of fresh) {
+        const t = tools.find(x => x.name === c.tool);
+        if (!t) continue;
+        let out;
+        try { out = await t.run(c.input || {}); } catch (e) { out = 'Ошибка: ' + (e.message || e); }
+        ctx.results.push({ tool: c.tool, out });
+        if (c.tool === 'search_candidates') { try { const j = JSON.parse(out); if (j[0]) { const full = window.ProfectiumAPI.state.candidates.find(x => x.id === j[0].id); if (full) ctx.top = { id: full.id, smin: full.salaryMin / 1000, smax: full.salaryMax / 1000, cat: full.role + ' · ' + full.grade }; } } catch (e) {} }
+      }
+      if (step === 3) await this.typeOut(this.summarize(ctx));
+    }
+    this.setState({ busy: false });
+  }
+  typeOut(text) {
+    return new Promise(res => {
+      const id = this.push({ kind: 'text', text: '', typing: true });
+      this._stopType = FX.type(text, part => this.patch(id, { text: part }), () => { this.patch(id, { typing: false }); res(); }, 140);
+    });
+  }
+  ping(h) {
+    const ev = h.events[0];
+    const id = 'd' + Date.now();
+    const host = h.url.replace(/^https?:\/\//, '').split('/')[0];
+    this.setState(s => ({ lastEvent: ev, deliveries: [{ id, event: ev, url: host, st: '…', pending: true, at: 'сейчас' }].concat(s.deliveries).slice(0, 6) }));
+    const ms = 80 + Math.round(Math.random() * 220);
+    setTimeout(() => { this.setState(s => ({ deliveries: s.deliveries.map(d => d.id === id ? Object.assign({}, d, { st: 'Макет · без отправки', pending: false, ms }) : d), hooks: s.hooks.map(x => x.id === h.id ? Object.assign({}, x, { st: 'Макет · без отправки' }) : x) })); FX.toast('Имитация доставки ' + ev + ' · сетевой запрос не отправлялся', { tone: 'blue' }); }, 900 + ms);
+  }
+
+  renderVals() {
+    const s = this.state;
+    if (!s.ready || !s.cfg) {
+      const noop = () => {};
+      return { tiles: [], tabs: [], features: [], budgets: [], tools: [], items: [], suggests: [], tokens: [], scopeOpts: [], expOpts: [], hooks: [], eventOpts: [], deliveries: [], logRows: [], transports: [], clients: [],
+        isHelper: s.tab === 'helper', isTools: s.tab === 'tools', isApi: s.tab === 'api', isLog: s.tab === 'log', noItems: true, hasItems: false, logRef: this.logRef,
+        q: s.q, onQ: noop, onQKey: noop, ask: noop, askLabel: 'Запустить', askStyle: {}, helperStatus: '', resetChat: noop,
+        testing: false, testLabel: 'Проверить правила', runTest: noop, hasTest: false, testText: '', testStyle: {}, saveCfg: noop, helperNote: '', featOn: 0,
+        toggleAnon: noop, anonTrack: {}, anonKnob: {}, payload: '', usedText: '', usedBar: {},
+        endpoint: '', copyEndpoint: noop, clientFile: '', clientConfig: '', clientHint: '', tokShowLabel: '', toggleTokShow: noop, copyConfig: noop, toolCount: 0,
+        hasFresh: false, fresh: '', copyFresh: noop, tokName: '', onTokName: noop, createTok: noop,
+        companyName: s.companyName, integrationStatus: s.integrationStatus, apiBase: location.origin + '/api/connect/v1', apiKey: '', rotateKey: noop, curl: '', hookUrl: '', onHookUrl: noop, addHook: noop, samplePayload: '', logEmpty: false };
+    }
+    const cfg = s.cfg;
+    const saved = ProfectiumSearch.config();
+    const log = ProfectiumSearch.log();
+    const chip = (on, dark) => ({ height: 32, padding: '0 12px', borderRadius: 4, font: 'inherit', fontSize: 13, cursor: 'pointer', fontFamily: "'JetBrains Mono',monospace", border: on ? '1px solid ' + (dark ? '#EDEDED' : '#1B1C21') : '1px solid ' + (dark ? '#3A3B42' : '#D9D9D5'), background: on ? (dark ? '#EDEDED' : '#1B1C21') : (dark ? 'transparent' : '#FFFFFF'), color: on ? (dark ? '#1B1C21' : '#FFFFFF') : (dark ? '#C8C9CA' : '#1B1C21') });
+    const track = on => ({ width: 40, height: 22, borderRadius: 999, background: on ? '#402FFF' : '#D9D9D5', position: 'relative', flexShrink: 0, transition: 'background .2s' });
+    const knob = on => ({ position: 'absolute', top: 3, left: on ? 21 : 3, width: 16, height: 16, borderRadius: '50%', background: '#FFFFFF', transition: 'left .25s cubic-bezier(.2,.8,.2,1)' });
+    const featOn = Object.values(saved.features).filter(Boolean).length;
+    const dotS = c => ({ position: 'absolute', inset: 0, borderRadius: '50%', background: c });
+    const go = t => () => this.setState({ tab: t });
+    const rulesReady = true;
+    const apiBase = location.origin + '/api/connect/v1';
+    const tokShown = s.tokShow && s.fresh ? s.fresh : 'YOUR_API_KEY';
+    const restExample = 'curl "' + apiBase + '/candidates?limit=5" -H "Authorization: Bearer ' + tokShown + '"';
+    const url = apiBase;
+    const cl = ['REST API · пример чтения', restExample, 'Ключи ниже подходят для REST API. Помощник работает через вашу сессию сайта.'];
+    const toolList = ProfectiumSearch.catalogTools();
+    const scopeColor = sc => sc === 'invitations:write' ? { bg: '#FDE8EB', c: '#B00E28' } : sc.indexOf('invitations') === 0 ? { bg: '#ECEAFF', c: '#2A1BD9' } : { bg: '#F3F3F0', c: '#45474E' };
+    const scStyle = sc => { const c = scopeColor(sc); return { fontFamily: "'JetBrains Mono',monospace", fontSize: 11, padding: '3px 7px', borderRadius: 3, background: c.bg, color: c.c }; };
+    const sample = c => !c ? { message: 'В каталоге пока нет доступных профилей' } : cfg.anonymize ? { candidate: 'Кандидат ' + c.id.toUpperCase(), category: c.role + ' · ' + c.grade, test: c.correct + '/6', fsp: c.ach.map(a => a.place + ' место · ' + a.disc), skills: c.skills.slice(0, 5), expectations: c.salary } : { candidate: c.name, city: c.city, category: c.role + ' · ' + c.grade, test: c.correct + '/6', fsp: c.ach.map(a => a.place + ' место · ' + a.comp), skills: c.skills.slice(0, 5), expectations: c.salary };
+    const fmtT = t => { const d = new Date(t); const now = new Date(); return (d.toDateString() === now.toDateString() ? '' : d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' }) + ' ') + d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }); };
+    const used = log.length, lim = saved.budget || 0;
+    const tabSt = on => ({ height: 50, padding: '0 16px', border: 0, background: 'none', font: 'inherit', fontSize: 15, fontWeight: on ? 600 : 400, cursor: 'pointer', color: on ? '#FFFFFF' : '#A3A5AD', boxShadow: on ? 'inset 0 -2px 0 #9A92FF' : 'none', display: 'flex', alignItems: 'center', gap: 8, whiteSpace: 'nowrap', transition: 'color .2s, box-shadow .3s' });
+    const F = [
+      ['search', 'Поиск обычным языком', 'Каталог понимает «бэкендер на Python с призами ФСП, удалёнка, до 260».', 'Каталог.dc.html', 'Каталог'],
+      ['explain', 'Объяснение ранжирования', 'Почему кандидат выше соседей — одной фразой в профиле.', 'Каталог.dc.html', 'Каталог'],
+      ['drafts', 'Черновики приглашений', 'Текст по профилю и потребности. Зарплату указываете вы.', 'Каталог.dc.html', 'Каталог'],
+      ['rubric', 'Серверная проверка теста', 'Квалификацию проверяет сервер. Локальный помощник не выставляет оценки.', 'Тестирование.dc.html?phase=result', 'Тест'],
+      ['resume', 'Подготовка к интервью', 'Три вопроса по слабым темам теста и опыту ФСП.', 'Каталог.dc.html', 'Каталог'],
+      ['tasks', 'Генерация коротких задач', 'Черновик задачи на 20 минут под вашу потребность.', 'Пульт.dc.html', 'Пульт']
+    ];
+    return {
+      companyName: s.companyName, integrationStatus: s.integrationStatus, apiBase,
+      tiles: [
+        { k: 'Локальный помощник', v: ProfectiumSearch.label(), d: (rulesReady ? 'проверена' : 'не проверена') + ' · ' + featOn + ' функций', dot: dotS(rulesReady ? '#9A92FF' : '#EC1D35'), ring: dotS(rulesReady ? '#9A92FF' : '#EC1D35'), go: go('helper') },
+        { k: 'Инструменты и REST', v: '5 инструментов', d: s.tokens.length + ' действующих ключей REST', dot: dotS('#9A92FF'), ring: dotS('#9A92FF'), go: go('tools') },
+        { k: 'Вебхуки', v: s.hooks.length + ' адреса', d: 'Локальный макет · события не отправляются', dot: dotS('#EDEDED'), ring: dotS('#EDEDED'), go: go('api') }
+      ],
+      tabs: [['helper', 'Локальный помощник', ''], ['tools', 'Инструменты и ключи', '5'], ['api', 'API и вебхуки', String(s.hooks.length)], ['log', 'Журнал', String(log.length)]].map(([k, t, n]) => ({ t, n, style: tabSt(s.tab === k), nStyle: { display: n ? 'inline-block' : 'none', fontFamily: "'JetBrains Mono',monospace", fontSize: 11, padding: '2px 6px', borderRadius: 3, background: s.tab === k ? '#402FFF' : '#2E2F36', color: '#FFFFFF' }, pick: () => this.setState({ tab: k }) })),
+      isHelper: s.tab === 'helper', isTools: s.tab === 'tools', isApi: s.tab === 'api', isLog: s.tab === 'log',
+      testing: s.testing, testLabel: s.testing ? 'Проверяем…' : 'Проверить правила',
+      runTest: async () => { if (s.testing) return; this.setState({ testing: true, testRes: null }); const r = await ProfectiumSearch.test(cfg); this.setState({ testing: false, testRes: r }); },
+      hasTest: !!s.testRes,
+      testText: s.testRes ? (s.testRes.ok ? '✓ ' + s.testRes.ms + ' мс · «' + s.testRes.text + '»' : '× ' + s.testRes.error) : '',
+      testStyle: { fontSize: 14, lineHeight: 1.45, color: s.testRes && s.testRes.ok ? '#2A1BD9' : '#B00E28', maxWidth: 460, animation: 'rowIn .3s ease both' },
+      saveCfg: () => { ProfectiumSearch.save(Object.assign({}, cfg, { checkedAt: s.testRes && s.testRes.ok ? new Date().toISOString() : '' })); FX.toast('Настройки помощника сохранены', { tone: 'blue', action: 'Попробовать в каталоге →', href: 'Каталог.dc.html' }); this.forceUpdate(); },
+      helperNote: 'Используются бесплатные правила и шаблоны. Настройки сохраняются в этом браузере.',
+      featOn,
+      features: F.map(([k, t, d, href, where], i) => { const on = !!cfg.features[k]; return { n: String(i + 1).padStart(2, '0'), t, d, href, where, track: track(on), knob: knob(on), toggle: e => { if (k === 'rubric') return FX.toast('Оценивание теста всегда выполняет сервер.'); if (e.target.closest && e.target.closest('a')) return; const f = Object.assign({}, cfg.features, { [k]: !on }); this.setCfg({ features: f }); ProfectiumSearch.save(Object.assign({}, saved, { features: f })); } }; }),
+      toggleAnon: () => { const v = !cfg.anonymize; this.setCfg({ anonymize: v }); ProfectiumSearch.save(Object.assign({}, saved, { anonymize: v })); },
+      anonTrack: track(cfg.anonymize), anonKnob: knob(cfg.anonymize),
+      payload: JSON.stringify({ mode: 'Локально · внешняя отправка отключена', availableProfiles: window.ProfectiumAPI?.state?.candidates?.length || 0, anonymize: cfg.anonymize }, null, 2),
+      usedText: used + ' / ' + (lim ? lim.toLocaleString('ru-RU') : '∞'),
+      usedBar: { width: lim ? Math.min(100, Math.max(2, used / lim * 100)) + '%' : '2%', height: '100%', background: '#402FFF', transition: 'width .6s' },
+      budgets: [[0, 'Бесплатно · локально']].map(([v, t]) => ({ t, style: chip(saved.budget === v), pick: () => { ProfectiumSearch.save(Object.assign({}, saved, { budget: v })); this.forceUpdate(); } })),
+      endpoint: url, copyEndpoint: () => this.copy(apiBase, 'Адрес REST API скопирован'),
+      transports: [['http', 'Streamable HTTP'], ['sse', 'SSE']].map(([k, t]) => ({ t, style: chip(s.transport === k, true), pick: () => this.setState({ transport: k }) })),
+      clients: [['rest', 'REST API']].map(([k, t]) => ({ t, pick: () => this.setState({ client: k }), style: { height: 46, padding: '0 14px', border: 0, background: 'none', font: 'inherit', fontSize: 14, cursor: 'pointer', whiteSpace: 'nowrap', color: s.client === k ? '#FFFFFF' : '#A3A5AD', fontWeight: s.client === k ? 600 : 400, boxShadow: s.client === k ? 'inset 0 -2px 0 #9A92FF' : 'none' } })),
+      clientFile: cl[0], clientConfig: cl[1], clientHint: cl[2],
+      tokShowLabel: s.tokShow ? 'Скрыть токен' : 'Показать токен', toggleTokShow: () => this.setState({ tokShow: !s.tokShow }),
+      copyConfig: () => this.copy(cl[1], 'Пример REST API скопирован'),
+      toolCount: toolList.length,
+      tools: toolList.map(t => { const open = s.openTool === t.name; return { name: t.name, scope: t.scope, scopeStyle: scStyle(t.scope), confirm: !!t.confirm, desc: t.description, open, caret: open ? '−' : '+', schema: JSON.stringify(t.input_schema, null, 2), toggle: () => this.setState({ openTool: open ? null : t.name }) }; }),
+      logRef: this.logRef,
+      helperStatus: ProfectiumSearch.label() + ' · 5 серверных инструментов',
+      noItems: s.items.length === 0, hasItems: s.items.length > 0,
+      suggests: ['Кто лучший Backend Middle с призами ФСП?', 'Сравни двух топовых Frontend Middle', 'Сколько приглашений ждут ответа?', 'Пригласи лучшего Data Science Middle на 230–280'].map(t => ({ t, run: () => this.ask(t) })),
+      items: s.items.map(it => {
+        const base = { wrap: { display: 'flex', flexDirection: 'column', animation: 'rowIn .35s cubic-bezier(.2,.8,.2,1) both' }, isUser: it.kind === 'user', isThink: it.kind === 'think', isCall: it.kind === 'call', isConfirm: it.kind === 'confirm', isText: it.kind === 'text', text: it.text || '' };
+        if (it.kind === 'call') Object.assign(base, { tool: it.tool, args: it.args, ms: it.ms || '…', hasOut: !!it.out, out: it.out || '', dot: { width: 8, height: 8, borderRadius: '50%', flexShrink: 0, background: it.st === 'ok' ? '#9A92FF' : it.st === 'err' ? '#EC1D35' : '#EDEDED', boxShadow: it.st === 'run' ? '0 0 0 4px rgba(237,237,237,.15)' : 'none' } });
+        if (it.kind === 'confirm') Object.assign(base, { pending: !!it.pending, done: !!it.done, verdict: it.verdict || '', yes: () => this['_res_' + it.id] && this['_res_' + it.id](true), no: () => this['_res_' + it.id] && this['_res_' + it.id](false) });
+        if (it.kind === 'text') base.typing = !!it.typing;
+        return base;
+      }),
+      q: s.q, onQ: e => this.setState({ q: e.target.value }), onQKey: e => { if (e.key === 'Enter') this.ask(); },
+      ask: () => this.ask(), askLabel: s.busy ? 'Работает…' : 'Запустить',
+      askStyle: { height: 50, padding: '0 20px', border: 0, borderRadius: 4, background: s.busy ? '#33343A' : '#402FFF', color: '#FFFFFF', font: 'inherit', fontSize: 15, fontWeight: 600, cursor: s.busy ? 'default' : 'pointer' },
+      resetChat: () => { if (!s.busy) this.setState({ items: [] }); },
+      tokens: s.tokens.map(t => ({ name: t.name, tail: t.tail, exp: t.exp, used: t.used, scopes: t.scopes.map(x => ({ t: x, style: scStyle(x) })), revoke: () => this.revokeToken(t) })),
+      hasFresh: !!s.fresh, fresh: s.fresh, copyFresh: () => this.copy(s.fresh, 'Токен скопирован. Сохраните его — больше он не покажется'),
+      tokName: s.tokName, onTokName: e => this.setState({ tokName: e.target.value }),
+      scopeOpts: Object.keys(s.tokScopes).map(k => ({ t: k, style: chip(s.tokScopes[k]), pick: () => this.setState({ tokScopes: Object.assign({}, s.tokScopes, { [k]: !s.tokScopes[k] }) }) })),
+      expOpts: [7, 30, 90].map(d => ({ t: d + ' дн', style: chip(s.tokExp === d), pick: () => this.setState({ tokExp: d }) })),
+      createTok: () => this.createToken(),
+      apiKey: s.fresh ? (s.tokShow ? s.fresh : 'Ключ создан · показ доступен во вкладке инструментов') : s.apiKey,
+      rotateKey: () => { this.setState({ tab: 'tools' }); FX.toast('Создайте новый ключ и при необходимости отзовите старый.'); },
+      curl: restExample,
+      hooks: s.hooks.map(h => ({ url: h.url, name: h.name, events: h.events, st: h.st, stStyle: { fontFamily: "'JetBrains Mono',monospace", fontSize: 12, color: h.st.indexOf('200') === 0 ? '#2A1BD9' : '#5B5D65' }, ping: () => this.ping(h), remove: () => this.setState(st => ({ hooks: st.hooks.filter(x => x.id !== h.id) })) })),
+      hookUrl: s.hookUrl, onHookUrl: e => this.setState({ hookUrl: e.target.value.trim() }),
+      eventOpts: ['invitation.viewed', 'invitation.accepted', 'invitation.declined', 'candidate.category_changed', 'task.solution_submitted'].map(k => ({ t: k, style: Object.assign(chip(!!s.hookEvents[k]), { fontSize: 12, height: 30 }), pick: () => this.setState({ hookEvents: Object.assign({}, s.hookEvents, { [k]: !s.hookEvents[k] }) }) })),
+      addHook: () => {
+        if (!/^https:\/\/\S+\.\S+/.test(s.hookUrl)) return FX.toast('Нужен адрес https://…', { tone: 'red' });
+        const ev = Object.keys(s.hookEvents).filter(k => s.hookEvents[k]);
+        if (!ev.length) return FX.toast('Выберите события', { tone: 'red' });
+        const h = { id: 'h' + Date.now(), url: s.hookUrl, name: 'Новый получатель', events: ev, st: 'ещё не было' };
+        this.setState(st => ({ hooks: st.hooks.concat(h), hookUrl: '' }));
+        setTimeout(() => this.ping(h), 300);
+      },
+      deliveries: s.deliveries.map(d => ({ event: d.event, url: d.url, st: d.st, pending: !!d.pending, meta: (d.ms ? d.ms + ' мс · ' : '') + d.at, stStyle: { fontFamily: "'JetBrains Mono',monospace", fontSize: 12, fontWeight: 600, padding: '2px 7px', borderRadius: 3, background: d.pending ? 'transparent' : d.st === '200' ? '#402FFF' : '#33343A', color: '#FFFFFF' } })),
+      samplePayload: 'POST /hooks/profectium\nX-Profectium-Event: ' + s.lastEvent + '\nX-Profectium-Preview: local-only\n\n' + JSON.stringify({ id: 'evt_7Q2m', type: s.lastEvent, created: '2026-10-10T09:14:00+03:00', data: s.lastEvent.indexOf('invitation') === 0 ? { invitation_id: 'inv_41k9', candidate: { id: 'c12', category: 'QA · Middle' }, salary: { from: 190, to: 220, currency: 'RUB' }, contacts_unlocked: s.lastEvent === 'invitation.accepted' } : { candidate: { id: 'c04' }, task: 'Повторная доставка событий' } }, null, 2),
+      logRows: log.map(l => ({ at: fmtT(l.at), purpose: l.purpose, via: l.via + ' · ' + l.method, ms: l.ms + ' мс', err: l.err || '', st: l.ok ? 'OK' : 'ошибка', stStyle: { justifySelf: 'end', fontFamily: "'JetBrains Mono',monospace", fontSize: 11, fontWeight: 600, padding: '3px 8px', borderRadius: 3, background: l.ok ? '#ECEAFF' : '#FDE8EB', color: l.ok ? '#2A1BD9' : '#B00E28' } })),
+      logEmpty: log.length === 0
+    };
+  }
+}
+</script>
+</body>
+</html>
